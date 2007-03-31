@@ -23,7 +23,7 @@
         <mkdir dir="${dir.distribute}"/>
     </target>
 
-    <target name="build" depends="init" description="Compiles warp sources into binary class files">
+    <target name="build" depends="init" description="Compiles warp core and demo sources into binary class files">
         <javac srcdir="${src}" destdir="${build}">
             <classpath refid="core.classpath"/>
         </javac>
