@@ -1,0 +1,29 @@
+h1,h2,h3
+{
+font-family: arial, 'sans serif',sans-serif;
+}
+
+p,table,li
+{
+font-family: arial, 'sans serif',sans-serif;
+margin-left: 4pt;
+}
+
+table.th {
+background-color: #fefeff;
+}
+
+body
+{
+background-color: #ffffff;
+}
+
+h1,h2,h3,hr
+{
+color:black;
+}
+
+a:link    {color:black}
+a:visited {color:black}
+a:active  {color:mediumblue}
+a:hover   {color:mediumblue}

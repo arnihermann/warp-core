@@ -1,0 +1,29 @@
+<project name="warp-core">
+    <description>Warp, a next-generation, component-based, event-driven Web framework</description>
+
+    <property file="build.properties"/>
+
+    <path id="core.classpath">
+        <fileset dir="${lib}">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="clean" description="Cleans up the build artifacts and temporary directories">
+        <delete dir="${build}"/>
+    </target>
+
+    <target name="init">
+        <mkdir dir="${build}"/>
+    </target>
+
+    <target name="build" depends="init" description="Compiles warp sources into binary class files">
+        <javac srcdir="${src}" destdir="${build}">
+            <classpath refid="core.classpath"/>
+        </javac>
+    </target>
+
+    <target name="assemble.jar" depends="build" description="Assembles a library jar of Warp core classes (for use in WEB-INF/lib for example)">
+        <jar basedir="${build}" jarfile="${artifact}"/>
+    </target>
+</project>

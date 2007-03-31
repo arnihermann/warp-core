@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html   xmlns:w="http://www.wideplay.com/warp/schema/warp_core.xsd"
+        xmlns="http://www.w3.org/1999/xhtml"
+        xml:lang="en" lang="en">
+
+  <head>
+    <title>Warp :: thing goes here</title>
+  </head>
+  
+  <body w:component="frame" w:title="Counter demo">
+
+    <p>
+        This page demonstrates the use of @Managed properties in Warp with a counter.
+        <br/>
+        <br/>
+        Counter value: <b>${counter}</b>
+    </p>
+
+    <br/>
+    <a w:component="link">increment</a>
+    <br/>
+    <a w:component="link" w:event="@Fwd">reset ctr</a>
+  </body>
+</html>

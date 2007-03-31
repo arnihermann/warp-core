@@ -1,0 +1,46 @@
+<html   xmlns:w="http://www.wideplay.com/warp/schema/warp_core.xsd"
+        xmlns="http://www.w3.org/1999/xhtml"
+        xml:lang="en" lang="en">
+
+  <head>
+    <title>Warp :: Page Injection Demo</title>
+  </head>
+  
+  <body w:component="frame" w:title="${title}">
+    Demonstrates some dynamic text mixed with static html content:<br/>
+
+    Dynamic: ${hello}
+    <p>
+        Title (dynamic) is: ${title}
+        <br/>
+        <b>random static nested message</b>
+    </p>
+
+
+    Demonstrates ways to send a user elsewhere on events:<br/>
+    <p>
+        This is a button which sends to the injected page "Next" via redirection (post &amp; request url):
+        <input w:component="button" w:event="@NextPage" w:label="next page"/>
+    </p>
+
+    <p>
+        This is a link to the injected page "Next" via redirection (post &amp; request url):
+        <a w:component="link" w:event="@NextPage">next page by link</a>
+    </p>
+
+    <p>
+        This is a link to an external site via redirection (post &amp; request url):
+        <a w:component="link">goto wideplay.com</a>
+    </p>
+
+    <p>
+        This is a link to the injected page "Next" via forwarding (single request):
+        <a w:component="link" w:event="@Fwd">next page via forward</a>
+    </p>
+
+    <p>
+        This is a direct static link to an external site (raw html):
+        <a href="http://www.wideplay.com">goto wideplay.com</a>
+    </p>
+  </body>
+</html>
