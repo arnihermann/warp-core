@@ -44,7 +44,7 @@ import java.util.List;
 @Component
 public class Viewport implements Renderable {
     private Object embed; //embedded page
-    private boolean ajax;
+    private Boolean ajax;
 
     @Inject private WarpModuleAssembly assembly;
 
@@ -62,16 +62,34 @@ public class Viewport implements Renderable {
             //render the embedded content as my children, rather than my own children (which are discarded), using the embedded object as page
             ComponentSupport.renderMultiple(writer, embeddedContent, injector, reflection, embedded);
         else {
-            //use an html writer adapter to intercept the event support for the page and turn it into ajax support 
+            //use an html writer adapter to intercept the event support for the page and turn it into ajax support
+            renderAjaxContent(writer, embeddedPageHandler, embeddedContent);
         }
     }
 
+    private void renderAjaxContent(HtmlWriter writer, PageHandler embeddedPageHandler, List<? extends ComponentHandler> embeddedContent) {
+        String viewportId = writer.newId(this);
+        writer.element("div", "id", viewportId);
 
-    public boolean isAjax() {
+        writer.registerScriptLibrary(CoreScriptLibraries.EXT_MIN);
+        writer.registerScriptLibrary(CoreScriptLibraries.EXT_UPDATEMANAGER_MIN);
+
+        writer.writeToOnLoad("Ext.get(\"");
+        writer.writeToOnLoad(viewportId);
+        writer.writeToOnLoad("\").load({ url:\"");
+        writer.writeToOnLoad("http://www.wideplay.com");
+        writer.writeToOnLoad("\",");
+        writer.writeToOnLoad("scripts:true, params=\"foo=bar\", text:\"Loading...\" });");
+
+        writer.end("div");
+    }
+
+
+    public Boolean getAjax() {
         return ajax;
     }
 
-    public void setAjax(boolean ajax) {
+    public void setAjax(Boolean ajax) {
         this.ajax = ajax;
     }
 
