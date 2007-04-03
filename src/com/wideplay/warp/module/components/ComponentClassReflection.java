@@ -1,6 +1,7 @@
 package com.wideplay.warp.module.components;
 
 import com.wideplay.warp.util.reflect.ReflectUtils;
+import com.wideplay.warp.util.beans.BeanUtils;
 import com.wideplay.warp.module.components.Renderable;
 import com.wideplay.warp.module.NotWritablePropertyException;
 
@@ -34,15 +35,11 @@ public class ComponentClassReflection {
     }
 
     public Object getPropertyValue(Object bean, String name) {
-        return ReflectUtils.invokeMethod(getters.get(name), bean, null);
+        return BeanUtils.getFromPropertyExpression(name, bean);
     }
 
     public void setPropertyValue(Object bean, String name, Object value) {
-        Method setter = setters.get(name);
-        if (null == setter)
-            throw new NotWritablePropertyException("No setter was found for property: " + name);
-
-        ReflectUtils.invokeMethod(setter, bean, new Object[] { value });
+        BeanUtils.setFromPropertyExpression(name, bean, value);
     }
 
     public Class<? extends Renderable> getComponentClass() {

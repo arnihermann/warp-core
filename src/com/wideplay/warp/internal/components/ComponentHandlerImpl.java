@@ -9,6 +9,7 @@ import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.PageRenderException;
 import com.wideplay.warp.rendering.HtmlWriter;
+import com.wideplay.warp.util.beans.BeanUtils;
 import ognl.Ognl;
 import ognl.OgnlException;
 
@@ -48,20 +49,17 @@ class ComponentHandlerImpl implements ComponentHandler {
 
         //bind the page model (ognl expressions) to the components attributes
         for (String property : propertyValueExpressions.keySet()) {
-            try {
-                //rip out value from page object and set it to component's attribute (where the ognl expression came from)
-                PropertyDescriptor propertyDescriptor = propertyValueExpressions.get(property);
-                Object value;
-                if (propertyDescriptor.isExpression())
-                    value =  Ognl.getValue(propertyDescriptor.getValue(), page);
-                else
-                    value = propertyDescriptor.getValue();
-                
-                //set the property on the component object
-                reflection.setPropertyValue(renderable, property, value);
-            } catch (OgnlException e) {
-                throw new PageRenderException("Error while evaluating expression: \"" + propertyValueExpressions.get(property).getValue() + "\" for attribute " + property, e);
-            }
+            //rip out value from page object and set it to component's attribute (where the ognl expression came from)
+            PropertyDescriptor propertyDescriptor = propertyValueExpressions.get(property);
+            Object value;
+            
+            if (propertyDescriptor.isExpression())
+                value =  BeanUtils.getFromPropertyExpression(propertyDescriptor.getValue(), page);
+            else
+                value = propertyDescriptor.getValue();
+
+            //set the property on the component object
+            reflection.setPropertyValue(renderable, property, value);
         }
 
         if (renderable instanceof AttributesInjectable)

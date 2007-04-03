@@ -44,7 +44,7 @@ import java.util.List;
 @Component
 public class Viewport implements Renderable {
     private Object embed; //embedded page
-    private Boolean ajax;
+    private boolean ajax = false;
 
     @Inject private WarpModuleAssembly assembly;
 
@@ -71,25 +71,26 @@ public class Viewport implements Renderable {
         String viewportId = writer.newId(this);
         writer.element("div", "id", viewportId);
 
-        writer.registerScriptLibrary(CoreScriptLibraries.EXT_MIN);
-        writer.registerScriptLibrary(CoreScriptLibraries.EXT_UPDATEMANAGER_MIN);
+        writer.registerScriptLibrary(CoreScriptLibraries.YUI_UTILITIES);
+        writer.registerScriptLibrary(CoreScriptLibraries.EXT_YUI_ADAPTER);
+        writer.registerScriptLibrary(CoreScriptLibraries.EXT_ALL);
 
-        writer.writeToOnLoad("Ext.get(\"");
+        writer.writeToOnLoad(" Ext.get(\"");
         writer.writeToOnLoad(viewportId);
-        writer.writeToOnLoad("\").load({ url:\"");
-        writer.writeToOnLoad("http://www.wideplay.com");
-        writer.writeToOnLoad("\",");
-        writer.writeToOnLoad("scripts:true, params=\"foo=bar\", text:\"Loading...\" });");
+        writer.writeToOnLoad("\").load({ url: \"");
+        writer.writeToOnLoad("/Counter");
+        writer.writeToOnLoad("\", ");
+        writer.writeToOnLoad("scripts:true, params:\"foo=bar\", text:\"Loading...\" }); ");
 
         writer.end("div");
     }
 
 
-    public Boolean getAjax() {
+    public boolean getAjax() {
         return ajax;
     }
 
-    public void setAjax(Boolean ajax) {
+    public void setAjax(boolean ajax) {
         this.ajax = ajax;
     }
 

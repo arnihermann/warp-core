@@ -4,6 +4,7 @@ import com.wideplay.warp.annotations.Managed;
 import com.wideplay.warp.annotations.OnEvent;
 import com.wideplay.warp.annotations.OnEvents;
 import com.wideplay.warp.annotations.Page;
+import com.wideplay.warp.annotations.event.PreRender;
 import com.google.inject.Inject;
 
 /**
@@ -15,8 +16,21 @@ import com.google.inject.Inject;
  */
 public class ViewportDemo {
     @Inject @OnEvents Counter counter;
+    @Inject Counter ajaxCounter;
+
+    @OnEvent @PreRender
+    void onBegin() {
+        ajaxCounter.increment();
+        ajaxCounter.increment();
+        ajaxCounter.increment();
+    }
 
     public Counter getCounter() {
         return counter;
+    }
+
+
+    public Counter getAjaxCounter() {
+        return ajaxCounter;
     }
 }

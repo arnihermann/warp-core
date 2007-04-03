@@ -37,7 +37,7 @@ class OgnlRequestBinder implements RequestBinder {
                 try {
                     for (String expression : parameters.get(paramName))
                         Ognl.getValue(expression, bean);
-                    return;
+                    continue;
                 } catch (OgnlException e) {
                     throw new RequestBindingException("Could not bind a request parameter (expression type) to the page object. Could be because of: a) missing setter, b) missing collection values, c) malformed request, or d) bug in the component that generated the binding expression", e);
                 }

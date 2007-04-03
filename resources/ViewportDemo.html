@@ -8,19 +8,31 @@
     <title>Warp :: Preview title</title>
   </head>
   
-  <body w:component="frame" w:title="Viewport demo">
+  <body w:component="frame" w:title="Viewport demo" w:css="assets/warp.css">
 
-    <p style="border-bottom-style:dashed; border-bottom-width:1px; border-bottom-color:#cccccc;">
+    <i>
         This page demonstrates the use of the Viewport component in Warp, by including the content of the counter demo.<br/>
+    </i>
+
+    <p>
         Notice that the embedded page is set as the event delegate and so we inherit the counter demo's functionality as-is. However, the managed
         properties of the Counter object are not considered managed properties of this page--because it is being embedded as a component and not a page,
         and therefore @Managed functionality is not inherited.
     </p>
 
-    <p>
-        <span w:component="viewport" w:embed="${counter}" w:ajax="${true}">
+    <h3>Page embedded in viewport normally:</h3>
+    <p> 
+        <span w:component="viewport" w:embed="${counter}">
             The content of the counter demo should show up here.
         </span>
+    </p>
+
+
+    <h3>Page embedded in viewport via ajax:</h3>
+    <p>
+        <div w:component="viewport" w:embed="${ajaxCounter}" w:ajax="true">
+            The content of the counter demo should show up here.
+        </div>
     </p>
 
   </body>
