@@ -18,10 +18,12 @@ import java.util.Set;
  */
 class JsSupportUtils {
     //js functions start with FN_
-    private static final String FN_PAGE_EVENT_PUBLISH;
+    private final String FN_PAGE_EVENT_PUBLISH;
+
+    private static JsSupportUtils instance;
 
     //load support funcs
-    static {
+    
         try {
             FN_PAGE_EVENT_PUBLISH = FileUtils.readFileToString(new File(HtmlWriter.class.getResource("warp-events.js").toURI()), null);
         } catch (IOException e) {
@@ -31,7 +33,7 @@ class JsSupportUtils {
         }
     }
 
-    static String wrapOnFrameLoadFn(StringBuilder content) {
+    String wrapOnFrameLoadFn(StringBuilder content) {
         //insert content in reverse order at index 0
         content.insert(0, "{");
         content.insert(0, HtmlWriter.ON_FRAME_LOAD_FUNCTION);
@@ -46,7 +48,7 @@ class JsSupportUtils {
         return content.toString();
     }
     
-    static String wrapLinkedScripts(Set<String> linkedScripts) {
+    String wrapLinkedScripts(Set<String> linkedScripts) {
         StringBuilder builder = new StringBuilder();
         for (String script : linkedScripts) {
             builder.append("<script type=\"text/javascript\" src=\"");

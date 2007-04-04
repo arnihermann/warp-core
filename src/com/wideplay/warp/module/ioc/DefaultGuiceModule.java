@@ -12,6 +12,7 @@ import com.wideplay.warp.module.pages.InjectPageProvider;
 import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.module.StateManager;
 import com.wideplay.warp.rendering.RequestBinder;
+import com.wideplay.warp.rendering.HtmlWriter;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

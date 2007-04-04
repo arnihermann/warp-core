@@ -62,7 +62,7 @@ class PageHandlerImpl implements PageHandler {
 
         //render template with the page as its model
         //write response to a new HtmlWriter using the component handler tree
-        YUIFrameHtmlWriter htmlWriter = new YUIFrameHtmlWriter();
+        HtmlWriter htmlWriter = injector.getInstance(HtmlWriter.class);
         rootComponentHandler.handleRender(htmlWriter, injector, reflection, page);
 
         //write buffered output to the response stream
