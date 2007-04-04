@@ -15,20 +15,20 @@ import com.google.inject.Inject;
  * @since 1.0
  */
 public class ViewportDemo {
-    @Inject @OnEvents Counter counter;
+    @Inject @Page @OnEvents Counter counter;
     @Inject Counter ajaxCounter;
 
     @OnEvent @PreRender
     void onBegin() {
-        ajaxCounter.increment();
-        ajaxCounter.increment();
-        ajaxCounter.increment();
+        counter.increment();
+        counter.increment();
+        counter.increment();
+        System.out.println(ViewportDemo.class.getName() + ".onBegin()!");
     }
 
     public Counter getCounter() {
         return counter;
     }
-
 
     public Counter getAjaxCounter() {
         return ajaxCounter;

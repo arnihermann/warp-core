@@ -13,6 +13,8 @@ import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.module.StateManager;
 import com.wideplay.warp.rendering.RequestBinder;
 import com.wideplay.warp.rendering.HtmlWriter;
+import com.wideplay.warp.util.Cube;
+import com.wideplay.warp.util.HashCube;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -34,9 +36,9 @@ class DefaultGuiceModule extends AbstractModule {
         bindScope(SessionScoped.class, WarpScopes.SESSION);
         bindScope(RequestScoped.class, WarpScopes.REQUEST);
 
-        //bind state managers at various scopes (later replace with impls)
-        bind(StateManager.class).annotatedWith(ApplicationWide.class).to(StateManagerImpl.class).in(Singleton.class);
-        bind(StateManager.class).annotatedWith(SessionWide.class).to(StateManagerImpl.class).in(SessionScoped.class);   //in sessionscoped
+        //bind state manager and its deps
+        bind(Cube.class).annotatedWith(SessionWide.class).to(HashCube.class).in(SessionScoped.class);
+        bind(StateManager.class).to(StateManagerImpl.class).in(Singleton.class);
 
         bind(ClassReflectionCache.class).toInstance(Builders.newClassReflectionCache());
 

@@ -2,6 +2,7 @@ package com.wideplay.warp.module.ioc;
 
 import com.google.inject.Injector;
 import com.google.inject.Key;
+import com.google.inject.Inject;
 import com.wideplay.warp.module.StateManager;
 import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.util.Cube;
@@ -21,11 +22,14 @@ import java.lang.reflect.Field;
  * @since 1.0
  */
 class StateManagerImpl implements StateManager {
-    //keyed on Page Class x Field name
-    private final Cube<Class<?>, String, Object> pagesAndProperties = new HashCube<Class<?>, String, Object>();
+    @Inject private Injector injector;
 
+    //TODO add additional cubes at different scopes?
+    //TODO fix generics
+    public synchronized void injectManaged(PageClassReflection reflection, Object page) {
+        //lookup scoped cube
+        Cube<Class<?>, String, Object> pagesAndProperties = injector.getInstance(Key.get(Cube.class, SessionWide.class));
 
-    public synchronized void injectManaged(Injector injector, PageClassReflection reflection, Object page) {
         for (FieldDescriptor managedFieldDescriptor : reflection.getManagedFields()) {
             Class<?> fieldClass = managedFieldDescriptor.getFieldType();
             String fieldName = managedFieldDescriptor.getField().getName();
@@ -62,12 +66,16 @@ class StateManagerImpl implements StateManager {
     }
 
     public synchronized void extractAndStore(PageClassReflection reflection, Object page) {
+        Cube<Class<?>, String, Object> pagesAndProperties = injector.getInstance(Key.get(Cube.class, SessionWide.class));
+
         //end of the request, take whatever is in the object's managed prop and store it
         for (FieldDescriptor managedFieldDescriptor : reflection.getManagedFields()) {
             Object value = ReflectUtils.readField(managedFieldDescriptor.getField(), page);
 
             //store it in the cube overwriting whatever was there if any
             pagesAndProperties.put(reflection.getPageClass(), managedFieldDescriptor.getField().getName(), value);
+
+            //TODO cascade the operation to any @Inject @Page fields
         }
     }
 

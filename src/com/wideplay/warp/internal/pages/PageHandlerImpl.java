@@ -39,8 +39,8 @@ class PageHandlerImpl implements PageHandler {
 
 
         //place persistent fields back into the page
-        StateManager stateManager = injector.getInstance(Key.get(StateManager.class, SessionWide.class));
-        stateManager.injectManaged(injector, reflection, page); //move out to InjectionSupport
+        StateManager stateManager = injector.getInstance(StateManager.class);
+        stateManager.injectManaged(reflection, page); //move out to InjectionSupport
 
         //map request parameters back into page object (only on events)
         if (null != request.getParameter(RequestBinder.EVENT_PARAMETER_NAME))

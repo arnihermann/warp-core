@@ -3,6 +3,7 @@ package com.wideplay.warp.module.pages;
 import com.google.inject.Provider;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.wideplay.warp.module.StateManager;
 
 /**
  * Created by IntelliJ IDEA.
@@ -22,6 +23,7 @@ import com.google.inject.Injector;
 public class InjectPageProvider<T> implements Provider<T> {
     private PageClassReflection reflection;
     @Inject private Injector injector;
+    @Inject private StateManager stateManager;
 
     public InjectPageProvider(PageClassReflection reflection) {
         this.reflection = reflection;
@@ -31,8 +33,11 @@ public class InjectPageProvider<T> implements Provider<T> {
         //grab instance from guice
         T page = (T) reflection.instantiateForPageInjection(injector);
 
-        //inject constants?
+        //inject other members (EXCEPT those marked with @Page)
         //...
+
+        //set managed properties
+        stateManager.injectManaged(reflection, page);
         
         return page;
     }

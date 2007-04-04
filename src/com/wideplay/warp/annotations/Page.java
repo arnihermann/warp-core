@@ -12,8 +12,7 @@ import java.lang.annotation.ElementType;
  * On: 21/03/2007
  *
  * This annotation is used to signal to guice that the object being provided is a
- * warp page and should be provided by warp (with managed properties and constants set but without
- * ANY other injections).
+ * warp page and should be provided by warp (without subsequent pages set).
  *
  * @author Dhanji R. Prasanna
  * @since 1.0
