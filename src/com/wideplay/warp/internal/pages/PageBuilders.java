@@ -18,5 +18,8 @@ public class PageBuilders {
 
     public static void buildAndStorePageHandlers(ServletContext context, Class<?> pageClass, String packageName, Map<String, PageHandler> pages) {
         new PageHandlerBuilder(context).build(pageClass, packageName, pages);
+
+        //load resources
+        JsSupportUtils.loadResources();
     }
 }

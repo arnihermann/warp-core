@@ -19,18 +19,20 @@ import java.util.MissingResourceException;
  */
 class JsSupportUtils {
     //js functions start with FN_
-    private static final String FN_PAGE_EVENT_PUBLISH;
+    private static String FN_PAGE_EVENT_PUBLISH;
 
     private static JsSupportUtils instance;
 
     //load support funcs
-    static {
+    static void loadResources() {
         try {
             FN_PAGE_EVENT_PUBLISH = FileUtils.readFileToString(new File(HtmlWriter.class.getResource("warp-events.js").toURI()), null);
         } catch (IOException e) {
-            throw new MissingResourceException("Missing javascript resources required by Warp", JsSupportUtils.class.getName(), "warp-events.js");
+            throw new MissingResourceException("Missing javascript resources required by Warp (are you copying .js files from src to build?)", HtmlWriter.class.getName(), "warp-events.js");
         } catch (URISyntaxException e) {
-            throw new MissingResourceException("Missing javascript resources required by Warp", JsSupportUtils.class.getName(), "warp-events.js");
+            throw new MissingResourceException("Missing javascript resources required by Warp (are you copying .js files from src to build?)", HtmlWriter.class.getName(), "warp-events.js");
+        } catch (NullPointerException e) {
+            throw new MissingResourceException("Missing javascript resources required by Warp (are you copying .js files from src to build?)", HtmlWriter.class.getName(), "warp-events.js");            
         }
     }
 
