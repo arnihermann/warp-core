@@ -10,15 +10,21 @@
   
   <body w:component="frame" w:title="Table component demo" w:css="assets/warp.css">
 
-    <p>
+    <i>
         This page demonstrates the use of the Table component in Warp.
         <br/>
-    </p>
+    </i>
 
+    <h3>A table from a collection of "dvd" objects:</h3>
     <p>
-        A table from a collection of "dvd" objects:
         <table w:component="table" w:items="beans"/>
     </p>
-  
+
+
+    <h3>The same table rendered as a grid:</h3>
+    <p>
+        <table w:component="table" w:items="beans" w:asGrid="true"/>
+    </p>
+
   </body>
 </html>
