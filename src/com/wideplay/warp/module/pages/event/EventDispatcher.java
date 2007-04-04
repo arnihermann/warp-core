@@ -68,7 +68,7 @@ public class EventDispatcher {
 
         //OTHERWISE:
 
-        log.trace("Firing event handler for: " + event);
+        log.trace("Looking for event handler for: " + event);
         //fire specific handlers
         Object result = null;
 

@@ -21,8 +21,6 @@ class JsSupportUtils {
     //js functions start with FN_
     private static String FN_PAGE_EVENT_PUBLISH;
 
-    private static JsSupportUtils instance;
-
     //load support funcs
     static void loadResources() {
         try {

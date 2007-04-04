@@ -7,6 +7,7 @@ import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.util.beans.BeanUtils;
+import com.wideplay.warp.internal.pages.PageBuilders;
 import com.google.inject.Injector;
 import com.google.inject.Inject;
 
@@ -26,11 +27,15 @@ import java.util.Iterator;
 @Component
 public class Table implements Renderable {
     private String items;
+    private boolean asGrid = false;
+
+    private static final String GRID_CONVERSION_FUNCTION = PageBuilders.loadResource(Table.class, "Grid.js");
 
     @Inject private ClassReflectionCache classCache;
 
     public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector, PageClassReflection reflection, Object page) {
-        writer.element("table", "border", 1);
+        String id = writer.newId(this);
+        writer.element("table", "id", id);
 
         //obtain the bound object
         Object itemsObject = BeanUtils.getFromPropertyExpression(items, page);
@@ -48,10 +53,13 @@ public class Table implements Renderable {
                     propertiesAndLabels = classCache.getPropertyLabelMap(item);
                     writeHeader(writer, propertiesAndLabels);
                     isFirst = false;
+                    writer.element("tbody");
                 }
 
                 writeRow(item, writer, propertiesAndLabels);
             }
+
+            writer.end("tbody");
 
         } else {    //is an array
             Map<String, String> propertiesAndLabels = null;
@@ -63,16 +71,38 @@ public class Table implements Renderable {
                 if (0 == i) {
                     propertiesAndLabels = classCache.getPropertyLabelMap(item);
                     writeHeader(writer, propertiesAndLabels);
+                    writer.element("tbody");
                 }
 
                 writeRow(item, writer, propertiesAndLabels);
             }
+            writer.end("tbody");
         }
         writer.end("table");
+
+
+        if (asGrid) {
+            //convert to grid
+            writer.registerScriptLibrary(CoreScriptLibraries.YUI_UTILITIES);
+            writer.registerScriptLibrary(CoreScriptLibraries.EXT_YUI_ADAPTER);
+            writer.registerScriptLibrary(CoreScriptLibraries.EXT_ALL);
+
+            //write out the function TODO minify or externalize
+            writer.writeToOnLoad(GRID_CONVERSION_FUNCTION);
+
+            //write out the conversion call
+            writer.writeToOnLoad(
+                    "var grid = new Ext.grid.TableGrid(\"");
+            writer.writeToOnLoad(id);
+            writer.writeToOnLoad("\");\n" +
+                    "grid.render();");
+        }
+
     }
 
     private void writeHeader(HtmlWriter writer, Map<String, String> propertiesAndLabels) {
         //write out header
+        writer.element("thead");
         writer.element("tr");
         for (String label : propertiesAndLabels.values()) {
             writer.element("th");
@@ -80,6 +110,7 @@ public class Table implements Renderable {
             writer.end("th");
         }
         writer.end("tr");
+        writer.end("thead");
     }
 
     private void writeRow(Object item, HtmlWriter writer, Map<String, String> propertiesAndLabels) {
@@ -98,5 +129,9 @@ public class Table implements Renderable {
 
     public void setItems(String items) {
         this.items = items;
+    }
+
+    public void setAsGrid(boolean asGrid) {
+        this.asGrid = asGrid;
     }
 }
