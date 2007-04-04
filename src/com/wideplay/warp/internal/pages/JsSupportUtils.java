@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Set;
+import java.util.MissingResourceException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,22 +19,22 @@ import java.util.Set;
  */
 class JsSupportUtils {
     //js functions start with FN_
-    private final String FN_PAGE_EVENT_PUBLISH;
+    private static final String FN_PAGE_EVENT_PUBLISH;
 
     private static JsSupportUtils instance;
 
     //load support funcs
-    
+    static {
         try {
             FN_PAGE_EVENT_PUBLISH = FileUtils.readFileToString(new File(HtmlWriter.class.getResource("warp-events.js").toURI()), null);
         } catch (IOException e) {
-            throw new InfrastructureError("Missing resources required by Warp: warp-events.js", e);
+            throw new MissingResourceException("Missing javascript resources required by Warp", JsSupportUtils.class.getName(), "warp-events.js");
         } catch (URISyntaxException e) {
-            throw new InfrastructureError("Missing resources required by Warp: warp-events.js", e);
+            throw new MissingResourceException("Missing javascript resources required by Warp", JsSupportUtils.class.getName(), "warp-events.js");
         }
     }
 
-    String wrapOnFrameLoadFn(StringBuilder content) {
+    static String wrapOnFrameLoadFn(StringBuilder content) {
         //insert content in reverse order at index 0
         content.insert(0, "{");
         content.insert(0, HtmlWriter.ON_FRAME_LOAD_FUNCTION);
@@ -48,7 +49,7 @@ class JsSupportUtils {
         return content.toString();
     }
     
-    String wrapLinkedScripts(Set<String> linkedScripts) {
+    static String wrapLinkedScripts(Set<String> linkedScripts) {
         StringBuilder builder = new StringBuilder();
         for (String script : linkedScripts) {
             builder.append("<script type=\"text/javascript\" src=\"");
