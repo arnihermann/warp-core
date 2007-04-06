@@ -58,11 +58,17 @@
     </target>
 
     <!-- targets to deploy the demo webapp in jetty -->
-    <taskdef classpathref="jetty.plugin.classpath" resource="tasks.properties" loaderref="jetty.loader" />
 
     <target name="jetty.run" description="Runs the demo webapp (expects it is published to dist) using the Jetty web server">
+        <taskdef classpathref="jetty.plugin.classpath" resource="tasks.properties" loaderref="jetty.loader" />
         <jetty>
             <webapp name="${demo.webapp}" contextPath="${demo.context-path}" warfile="${dir.distribute}/${demo.artifact}"/>
         </jetty>
+    </target>
+
+    
+    <target name="deploy.tomcat.root" depends="assemble.war">
+        <fail unless="tomcat.home">Please set tomcat.home value.</fail>
+        <copy tofile="${tomcat.home}/webapps/ROOT.war" file="${dir.distribute}/${demo.artifact}"/>
     </target>
 </project>
