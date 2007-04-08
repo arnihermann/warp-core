@@ -1,17 +1,13 @@
 package com.wideplay.warp.internal.components;
 
 import com.wideplay.warp.annotations.Component;
-import com.wideplay.warp.internal.pages.PageBuilders;
-import com.wideplay.warp.module.ComponentRegistry;
 import com.wideplay.warp.module.components.Renderable;
+import com.wideplay.warp.module.ComponentRegistry;
 import com.wideplay.warp.rendering.ComponentHandler;
-import com.wideplay.warp.rendering.PageHandler;
 import com.wideplay.warp.util.TextTools;
 import org.dom4j.Document;
 
 import javax.servlet.ServletContext;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -36,13 +32,11 @@ public class ComponentBuilders {
         if (TextTools.isEmptyString(componentName))
             componentName = componentClass.getSimpleName();
 
-        //is this a renderable-style component?
-        if(Renderable.class.isAssignableFrom(componentClass)) {
-            registry.register(componentName, (Class<? extends Renderable>) componentClass);
-            return;
-        }
+        //register this component by name
+        registry.register(componentName, componentClass);
+    }
 
-        //otherwise this is a template-style component
-        new TemplateStyleCustomComponentBuilder(context, registry, packageName).buildAndRegister(componentName, componentClass);
+    public static ComponentRegistry newComponentRegistry() {
+        return new DefaultComponentRegistryImpl();
     }
 }

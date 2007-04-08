@@ -43,13 +43,17 @@ import java.util.List;
 @Component
 public class Viewport implements Renderable {
     private Object embed; //embedded page
+    private Class<?> embedPage; //optionally embed by page class
+
     private boolean ajax = false;
 
     @Inject private WarpModuleAssembly assembly;
 
     public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector, PageClassReflection reflection, Object page) {
-        //obtain the embedded page object
+        //obtain the embedded page object (either directly injected or get via page class from guice)
         Object embedded = embed;
+        if (null != embedPage)
+            embedded = injector.getInstance(embedPage);
 
         //get its component object tree
         String uri = assembly.resolvePageURI(embedded);

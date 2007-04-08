@@ -8,8 +8,8 @@ import com.wideplay.warp.WarpModule;
 import com.wideplay.warp.annotations.Component;
 import com.wideplay.warp.internal.components.ComponentBuilders;
 import com.wideplay.warp.internal.pages.PageBuilders;
-import com.wideplay.warp.module.ComponentRegistry;
 import com.wideplay.warp.module.WarpModuleAssembly;
+import com.wideplay.warp.module.ComponentRegistry;
 import com.wideplay.warp.module.ioc.IocContextManager;
 import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.PageHandler;
@@ -59,7 +59,7 @@ class WarpModuleAssemblyBuilder {
         List<Class<?>> allClasses = new ClassListBuilder().loadClasses(url, packageName);
 
         //startup services
-        ComponentRegistry componentRegistry = new ComponentRegistry();
+        ComponentRegistry componentRegistry = ComponentBuilders.newComponentRegistry();
         internalServicesModule.setComponentRegistry(componentRegistry);
 
         //build page reflections and assemble them into the module
@@ -112,6 +112,9 @@ class WarpModuleAssemblyBuilder {
         
         return warpModuleAssembly;
     }
+
+
+    
 
     private boolean isNonPageClass(Class<?> pageClass) {
         return pageClass.isAnnotation() || pageClass.isEnum() || pageClass.isInterface();

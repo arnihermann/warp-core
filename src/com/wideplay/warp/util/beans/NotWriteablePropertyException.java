@@ -7,13 +7,13 @@ package com.wideplay.warp.util.beans;
  * @author Dhanji R. Prasanna
  * @since 1.0
  */
-class NotWritablePropertyException extends RuntimeException {
+class NotWriteablePropertyException extends RuntimeException {
 
-    public NotWritablePropertyException(String message) {
+    public NotWriteablePropertyException(String message) {
         super(message);
     }
 
-    public NotWritablePropertyException(String message, Throwable cause) {
+    public NotWriteablePropertyException(String message, Throwable cause) {
         super(message, cause);
     }
 }

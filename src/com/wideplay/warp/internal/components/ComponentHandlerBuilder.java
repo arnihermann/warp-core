@@ -1,11 +1,10 @@
 package com.wideplay.warp.internal.components;
 
 import com.wideplay.warp.core.RawText;
-import com.wideplay.warp.module.ComponentRegistry;
 import com.wideplay.warp.module.WarpConfigurationException;
+import com.wideplay.warp.module.ComponentRegistry;
 import com.wideplay.warp.module.components.ComponentClassReflection;
 import com.wideplay.warp.module.components.PropertyDescriptor;
-import com.wideplay.warp.module.components.Renderable;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.util.TextTools;
 import org.apache.commons.logging.Log;
@@ -52,7 +51,7 @@ class ComponentHandlerBuilder {
 
 
     //builds a component handler for any node having w: prefix, failing which it is treated as a text node
-    private ComponentHandlerImpl buildComponentHandler(Node node) {
+    private ComponentHandler buildComponentHandler(Node node) {
         boolean isRawText = false;
 
         //lookup the component name (we only worry about components marked with warp attribs)
@@ -75,21 +74,56 @@ class ComponentHandlerBuilder {
             return null;
 
 
+        //build a handler for either a Renderable or TemplateStyle component
+        if (registry.isRenderableStyle(componentName))
+            return buildRenderableComponentHandler(componentName, node, isRawText);
+        else
+            return buildTemplateStyleComponentHandler(componentName, node);
+    }
 
-        //lookup registered component and build a reflection
-        Class<? extends Renderable> componentClass = registry.getComponent(componentName);
-        ComponentClassReflection reflection = new ComponentClassReflectionBuilder(componentClass).build();
+    @SuppressWarnings("unchecked")
+    private ComponentHandler buildTemplateStyleComponentHandler(String componentName, Node node) {
+        //template-style components do not have children, so just build and return a handler
+        Class<?> clazz = registry.getTemplateStyleComponent(componentName);
+
+        //lookup viewport component
+        ComponentClassReflection reflection = registry.getRenderableComponent(ComponentRegistry.VIEWPORT_COMPONENT_NAME);
+
+        //read any warp-specific attributes and store them
+        Map<String, PropertyDescriptor> propertyValueExpressions = buildPropertyValues(node, false);
+
+        //read any arbitrary attributes
+        Map<String, Object> arbitraryAttributes = buildArbitraryAttributes(node);
+
+        //configure viewport to bind on our component using its classname
+        propertyValueExpressions.put("embedPage", new PropertyDescriptor("embedPage", clazz.getName(), true));
+
+        return new RenderableComponentHandlerImpl(reflection, propertyValueExpressions, Collections.EMPTY_LIST, arbitraryAttributes);
+    }
+
+
+    private RenderableComponentHandlerImpl buildRenderableComponentHandler(String componentName, Node node, boolean rawText) {
+        //lookup registered component (builds a reflection if needed)
+        ComponentClassReflection reflection = registry.getRenderableComponent(componentName);
 
         //read warp-specific attributes and store them
-        Map<String, PropertyDescriptor> propertyValueExpressions = buildPropertyValues(node, isRawText);
+        Map<String, PropertyDescriptor> propertyValueExpressions = buildPropertyValues(node, rawText);
 
         //read text & arbitrary attributes if necessary and store them
         Map<String, Object> arbitraryAttributes = null;
-        if (isRawText)
+        if (rawText)
             arbitraryAttributes = buildArbitraryAttributes(node);
 
+        //chain to children
+        List<ComponentHandler> nestedComponentHandlers = buildChildNodes(node);
+
+        //return when done
+        return new RenderableComponentHandlerImpl(reflection, propertyValueExpressions, nestedComponentHandlers, arbitraryAttributes);
+    }
+
+    private List<ComponentHandler> buildChildNodes(Node node) {
         //build nested components that are embedded below this ELEMENT recursively
-        List<ComponentHandlerImpl> nestedComponentHandlers = new LinkedList<ComponentHandlerImpl>();
+        List<ComponentHandler> nestedComponentHandlers = new LinkedList<ComponentHandler>();
         if (Node.ELEMENT_NODE == node.getNodeType()) {
             Element element = (Element)node;
             log.debug("Processing child nodes for <" + element.getName() + ">");
@@ -97,16 +131,14 @@ class ComponentHandlerBuilder {
             //iterate child nodes and recursively build their handlers
             for (Object object : element.content()) {
                 Node child = (Node) object;
-    
-                ComponentHandlerImpl childHandler = buildComponentHandler(child);
+
+                //may build either as renderable or template-style
+                ComponentHandler childHandler = buildComponentHandler(child);
                 if (null != childHandler)
                     nestedComponentHandlers.add(childHandler);
             }
         }
-
-
-        //return when done
-        return new ComponentHandlerImpl(reflection, propertyValueExpressions, nestedComponentHandlers, arbitraryAttributes);
+        return nestedComponentHandlers;
     }
 
 

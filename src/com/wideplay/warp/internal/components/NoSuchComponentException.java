@@ -1,4 +1,4 @@
-package com.wideplay.warp.module;
+package com.wideplay.warp.internal.components;
 
 /**
  * Created with IntelliJ IDEA.

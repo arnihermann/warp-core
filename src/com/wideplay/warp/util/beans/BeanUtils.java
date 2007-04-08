@@ -25,7 +25,7 @@ public class BeanUtils {
         try {
             Ognl.setValue(expr, bean, value);
         } catch (OgnlException e) {
-            throw new NotWritablePropertyException("Provided property expression has no setter or could not be applied to the provided object graph: " + expr, e);
+            throw new NotWriteablePropertyException("Provided property expression has no setter or could not be applied to the provided object graph: " + expr, e);
         }
     }
 }
