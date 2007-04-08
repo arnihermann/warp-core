@@ -1,9 +1,11 @@
 package com.wideplay.warp.module;
 
 import com.google.inject.Injector;
+import com.google.inject.Key;
 import com.wideplay.warp.rendering.PageHandler;
 
 import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,12 +17,18 @@ import java.util.Map;
 public class WarpModuleAssembly {
     private final Map<String, PageHandler> pages;
     private final Map<Class<?>, String> pageURIs;
+    private final Map<String, Class<?>> pagesByClassName;
     private final Injector injector;
 
     public WarpModuleAssembly(Map<String, PageHandler> pages, Injector injector, Map<Class<?>, String> pageURIs) {
         this.pages = pages;
         this.injector = injector;
         this.pageURIs = pageURIs;
+
+        //create a quickmap for retrieving page classes by name
+        pagesByClassName = new HashMap<String, Class<?>>();
+        for (Class<?> pageClass : pageURIs.keySet())
+            pagesByClassName.put(pageClass.getName(), pageClass);
     }
 
     public PageHandler getPage(String uri) {
@@ -70,4 +78,7 @@ public class WarpModuleAssembly {
     }
 
 
+    public Class<?> getPageClassByName(String pageClass) {
+        return pagesByClassName.get(pageClass);
+    }
 }

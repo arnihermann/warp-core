@@ -2,7 +2,9 @@ package com.wideplay.warp.core;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.Key;
 import com.wideplay.warp.annotations.Component;
+import com.wideplay.warp.annotations.Page;
 import com.wideplay.warp.module.WarpModuleAssembly;
 import com.wideplay.warp.module.components.Renderable;
 import com.wideplay.warp.module.pages.PageClassReflection;
@@ -43,7 +45,7 @@ import java.util.List;
 @Component
 public class Viewport implements Renderable {
     private Object embed; //embedded page
-    private Class<?> embedPage; //optionally embed by page class
+    private String embedClass; //optionally embed by page class
 
     private boolean ajax = false;
 
@@ -52,8 +54,8 @@ public class Viewport implements Renderable {
     public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector, PageClassReflection reflection, Object page) {
         //obtain the embedded page object (either directly injected or get via page class from guice)
         Object embedded = embed;
-        if (null != embedPage)
-            embedded = injector.getInstance(embedPage);
+        if (null != embedClass)
+            embedded = injector.getInstance(Key.get(assembly.getPageClassByName(embedClass), Page.class));
 
         //get its component object tree
         String uri = assembly.resolvePageURI(embedded);
@@ -97,7 +99,7 @@ public class Viewport implements Renderable {
         this.embed = embed;
     }
 
-    public void setEmbedPage(Class<?> embedPage) {
-        this.embedPage = embedPage;
+    public void setEmbedClass(String embedClass) {
+        this.embedClass = embedClass;
     }
 }
