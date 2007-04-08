@@ -98,11 +98,11 @@ class ComponentHandlerBuilder {
         //configure viewport to bind on our component using its classname
         propertyValueExpressions.put("embedPage", new PropertyDescriptor("embedPage", clazz.getName(), true));
 
-        return new RenderableComponentHandlerImpl(reflection, propertyValueExpressions, Collections.EMPTY_LIST, arbitraryAttributes);
+        return new ComponentHandlerImpl(reflection, propertyValueExpressions, Collections.EMPTY_LIST, arbitraryAttributes);
     }
 
 
-    private RenderableComponentHandlerImpl buildRenderableComponentHandler(String componentName, Node node, boolean rawText) {
+    private ComponentHandlerImpl buildRenderableComponentHandler(String componentName, Node node, boolean rawText) {
         //lookup registered component (builds a reflection if needed)
         ComponentClassReflection reflection = registry.getRenderableComponent(componentName);
 
@@ -118,7 +118,7 @@ class ComponentHandlerBuilder {
         List<ComponentHandler> nestedComponentHandlers = buildChildNodes(node);
 
         //return when done
-        return new RenderableComponentHandlerImpl(reflection, propertyValueExpressions, nestedComponentHandlers, arbitraryAttributes);
+        return new ComponentHandlerImpl(reflection, propertyValueExpressions, nestedComponentHandlers, arbitraryAttributes);
     }
 
     private List<ComponentHandler> buildChildNodes(Node node) {

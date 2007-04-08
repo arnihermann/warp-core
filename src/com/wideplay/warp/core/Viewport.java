@@ -89,16 +89,15 @@ public class Viewport implements Renderable {
         writer.end("div");
     }
 
-
-    public boolean getAjax() {
-        return ajax;
-    }
-
     public void setAjax(boolean ajax) {
         this.ajax = ajax;
     }
 
     public void setEmbed(Object embed) {
         this.embed = embed;
+    }
+
+    public void setEmbedPage(Class<?> embedPage) {
+        this.embedPage = embedPage;
     }
 }

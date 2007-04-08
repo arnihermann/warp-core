@@ -21,13 +21,13 @@ import java.util.Map;
  * @author Dhanji R. Prasanna
  * @since 1.0
  */
-class RenderableComponentHandlerImpl implements ComponentHandler {
+class ComponentHandlerImpl implements ComponentHandler {
     private final ComponentClassReflection reflection;
     private final Map<String, PropertyDescriptor> propertyValueExpressions;
     private final List<? extends ComponentHandler> nestedComponents;
     private final Map<String, Object> arbitraryAttributes;
 
-    public RenderableComponentHandlerImpl(ComponentClassReflection reflection, Map<String, PropertyDescriptor> propertyValues,
+    public ComponentHandlerImpl(ComponentClassReflection reflection, Map<String, PropertyDescriptor> propertyValues,
                             List<ComponentHandler> nestedComponents, Map<String, Object> arbitraryAttributes) {
         
         this.reflection = reflection;
