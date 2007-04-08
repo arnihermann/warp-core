@@ -2,15 +2,11 @@ package com.wideplay.warp.internal;
 
 import com.wideplay.warp.module.components.ClassReflectionCache;
 import com.wideplay.warp.util.reflect.ReflectUtils;
-import com.wideplay.warp.rendering.PageRenderException;
-
-import java.util.*;
-import java.lang.reflect.Method;
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.

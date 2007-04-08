@@ -2,13 +2,12 @@ package com.wideplay.warp.internal.pages;
 
 import com.wideplay.warp.annotations.OnEvent;
 import com.wideplay.warp.util.reflect.ReflectUtils;
-
-import java.lang.reflect.Method;
-import java.lang.annotation.Annotation;
-import java.util.*;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.

@@ -1,12 +1,11 @@
 package com.wideplay.warp.module.ioc;
 
+import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Key;
-import com.google.inject.Inject;
 import com.wideplay.warp.module.StateManager;
 import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.util.Cube;
-import com.wideplay.warp.util.HashCube;
 import com.wideplay.warp.util.reflect.FieldDescriptor;
 import com.wideplay.warp.util.reflect.ReflectUtils;
 

@@ -1,9 +1,6 @@
 package com.wideplay.warp.module.components;
 
-import com.wideplay.warp.util.reflect.ReflectUtils;
 import com.wideplay.warp.util.beans.BeanUtils;
-import com.wideplay.warp.module.components.Renderable;
-import com.wideplay.warp.module.NotWritablePropertyException;
 
 import java.lang.reflect.Method;
 import java.util.Map;

@@ -1,19 +1,19 @@
 package com.wideplay.warp.core;
 
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.wideplay.warp.annotations.Component;
-import com.wideplay.warp.module.components.Renderable;
+import com.wideplay.warp.internal.pages.PageBuilders;
 import com.wideplay.warp.module.components.ClassReflectionCache;
+import com.wideplay.warp.module.components.Renderable;
 import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.util.beans.BeanUtils;
-import com.wideplay.warp.internal.pages.PageBuilders;
-import com.google.inject.Injector;
-import com.google.inject.Inject;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Iterator;
 
 /**
  * Created with IntelliJ IDEA.

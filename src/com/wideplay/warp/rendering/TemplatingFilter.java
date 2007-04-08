@@ -1,7 +1,6 @@
 package com.wideplay.warp.rendering;
 
 import com.wideplay.warp.module.WarpModuleAssembly;
-import com.wideplay.warp.rendering.PageRedirector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

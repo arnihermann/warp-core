@@ -7,11 +7,8 @@ import com.wideplay.warp.module.components.PropertyDescriptor;
 import com.wideplay.warp.module.components.Renderable;
 import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
-import com.wideplay.warp.rendering.PageRenderException;
 import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.util.beans.BeanUtils;
-import ognl.Ognl;
-import ognl.OgnlException;
 
 import java.util.Collections;
 import java.util.List;

@@ -1,9 +1,8 @@
 package com.wideplay.warp.util.reflect;
 
+import com.wideplay.warp.util.TextTools;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
-import com.wideplay.warp.util.TextTools;
 
 /**
  * Created with IntelliJ IDEA.

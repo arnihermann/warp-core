@@ -1,14 +1,13 @@
 package com.wideplay.warp.internal.pages;
 
 import com.wideplay.warp.rendering.HtmlWriter;
-import com.wideplay.warp.util.reflect.InfrastructureError;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Set;
 import java.util.MissingResourceException;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.

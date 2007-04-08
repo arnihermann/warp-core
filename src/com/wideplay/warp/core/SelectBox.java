@@ -5,8 +5,8 @@ import com.wideplay.warp.annotations.Component;
 import com.wideplay.warp.module.components.Renderable;
 import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
-import com.wideplay.warp.rendering.RequestBinder;
 import com.wideplay.warp.rendering.HtmlWriter;
+import com.wideplay.warp.rendering.RequestBinder;
 import com.wideplay.warp.util.beans.BeanUtils;
 
 import java.util.List;

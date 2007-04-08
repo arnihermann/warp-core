@@ -1,12 +1,12 @@
 package com.wideplay.warp.module.ioc;
 
-import com.wideplay.warp.util.reflect.ReflectUtils;
 import com.google.inject.Binding;
-import com.google.inject.Key;
 import com.google.inject.Injector;
+import com.google.inject.Key;
+import com.wideplay.warp.util.reflect.ReflectUtils;
 
-import java.util.List;
 import java.lang.reflect.Constructor;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.

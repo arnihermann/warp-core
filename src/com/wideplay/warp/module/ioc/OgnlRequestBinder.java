@@ -3,12 +3,11 @@ package com.wideplay.warp.module.ioc;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.wideplay.warp.rendering.RequestBinder;
+import ognl.Ognl;
+import ognl.OgnlException;
 
 import java.util.Map;
 import java.util.Set;
-
-import ognl.Ognl;
-import ognl.OgnlException;
 
 /**
  * Created with IntelliJ IDEA.

@@ -1,6 +1,5 @@
 package com.wideplay.warp.module;
 
-import com.google.inject.Injector;
 import com.wideplay.warp.module.pages.PageClassReflection;
 
 /**

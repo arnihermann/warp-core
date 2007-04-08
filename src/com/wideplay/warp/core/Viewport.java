@@ -1,15 +1,14 @@
 package com.wideplay.warp.core;
 
-import com.google.inject.Injector;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.wideplay.warp.annotations.Component;
+import com.wideplay.warp.module.WarpModuleAssembly;
 import com.wideplay.warp.module.components.Renderable;
 import com.wideplay.warp.module.pages.PageClassReflection;
-import com.wideplay.warp.module.WarpModuleAssembly;
 import com.wideplay.warp.rendering.ComponentHandler;
-import com.wideplay.warp.rendering.PageHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
-import com.wideplay.warp.util.beans.BeanUtils;
+import com.wideplay.warp.rendering.PageHandler;
 
 import java.util.List;
 
@@ -53,7 +52,8 @@ public class Viewport implements Renderable {
         Object embedded = embed;
 
         //get its component object tree
-        PageHandler embeddedPageHandler = assembly.getPage(assembly.resolvePageURI(embedded));
+        String uri = assembly.resolvePageURI(embedded);
+        PageHandler embeddedPageHandler = assembly.getPage(uri);
 
         //strip the frame (or whatever is wrapping) component
         List<? extends ComponentHandler> embeddedContent = embeddedPageHandler.getRootComponentHandler().getNestedComponents();
@@ -63,11 +63,11 @@ public class Viewport implements Renderable {
             ComponentSupport.renderMultiple(writer, embeddedContent, injector, reflection, embedded);
         else {
             //use an html writer adapter to intercept the event support for the page and turn it into ajax support
-            renderAjaxContent(writer, embeddedPageHandler, embeddedContent);
+            renderAjaxContent(writer, embeddedPageHandler, embeddedContent, uri);
         }
     }
 
-    private void renderAjaxContent(HtmlWriter writer, PageHandler embeddedPageHandler, List<? extends ComponentHandler> embeddedContent) {
+    private void renderAjaxContent(HtmlWriter writer, PageHandler embeddedPageHandler, List<? extends ComponentHandler> embeddedContent, String uri) {
         String viewportId = writer.newId(this);
         writer.element("div", "id", viewportId);
 
@@ -78,9 +78,9 @@ public class Viewport implements Renderable {
         writer.writeToOnLoad(" Ext.get(\"");
         writer.writeToOnLoad(viewportId);
         writer.writeToOnLoad("\").load({ url: \"");
-        writer.writeToOnLoad("/Counter");
+        writer.writeToOnLoad(uri);
         writer.writeToOnLoad("\", ");
-        writer.writeToOnLoad("scripts:true, params:\"foo=bar\", text:\"Loading...\" }); ");
+        writer.writeToOnLoad("scripts:true, params:\"\", text:\"Loading...\" }); ");
 
         writer.end("div");
     }

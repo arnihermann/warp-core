@@ -1,7 +1,7 @@
 package com.wideplay.warp.module.pages;
 
-import com.wideplay.warp.util.reflect.FieldDescriptor;
 import com.google.inject.Injector;
+import com.wideplay.warp.util.reflect.FieldDescriptor;
 
 import java.util.Set;
 

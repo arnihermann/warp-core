@@ -1,16 +1,15 @@
 package com.wideplay.warp.internal.pages;
 
+import com.wideplay.warp.module.ComponentRegistry;
 import com.wideplay.warp.rendering.PageHandler;
-import com.wideplay.warp.rendering.HtmlWriter;
+import org.apache.commons.io.FileUtils;
 
 import javax.servlet.ServletContext;
-import java.util.Map;
-import java.util.MissingResourceException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-
-import org.apache.commons.io.FileUtils;
+import java.util.Map;
+import java.util.MissingResourceException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,8 +22,8 @@ public class PageBuilders {
     private PageBuilders() {
     }
 
-    public static void buildAndStorePageHandlers(ServletContext context, Class<?> pageClass, String packageName, Map<String, PageHandler> pages) {
-        new PageHandlerBuilder(context).build(pageClass, packageName, pages);
+    public static void buildAndStorePageHandler(ServletContext context, ComponentRegistry registry, Class<?> pageClass, String packageName, Map<String, PageHandler> pages) {
+        new PageHandlerBuilder(context, registry).build(pageClass, packageName, pages);
 
         //load resources
         JsSupportUtils.loadResources();

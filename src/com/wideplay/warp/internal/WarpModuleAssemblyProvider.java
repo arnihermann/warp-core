@@ -1,7 +1,7 @@
 package com.wideplay.warp.internal;
 
-import com.wideplay.warp.module.WarpModuleAssembly;
 import com.google.inject.Provider;
+import com.wideplay.warp.module.WarpModuleAssembly;
 
 /**
  * Created by IntelliJ IDEA.

@@ -1,14 +1,14 @@
 package com.wideplay.warp.internal;
 
+import com.wideplay.warp.WarpModule;
 import com.wideplay.warp.module.WarpModuleAssembly;
 import com.wideplay.warp.module.components.ClassReflectionCache;
-import com.wideplay.warp.WarpModule;
 import com.wideplay.warp.rendering.RequestBinder;
 import com.wideplay.warp.util.reflect.ReflectUtils;
 
 import javax.servlet.ServletContext;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.

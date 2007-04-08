@@ -1,12 +1,12 @@
 package com.wideplay.warp.internal.pages;
 
-import com.google.inject.Key;
 import com.google.inject.BindingAnnotation;
+import com.google.inject.Key;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.lang.reflect.Constructor;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.

@@ -17,12 +17,12 @@
 
 package com.wideplay.warp.module.ioc;
 
-import com.google.inject.Scope;
 import com.google.inject.Key;
 import com.google.inject.Provider;
+import com.google.inject.Scope;
 
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * Created with IntelliJ IDEA.

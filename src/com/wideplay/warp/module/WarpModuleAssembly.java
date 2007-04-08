@@ -1,7 +1,7 @@
 package com.wideplay.warp.module;
 
-import com.wideplay.warp.rendering.PageHandler;
 import com.google.inject.Injector;
+import com.wideplay.warp.rendering.PageHandler;
 
 import java.util.Map;
 

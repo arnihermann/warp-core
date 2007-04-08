@@ -1,15 +1,15 @@
 package com.wideplay.warp.internal.pages;
 
+import com.wideplay.warp.module.pages.event.EventHandlerDelegate;
 import com.wideplay.warp.util.reflect.FieldDescriptor;
 import com.wideplay.warp.util.reflect.ReflectUtils;
-import com.wideplay.warp.module.pages.event.EventHandlerDelegate;
 
-import java.lang.reflect.Method;
 import java.lang.annotation.Annotation;
-import java.util.List;
-import java.util.Set;
-import java.util.Map;
+import java.lang.reflect.Method;
 import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.

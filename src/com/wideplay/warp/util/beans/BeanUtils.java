@@ -2,7 +2,6 @@ package com.wideplay.warp.util.beans;
 
 import ognl.Ognl;
 import ognl.OgnlException;
-import com.wideplay.warp.module.NotWritablePropertyException;
 
 /**
  * Created with IntelliJ IDEA.

@@ -1,12 +1,10 @@
 package com.wideplay.warp.internal.pages;
 
 import com.google.inject.Injector;
-import com.google.inject.Key;
-import com.wideplay.warp.module.ioc.SessionWide;
+import com.wideplay.warp.annotations.event.PostRender;
+import com.wideplay.warp.annotations.event.PreRender;
 import com.wideplay.warp.module.StateManager;
 import com.wideplay.warp.rendering.*;
-import com.wideplay.warp.annotations.event.PreRender;
-import com.wideplay.warp.annotations.event.PostRender;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

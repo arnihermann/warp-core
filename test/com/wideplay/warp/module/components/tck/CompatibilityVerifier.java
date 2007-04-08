@@ -1,20 +1,20 @@
 package com.wideplay.warp.module.components.tck;
 
-import com.wideplay.warp.rendering.ComponentHandler;
-import com.wideplay.warp.rendering.HtmlWriter;
-import com.wideplay.warp.rendering.ScriptLibrary;
-import com.wideplay.warp.rendering.ScriptEvents;
+import com.google.inject.Injector;
 import com.wideplay.warp.annotations.Component;
 import com.wideplay.warp.module.components.Renderable;
 import com.wideplay.warp.module.pages.PageClassReflection;
-import com.google.inject.Injector;
+import com.wideplay.warp.rendering.ComponentHandler;
+import com.wideplay.warp.rendering.HtmlWriter;
+import com.wideplay.warp.rendering.ScriptEvents;
+import com.wideplay.warp.rendering.ScriptLibrary;
 
-import java.util.List;
-import java.util.LinkedList;
-import java.util.ArrayList;
-import java.lang.reflect.Proxy;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.

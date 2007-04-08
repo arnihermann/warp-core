@@ -1,11 +1,11 @@
 package com.wideplay.warp.internal;
 
-import org.testng.annotations.Test;
 import com.google.inject.*;
 import com.wideplay.warp.WarpModule;
+import org.testng.annotations.Test;
 
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.

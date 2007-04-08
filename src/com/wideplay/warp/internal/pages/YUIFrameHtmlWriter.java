@@ -1,8 +1,8 @@
 package com.wideplay.warp.internal.pages;
 
 import com.wideplay.warp.rendering.HtmlWriter;
-import com.wideplay.warp.rendering.ScriptLibrary;
 import com.wideplay.warp.rendering.ScriptEvents;
+import com.wideplay.warp.rendering.ScriptLibrary;
 
 import java.util.LinkedHashSet;
 import java.util.Set;

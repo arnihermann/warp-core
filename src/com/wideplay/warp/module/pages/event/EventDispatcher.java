@@ -1,8 +1,7 @@
 package com.wideplay.warp.module.pages.event;
 
-import com.wideplay.warp.util.reflect.ReflectUtils;
 import com.wideplay.warp.util.TextTools;
-import com.wideplay.warp.module.pages.PageClassReflection;
+import com.wideplay.warp.util.reflect.ReflectUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

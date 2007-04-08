@@ -2,8 +2,8 @@ package com.wideplay.warp.util.reflect;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.

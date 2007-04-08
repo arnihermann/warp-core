@@ -1,16 +1,15 @@
 package com.wideplay.warp.internal.components;
 
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-import org.testng.annotations.DataProvider;
-import org.dom4j.Document;
-import org.dom4j.DocumentHelper;
 import com.wideplay.warp.module.ComponentRegistry;
 import com.wideplay.warp.rendering.ComponentHandler;
-import com.wideplay.warp.internal.components.ComponentHandlerBuilder;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
-import java.io.IOException;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**

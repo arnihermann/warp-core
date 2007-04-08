@@ -4,8 +4,8 @@ import com.wideplay.warp.util.reflect.FieldDescriptor;
 
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.Set;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.

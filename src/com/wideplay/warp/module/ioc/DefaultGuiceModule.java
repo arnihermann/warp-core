@@ -7,12 +7,11 @@ import com.google.inject.servlet.RequestScoped;
 import com.google.inject.servlet.SessionScoped;
 import com.wideplay.warp.annotations.Page;
 import com.wideplay.warp.internal.Builders;
+import com.wideplay.warp.module.StateManager;
 import com.wideplay.warp.module.components.ClassReflectionCache;
 import com.wideplay.warp.module.pages.InjectPageProvider;
 import com.wideplay.warp.module.pages.PageClassReflection;
-import com.wideplay.warp.module.StateManager;
 import com.wideplay.warp.rendering.RequestBinder;
-import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.util.Cube;
 import com.wideplay.warp.util.HashCube;
 

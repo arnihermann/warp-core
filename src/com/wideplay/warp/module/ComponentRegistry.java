@@ -1,10 +1,10 @@
 package com.wideplay.warp.module;
 
-import com.wideplay.warp.module.components.Renderable;
 import com.wideplay.warp.core.*;
+import com.wideplay.warp.module.components.Renderable;
 
-import java.util.Map;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -36,16 +36,20 @@ public class ComponentRegistry {
         register("viewport", Viewport.class);
     }
 
-    public synchronized Class<? extends Renderable> getComponent(String elementName) {
+    public Class<? extends Renderable> getComponent(String elementName) {
         Class<? extends Renderable> componentClass = componentsByName.get(elementName);
 
         if (null == componentClass)
-            throw new NoSuchComponentException("no component was registered for the component key: " + elementName);
+            throw new NoSuchComponentException("No component was registered for the component key: " + elementName);
 
         return componentClass;
     }
 
-    public synchronized void register(String name, Class<? extends Renderable> clazz) {
+    public void register(String name, Class<? extends Renderable> clazz) {
+        //do some checking
+        if (componentsByName.containsKey(name))
+            throw new DuplicateComponentException("Component name " + name + " is already registered to class: " + componentsByName.get(name).getName());
+        
         componentsByName.put(name, clazz);
     }
 }

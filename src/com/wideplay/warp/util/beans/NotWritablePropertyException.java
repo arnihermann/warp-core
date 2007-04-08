@@ -1,4 +1,4 @@
-package com.wideplay.warp.module;
+package com.wideplay.warp.util.beans;
 
 /**
  * Created with IntelliJ IDEA.
@@ -7,7 +7,7 @@ package com.wideplay.warp.module;
  * @author Dhanji R. Prasanna
  * @since 1.0
  */
-public class NotWritablePropertyException extends RuntimeException {
+class NotWritablePropertyException extends RuntimeException {
 
     public NotWritablePropertyException(String message) {
         super(message);

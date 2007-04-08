@@ -1,12 +1,12 @@
 package com.wideplay.warp.internal;
 
-import org.testng.annotations.Test;
-import org.testng.annotations.BeforeClass;
 import ognl.Ognl;
 import ognl.OgnlException;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.

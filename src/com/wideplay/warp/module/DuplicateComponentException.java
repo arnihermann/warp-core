@@ -7,9 +7,9 @@ package com.wideplay.warp.module;
  * @author Dhanji R. Prasanna
  * @since 1.0
  */
-class NoSuchComponentException extends RuntimeException{
+class DuplicateComponentException extends RuntimeException{
 
-    public NoSuchComponentException(String message) {
+    public DuplicateComponentException(String message) {
         super(message);
     }
 

@@ -1,7 +1,7 @@
 package com.wideplay.warp.example;
 
-import com.wideplay.warp.annotations.OnEvent;
 import com.wideplay.warp.annotations.Managed;
+import com.wideplay.warp.annotations.OnEvent;
 
 /**
  * Created with IntelliJ IDEA.

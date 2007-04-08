@@ -1,19 +1,19 @@
 package com.wideplay.warp.internal.components;
 
-import org.dom4j.Document;
-import org.dom4j.Element;
-import org.dom4j.Attribute;
-import org.dom4j.Node;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import com.wideplay.warp.module.WarpConfigurationException;
-import com.wideplay.warp.module.ComponentRegistry;
-import com.wideplay.warp.module.components.ComponentClassReflection;
-import com.wideplay.warp.module.components.Renderable;
-import com.wideplay.warp.module.components.PropertyDescriptor;
 import com.wideplay.warp.core.RawText;
+import com.wideplay.warp.module.ComponentRegistry;
+import com.wideplay.warp.module.WarpConfigurationException;
+import com.wideplay.warp.module.components.ComponentClassReflection;
+import com.wideplay.warp.module.components.PropertyDescriptor;
+import com.wideplay.warp.module.components.Renderable;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.util.TextTools;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.dom4j.Attribute;
+import org.dom4j.Document;
+import org.dom4j.Element;
+import org.dom4j.Node;
 
 import java.util.*;
 

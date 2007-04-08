@@ -1,27 +1,25 @@
 package com.wideplay.warp.internal.pages;
 
-import com.wideplay.warp.rendering.ComponentHandler;
-import com.wideplay.warp.rendering.PageHandler;
 import com.wideplay.warp.annotations.Template;
 import com.wideplay.warp.annotations.URIMapping;
-import com.wideplay.warp.module.WarpConfigurationException;
-import com.wideplay.warp.module.ComponentRegistry;
 import com.wideplay.warp.internal.components.ComponentBuilders;
+import com.wideplay.warp.module.ComponentRegistry;
+import com.wideplay.warp.module.WarpConfigurationException;
+import com.wideplay.warp.rendering.ComponentHandler;
+import com.wideplay.warp.rendering.PageHandler;
 import com.wideplay.warp.util.TextTools;
-
-import java.util.Map;
-import java.io.File;
-import java.io.IOException;
-import java.io.FileNotFoundException;
-
-import org.dom4j.Document;
-import org.dom4j.DocumentHelper;
-import org.dom4j.DocumentException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
 
 import javax.servlet.ServletContext;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -31,12 +29,14 @@ import javax.servlet.ServletContext;
  * @since 1.0
  */
 class PageHandlerBuilder {
-    private ServletContext context;
+    private final ServletContext context;
+    private final ComponentRegistry registry;
 
     private final Log log = LogFactory.getLog(getClass());
 
-    public PageHandlerBuilder(ServletContext context) {
+    public PageHandlerBuilder(ServletContext context, ComponentRegistry registry) {
         this.context = context;
+        this.registry = registry;
     }
 
     public void build(Class<?> pageClass, String packageName, Map<String, PageHandler> pages) {
@@ -84,7 +84,7 @@ class PageHandlerBuilder {
 
 
     private ComponentHandler buildComponentHandler(Document document) {
-        return ComponentBuilders.buildComponentHandler(new ComponentRegistry(), document);
+        return ComponentBuilders.buildComponentHandler(registry, document);
     }
 
 

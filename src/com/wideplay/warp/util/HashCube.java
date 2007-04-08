@@ -1,7 +1,7 @@
 package com.wideplay.warp.util;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.

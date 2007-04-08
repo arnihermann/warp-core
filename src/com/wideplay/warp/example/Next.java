@@ -1,8 +1,8 @@
 package com.wideplay.warp.example;
 
+import com.google.inject.Inject;
 import com.wideplay.warp.annotations.OnEvent;
 import com.wideplay.warp.annotations.Page;
-import com.google.inject.Inject;
 
 /**
  * Created with IntelliJ IDEA.

@@ -3,7 +3,6 @@ package com.wideplay.warp.rendering;
 import com.google.inject.servlet.RequestParameters;
 
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.

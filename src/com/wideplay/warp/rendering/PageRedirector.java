@@ -1,16 +1,14 @@
 package com.wideplay.warp.rendering;
 
-import com.wideplay.warp.module.pages.event.Redirect;
-import com.wideplay.warp.module.pages.event.Forward;
 import com.wideplay.warp.module.WarpModuleAssembly;
-import com.wideplay.warp.rendering.PageRenderException;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-
+import com.wideplay.warp.module.pages.event.Forward;
+import com.wideplay.warp.module.pages.event.Redirect;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * Created with IntelliJ IDEA.

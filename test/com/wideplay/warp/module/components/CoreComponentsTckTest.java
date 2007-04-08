@@ -1,11 +1,11 @@
 package com.wideplay.warp.module.components;
 
-import org.testng.annotations.Test;
-import org.testng.annotations.DataProvider;
 import com.wideplay.warp.core.Frame;
-import com.wideplay.warp.core.RawText;
 import com.wideplay.warp.core.Link;
+import com.wideplay.warp.core.RawText;
 import com.wideplay.warp.module.components.tck.CompatibilityVerifier;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
 /**
  * Created with IntelliJ IDEA.

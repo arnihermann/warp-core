@@ -1,7 +1,7 @@
 package com.wideplay.warp.module.ioc;
 
-import com.google.inject.Key;
 import com.google.inject.Injector;
+import com.google.inject.Key;
 import com.google.inject.Module;
 import com.wideplay.warp.module.pages.PageClassReflection;
 
@@ -60,7 +60,7 @@ public class IocContextManager {
         }
     }
 
-    public static void throwNotScopeableException(String message) {
+    static void throwNotScopeableException(String message) {
         throw new NotScopeableException(message);
     }
     

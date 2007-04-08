@@ -1,9 +1,9 @@
 package com.wideplay.warp.module.components;
 
+import com.google.inject.Injector;
+import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
-import com.wideplay.warp.module.pages.PageClassReflection;
-import com.google.inject.Injector;
 
 import java.util.List;
 

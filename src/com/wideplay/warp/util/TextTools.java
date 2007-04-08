@@ -1,12 +1,11 @@
 package com.wideplay.warp.util;
 
-import com.wideplay.warp.util.Token;
 import com.wideplay.warp.rendering.PageRenderException;
 
-import java.util.List;
-import java.util.Collections;
-import java.util.ArrayList;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.

@@ -4,8 +4,8 @@ import com.wideplay.warp.module.components.ComponentClassReflection;
 import com.wideplay.warp.module.components.Renderable;
 
 import java.lang.reflect.Method;
-import java.util.Map;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.

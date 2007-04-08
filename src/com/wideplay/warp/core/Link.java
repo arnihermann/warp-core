@@ -1,11 +1,13 @@
 package com.wideplay.warp.core;
 
+import com.google.inject.Injector;
 import com.wideplay.warp.annotations.Component;
-import com.wideplay.warp.rendering.*;
 import com.wideplay.warp.module.components.Renderable;
 import com.wideplay.warp.module.pages.PageClassReflection;
+import com.wideplay.warp.rendering.ComponentHandler;
+import com.wideplay.warp.rendering.HtmlWriter;
+import com.wideplay.warp.rendering.ScriptEvents;
 import com.wideplay.warp.util.TextTools;
-import com.google.inject.Injector;
 
 import java.util.List;
 

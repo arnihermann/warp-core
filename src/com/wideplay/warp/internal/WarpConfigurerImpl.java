@@ -1,10 +1,10 @@
 package com.wideplay.warp.internal;
 
-import com.wideplay.warp.Warp;
 import com.google.inject.Module;
+import com.wideplay.warp.Warp;
 
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.

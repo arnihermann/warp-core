@@ -1,8 +1,8 @@
 package com.wideplay.warp.example;
 
-import com.wideplay.warp.WarpModule;
-import com.wideplay.warp.Warp;
 import com.google.inject.AbstractModule;
+import com.wideplay.warp.Warp;
+import com.wideplay.warp.WarpModule;
 
 /**
  * Created with IntelliJ IDEA.

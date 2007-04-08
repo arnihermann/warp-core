@@ -1,7 +1,5 @@
 package com.wideplay.warp.util.beans;
 
-import ognl.OgnlException;
-
 /**
  * Created with IntelliJ IDEA.
  * On: 25/03/2007

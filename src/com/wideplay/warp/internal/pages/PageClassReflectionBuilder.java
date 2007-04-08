@@ -1,21 +1,20 @@
 package com.wideplay.warp.internal.pages;
 
-import com.wideplay.warp.util.reflect.ReflectUtils;
-import com.wideplay.warp.util.reflect.FieldDescriptor;
-import com.wideplay.warp.annotations.OnEvent;
-import com.wideplay.warp.annotations.Managed;
-import com.wideplay.warp.annotations.OnEvents;
-import com.wideplay.warp.internal.pages.PageClassReflectionImpl;
-import com.wideplay.warp.module.WarpConfigurationException;
-import com.wideplay.warp.module.pages.event.EventHandlerDelegate;
 import com.google.inject.Inject;
 import com.google.inject.Key;
+import com.wideplay.warp.annotations.Managed;
+import com.wideplay.warp.annotations.OnEvent;
+import com.wideplay.warp.annotations.OnEvents;
+import com.wideplay.warp.module.WarpConfigurationException;
+import com.wideplay.warp.module.pages.event.EventHandlerDelegate;
+import com.wideplay.warp.util.reflect.FieldDescriptor;
+import com.wideplay.warp.util.reflect.ReflectUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Constructor;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.*;
 
 

@@ -1,14 +1,14 @@
 package com.wideplay.warp.internal.pages;
 
+import com.google.inject.Inject;
+import com.wideplay.warp.annotations.OnEvent;
 import com.wideplay.warp.annotations.OnEvents;
 import com.wideplay.warp.annotations.Page;
-import com.wideplay.warp.annotations.OnEvent;
-import com.wideplay.warp.example.Fwd;
 import com.wideplay.warp.example.EventDelegate;
+import com.wideplay.warp.example.Fwd;
 import com.wideplay.warp.example.Next;
 import com.wideplay.warp.example.NextPage;
 import com.wideplay.warp.module.pages.event.Redirect;
-import com.google.inject.Inject;
 
 /**
  * Created with IntelliJ IDEA.
