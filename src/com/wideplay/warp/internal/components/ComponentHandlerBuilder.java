@@ -1,6 +1,7 @@
 package com.wideplay.warp.internal.components;
 
 import com.wideplay.warp.core.RawText;
+import com.wideplay.warp.core.Viewport;
 import com.wideplay.warp.module.WarpConfigurationException;
 import com.wideplay.warp.module.ComponentRegistry;
 import com.wideplay.warp.module.components.ComponentClassReflection;
@@ -81,6 +82,9 @@ class ComponentHandlerBuilder {
             return buildTemplateStyleComponentHandler(componentName, node);
     }
 
+
+
+    
     @SuppressWarnings("unchecked")
     private ComponentHandler buildTemplateStyleComponentHandler(String componentName, Node node) {
         //template-style components do not have children, so just build and return a handler
@@ -93,13 +97,16 @@ class ComponentHandlerBuilder {
         Map<String, PropertyDescriptor> propertyValueExpressions = buildPropertyValues(node, false);
 
         //read any arbitrary attributes
-        Map<String, Object> arbitraryAttributes = buildArbitraryAttributes(node);
+        Map<String, Object> arbitraryAttributes = buildCustomAttributes((Element) node);
 
         //configure viewport to bind on our component using its classname
-        propertyValueExpressions.put("embedPage", new PropertyDescriptor("embedPage", clazz.getName(), true));
+        propertyValueExpressions.put(Viewport.EMBED_CLASS_PROPERTY, new PropertyDescriptor(Viewport.EMBED_CLASS_PROPERTY, clazz.getName(), false));
 
         return new ComponentHandlerImpl(reflection, propertyValueExpressions, Collections.EMPTY_LIST, arbitraryAttributes);
     }
+
+
+
 
 
     private ComponentHandlerImpl buildRenderableComponentHandler(String componentName, Node node, boolean rawText) {
@@ -142,6 +149,27 @@ class ComponentHandlerBuilder {
     }
 
 
+    //builds arbitrary custom attributes that are meant to be injected into user-defined non-Renderable @Component objects
+    private Map<String, Object> buildCustomAttributes(Element element) {
+        Map<String, Object> attribs = new LinkedHashMap<String, Object>();
+
+        //walk attributes and stash them (so long as they're not warp components)
+        for (Object object : element.attributes()) {
+            Attribute attribute = (Attribute)object;
+
+            //store only non-w: attribs
+            if (!isWarpAttribute(attribute)) {
+                PropertyDescriptor descriptor = buildPropertyDescriptor(attribute);
+
+                //store the descriptor by property name
+                attribs.put(descriptor.getName(), descriptor);
+            }
+        }
+
+        return attribs;
+    }
+
+
     //builds arbitrary attributes (random props that are stuck on to a component--really only for RawText components)
     private Map<String, Object> buildArbitraryAttributes(Node node) {
         Map<String, Object> attribs = new LinkedHashMap<String, Object>();
@@ -181,12 +209,8 @@ class ComponentHandlerBuilder {
                 Attribute attribute = (Attribute) object;
 
                 //store only w: attribs that are NOT component ids
-                if (attribute.getNamespacePrefix().equals(WARP_PREFIX) && !attribute.getName().endsWith("component")) {
-                    boolean isExpression = attribute.getValue().startsWith("${");
-
-                    PropertyDescriptor descriptor = new PropertyDescriptor(attribute.getName(),
-                            isExpression ? stripOgnlExpression(attribute.getValue()) : attribute.getValue(),
-                            isExpression);
+                if (isWarpAttribute(attribute)) {
+                    PropertyDescriptor descriptor = buildPropertyDescriptor(attribute);
 
                     //store the descriptor by property name
                     propertyValueExpressions.put(descriptor.getName(), descriptor);
@@ -195,6 +219,18 @@ class ComponentHandlerBuilder {
         }
 
         return propertyValueExpressions;
+    }
+
+    private PropertyDescriptor buildPropertyDescriptor(Attribute attribute) {
+        boolean isExpression = attribute.getValue().startsWith("${");
+
+        return new PropertyDescriptor(attribute.getName(),
+                isExpression ? stripOgnlExpression(attribute.getValue()) : attribute.getValue(),
+                isExpression);
+    }
+
+    private boolean isWarpAttribute(Attribute attribute) {
+        return attribute.getNamespacePrefix().equals(WARP_PREFIX) && !attribute.getName().endsWith("component");
     }
 
     //builds text that can be output from a RawText component specific to the given node

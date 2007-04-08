@@ -10,6 +10,7 @@ import com.wideplay.warp.internal.components.ComponentBuilders;
 import com.wideplay.warp.internal.pages.PageBuilders;
 import com.wideplay.warp.module.WarpModuleAssembly;
 import com.wideplay.warp.module.ComponentRegistry;
+import com.wideplay.warp.module.components.Renderable;
 import com.wideplay.warp.module.ioc.IocContextManager;
 import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.PageHandler;
@@ -19,12 +20,7 @@ import org.apache.commons.logging.LogFactory;
 import javax.servlet.ServletContext;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import ognl.Ognl;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -66,23 +62,28 @@ class WarpModuleAssemblyBuilder {
 
         //build page reflections and assemble them into the module
         Map<String, PageHandler> pages = new LinkedHashMap<String, PageHandler>();
+        Set<Class<?>> componentClasses = new LinkedHashSet<Class<?>>();
         for (Class<?> pageClass : allClasses) {
             //only build handlers for page classes (skips enums, etc.)
-            if (isNonPageClass(pageClass))
+            if (isNonClass(pageClass))
                 continue;
 
-            //should be built as a custom component?
-            if (isComponentClass(pageClass))
-                ComponentBuilders.buildAndRegisterComponent(context, componentRegistry, packageName, pageClass);
-            else
+            //also build as page if necessary
+            if (isShouldBuildAsPage(pageClass))
                 PageBuilders.buildAndStorePageHandler(context, componentRegistry, pageClass, packageName, pages);
+
+            //should be built as a custom component?
+            if (isComponentClass(pageClass)) {
+                ComponentBuilders.buildAndRegisterComponent(context, componentRegistry, pageClass, packageName, pages);
+                componentClasses.add(pageClass);
+            }
         }
 
         //build a guice module out of the loaded pages
         List<PageClassReflection> pageBindings = new ArrayList<PageClassReflection>(pages.size());
         Map<Class<?>, String> pagesURIs = new LinkedHashMap<Class<?>, String>();
         for (String pageURI : pages.keySet()) {
-
+            
             log.debug("Binding page to provider (in guice) and to URI : " + pageURI);
             PageHandler pageHandler = pages.get(pageURI);
             Class<?> pageClass = pageHandler.getPageClassReflection().getPageClass();
@@ -92,8 +93,10 @@ class WarpModuleAssemblyBuilder {
             pagesURIs.put(pageClass, pageURI);
         }
 
+        WarpModuleAssembly warpModuleAssembly = configureGuice(pageBindings, pages, pagesURIs);
+        warpModuleAssembly.hidePages(componentClasses);
 
-        return configureGuice(pageBindings, pages, pagesURIs);
+        return warpModuleAssembly;
     }
 
 
@@ -118,7 +121,7 @@ class WarpModuleAssemblyBuilder {
 
     
 
-    private boolean isNonPageClass(Class<?> pageClass) {
+    private boolean isNonClass(Class<?> pageClass) {
         return pageClass.isAnnotation() || pageClass.isEnum() || pageClass.isInterface();
     }
 
@@ -126,6 +129,9 @@ class WarpModuleAssemblyBuilder {
         return clazz.isAnnotationPresent(Component.class);
     }
 
+    private boolean isShouldBuildAsPage(Class<?> clazz) {
+        return !(Renderable.class.isAssignableFrom(clazz));
+    }
 
     private class InternalServicesModule extends AbstractModule {
         private WarpModuleAssemblyProvider warpModuleAssemblyProvider;

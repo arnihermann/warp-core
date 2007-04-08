@@ -7,12 +7,14 @@ import com.wideplay.warp.annotations.Component;
 import com.wideplay.warp.annotations.Page;
 import com.wideplay.warp.module.WarpModuleAssembly;
 import com.wideplay.warp.module.components.Renderable;
+import com.wideplay.warp.module.components.PropertyDescriptor;
 import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.rendering.PageHandler;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -43,11 +45,14 @@ import java.util.List;
  * @since 1.0
  */
 @Component
-public class Viewport implements Renderable {
+public class Viewport implements Renderable, AttributesInjectable {
     private Object embed; //embedded page
     private String embedClass; //optionally embed by page class
-
     private boolean ajax = false;
+    private Map<String, PropertyDescriptor> attribs;
+
+    public static final String EMBED_CLASS_PROPERTY = "embedClass";
+
 
     @Inject private WarpModuleAssembly assembly;
 
@@ -57,12 +62,15 @@ public class Viewport implements Renderable {
         if (null != embedClass)
             embedded = injector.getInstance(Key.get(assembly.getPageClassByName(embedClass), Page.class));
 
-        //get its component object tree
+        //get its component object tree (i.e. the PageHandler which renders it)
         String uri = assembly.resolvePageURI(embedded);
         PageHandler embeddedPageHandler = assembly.getPage(uri);
 
         //strip the frame (or whatever is wrapping) component
         List<? extends ComponentHandler> embeddedContent = embeddedPageHandler.getRootComponentHandler().getNestedComponents();
+
+        //inject the embedded page (configure it) prior to render
+        //...
 
         if (!ajax)
             //render the embedded content as my children, rather than my own children (which are discarded), using the embedded object as page
@@ -101,5 +109,10 @@ public class Viewport implements Renderable {
 
     public void setEmbedClass(String embedClass) {
         this.embedClass = embedClass;
+    }
+
+    @SuppressWarnings("unchecked") //Horrible unchecked cast being forced
+    public void setAttributeNameValuePairs(Map attribs) {
+        this.attribs = attribs;
     }
 }

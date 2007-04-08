@@ -6,6 +6,8 @@ import com.wideplay.warp.rendering.PageHandler;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Set;
+import java.util.LinkedHashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,12 +20,18 @@ public class WarpModuleAssembly {
     private final Map<String, PageHandler> pages;
     private final Map<Class<?>, String> pageURIs;
     private final Map<String, Class<?>> pagesByClassName;
+
+    private final Map<String, PageHandler> userFacingPages = new LinkedHashMap<String, PageHandler>();
+
     private final Injector injector;
 
     public WarpModuleAssembly(Map<String, PageHandler> pages, Injector injector, Map<Class<?>, String> pageURIs) {
         this.pages = pages;
         this.injector = injector;
         this.pageURIs = pageURIs;
+
+        //create a "masking" map for retrieving user-facing pages
+        userFacingPages.putAll(pages);
 
         //create a quickmap for retrieving page classes by name
         pagesByClassName = new HashMap<String, Class<?>>();
@@ -33,6 +41,10 @@ public class WarpModuleAssembly {
 
     public PageHandler getPage(String uri) {
         return pages.get(uri);
+    }
+
+    public PageHandler getUserFacingPage(String uri) {
+        return userFacingPages.get(uri);
     }
 
     public Injector getInjector() {
@@ -80,5 +92,10 @@ public class WarpModuleAssembly {
 
     public Class<?> getPageClassByName(String pageClass) {
         return pagesByClassName.get(pageClass);
+    }
+
+    public void hidePages(Set<Class<?>> classes) {
+        //hides pages we dont want seen by the user
+        userFacingPages.values().removeAll(classes);
     }
 }

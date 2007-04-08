@@ -35,13 +35,13 @@ public class TemplatingFilter {
 
 
         //locate page handler from uri and handle page
-        PageHandler handler = assembly.getPage(request.getRequestURI());
-        log.trace("filter active for page: " + request.getRequestURI() + " ; handled by: " + handler);
+        PageHandler handler = assembly.getUserFacingPage(request.getRequestURI());
 
         //render normally?, i.e. thru servlet
         if (null == handler)
             return false;
 
+        log.trace("filter active for page: " + request.getRequestURI() + " ; handled by: " + handler);
 
 
         //locate template and render to response
