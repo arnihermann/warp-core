@@ -9,7 +9,7 @@
   <body w:component="frame" w:title="Viewport demo" w:css="assets/warp.css">
 
     <i>
-        This page demonstrates the use of the Viewport component in Warp, by including the content of the counter demo.<br/>
+        This page demonstrates the use of the Viewport component in Warp, by including the content of the counter demo in various ways.<br/>
     </i>
 
     <p>
@@ -19,7 +19,7 @@
 
     <h3>Page embedded in viewport normally:</h3>
     <p> 
-        <span w:component="counter">
+        <span w:component="viewport" w:embed="${counter}">
             The content of the counter demo should show up here.
         </span>
     </p>
@@ -30,6 +30,13 @@
         <div w:component="viewport" w:embed="${ajaxCounter}" w:ajax="true">
             The content of the counter demo should show up here.
         </div>
+    </p>
+
+    <h3>Custom Component direct use (custom attribs bound to embedded counter page):</h3>
+    <p>
+        <span w:component="counter" counter="${counter.counter}">
+            The content of the counter demo should show up here.
+        </span>
     </p>
 
   </body>

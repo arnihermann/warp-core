@@ -13,7 +13,7 @@ import com.wideplay.warp.annotations.Template;
  * @since 1.0
  */
 @Component(name = "counter")
-@Template(name = "Counter.xhtml")
+@Template(name = "CounterComponentTemplate.html")
 public class CounterComponent {
     private int counter;
 
@@ -21,13 +21,7 @@ public class CounterComponent {
         return counter;
     }
 
-    @OnEvent
-    public void increment() {
-        counter++;
-    }
-
-    @OnEvent @Fwd
-    public void reset() {
-        counter = -1;
+    public void setCounter(int counter) {
+        this.counter = counter;
     }
 }

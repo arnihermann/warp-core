@@ -6,6 +6,7 @@ import com.wideplay.warp.module.components.ComponentClassReflection;
 import com.wideplay.warp.module.components.PropertyDescriptor;
 import com.wideplay.warp.module.components.Renderable;
 import com.wideplay.warp.module.pages.PageClassReflection;
+import com.wideplay.warp.module.ioc.IocContextManager;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.util.beans.BeanUtils;
@@ -45,19 +46,7 @@ class ComponentHandlerImpl implements ComponentHandler {
         //...
 
         //bind the page model (ognl expressions) to the components attributes
-        for (String property : propertyValueExpressions.keySet()) {
-            //rip out value from page object and set it to component's attribute (where the ognl expression came from)
-            PropertyDescriptor propertyDescriptor = propertyValueExpressions.get(property);
-            Object value;
-            
-            if (propertyDescriptor.isExpression())
-                value =  BeanUtils.getFromPropertyExpression(propertyDescriptor.getValue(), page);
-            else
-                value = propertyDescriptor.getValue();
-
-            //set the property on the component object
-            reflection.setPropertyValue(renderable, property, value);
-        }
+        IocContextManager.injectProperties(propertyValueExpressions.values(), renderable, page);
 
         if (renderable instanceof AttributesInjectable)
             ((AttributesInjectable)renderable).setAttributeNameValuePairs(arbitraryAttributes);

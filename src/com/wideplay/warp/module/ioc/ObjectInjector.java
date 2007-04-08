@@ -4,9 +4,12 @@ import com.google.inject.Binding;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.wideplay.warp.util.reflect.ReflectUtils;
+import com.wideplay.warp.util.beans.BeanUtils;
+import com.wideplay.warp.module.components.PropertyDescriptor;
 
 import java.lang.reflect.Constructor;
 import java.util.List;
+import java.util.Collection;
 
 /**
  * Created by IntelliJ IDEA.
@@ -20,6 +23,20 @@ import java.util.List;
  * @since 1.0
  */
 class ObjectInjector {
+
+    public static void injectAll(Collection<PropertyDescriptor> properties, Object target, Object source) {
+        for (PropertyDescriptor propertyDescriptor : properties) {
+            Object value;
+
+            if (propertyDescriptor.isExpression())
+                value =  BeanUtils.getFromPropertyExpression(propertyDescriptor.getValue(), source);
+            else
+                value = propertyDescriptor.getValue();
+
+            //set the property on the component object
+            BeanUtils.setFromPropertyExpression(propertyDescriptor.getName(), target, value);
+        }
+    }
 
     //TODO fix generics
     public static Object constructorInject(Class<?> pageClass, Constructor constructor, List<Key<?>> constructorArgs, Injector injector) {

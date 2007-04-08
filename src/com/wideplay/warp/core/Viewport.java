@@ -6,6 +6,7 @@ import com.google.inject.Key;
 import com.wideplay.warp.annotations.Component;
 import com.wideplay.warp.annotations.Page;
 import com.wideplay.warp.module.WarpModuleAssembly;
+import com.wideplay.warp.module.ioc.IocContextManager;
 import com.wideplay.warp.module.components.Renderable;
 import com.wideplay.warp.module.components.PropertyDescriptor;
 import com.wideplay.warp.module.pages.PageClassReflection;
@@ -69,8 +70,9 @@ public class Viewport implements Renderable, AttributesInjectable {
         //strip the frame (or whatever is wrapping) component
         List<? extends ComponentHandler> embeddedContent = embeddedPageHandler.getRootComponentHandler().getNestedComponents();
 
-        //inject the embedded page (configure it) prior to render
-        //...
+        //inject the embedded page (configure it) prior to render--with properties from the current page (as necessary)
+        if (null != attribs)
+            IocContextManager.injectProperties(attribs.values(), embedded, page);
 
         if (!ajax)
             //render the embedded content as my children, rather than my own children (which are discarded), using the embedded object as page

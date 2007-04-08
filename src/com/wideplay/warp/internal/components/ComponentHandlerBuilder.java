@@ -158,7 +158,7 @@ class ComponentHandlerBuilder {
             Attribute attribute = (Attribute)object;
 
             //store only non-w: attribs
-            if (!isWarpAttribute(attribute)) {
+            if (!isWarpAttribute(attribute) && !attribute.getName().equals("component")) {
                 PropertyDescriptor descriptor = buildPropertyDescriptor(attribute);
 
                 //store the descriptor by property name

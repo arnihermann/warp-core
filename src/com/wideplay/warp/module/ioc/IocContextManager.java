@@ -4,11 +4,14 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.Module;
 import com.wideplay.warp.module.pages.PageClassReflection;
+import com.wideplay.warp.module.components.PropertyDescriptor;
+import com.wideplay.warp.module.components.Renderable;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Constructor;
 import java.util.List;
+import java.util.Collection;
 
 /**
  * Created with IntelliJ IDEA.
@@ -39,6 +42,10 @@ public class IocContextManager {
         }
 
         return context.getRequest();
+    }
+
+    public static void injectProperties(Collection<PropertyDescriptor> propertyDescriptors, Object target, Object source) {
+        ObjectInjector.injectAll(propertyDescriptors, target, source);
     }
 
 
