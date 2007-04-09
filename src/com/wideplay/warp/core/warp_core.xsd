@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsd:schema 
 	    targetNamespace="http://www.wideplay.com/warp/schema/warp_core.xsd"
-	    xmlns="http://www.wideplay.com/warp/schema/warp_core.xsd"
+	    xmlns="http://www.wideplay.com/warp/schema/core"
 	    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 
-    <xsd:element name="component">
-        <xsd:complexType mixed="true">
-            <xsd:attribute name="id" type="xsd:ID"/>
-            <xsd:attribute name="type" type="xsd:string"/>
-            <xsd:anyAttribute/>
-        </xsd:complexType>
-    </xsd:element>
-    <!-- body identifies where the body of the renderable belongs within the renderable's template -->
-    <xsd:element name="body"/>
+    <xsd:complexType name="warp-component">
+        <xsd:complexContent>
+            <xsd:extension base="xsd:anyType">
+                <xsd:attribute name="component" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
 </xsd:schema>
