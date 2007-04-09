@@ -83,7 +83,6 @@ class YUIFrameHtmlWriter implements HtmlWriter {
         writer.append('>');
     }
 
-
     public String getBuffer() {
         //insert the onFrameLoadWriter content in the placeholder
         return writer
@@ -92,7 +91,11 @@ class YUIFrameHtmlWriter implements HtmlWriter {
                 .replaceFirst(HtmlWriter.ON_FRAME_LOAD_PLACEHOLDER, JsSupportUtils.wrapOnFrameLoadFn(onFrameLoadWriter));
     }
 
-    public void selfClosedElement(String name, Object[] nameValuePairs) {
+    public void selfClosedElement(String name, Object... nameValuePairs) {
+        selfClosedElementWithAttrs(name, nameValuePairs);
+    }
+
+    public void selfClosedElementWithAttrs(String name, Object[] nameValuePairs) {
         writer.append('<');
         writer.append(name);
         attributes(nameValuePairs);

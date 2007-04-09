@@ -34,7 +34,8 @@ public interface HtmlWriter {
 
     void end(String name);
 
-    void selfClosedElement(String name, Object[] nameValuePairs);
+    void selfClosedElement(String name, Object...nameValuePairs);
+    void selfClosedElementWithAttrs(String name, Object[] nameValuePairs);
 
     String getBuffer();
 }

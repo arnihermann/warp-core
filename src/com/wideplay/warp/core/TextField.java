@@ -25,7 +25,11 @@ public class TextField implements Renderable {
         //read the bound value
         Object text = BeanUtils.getFromPropertyExpression(bind, page);
 
-        writer.element("input", "type", "text", "name", bind, "value", text);
+        writer.element("input",
+                "type", "text",
+                "name", bind,
+                "value", text,
+                "class","wText");
         writer.end("input");
     }
 

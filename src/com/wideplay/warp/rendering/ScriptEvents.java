@@ -10,6 +10,7 @@ package com.wideplay.warp.rendering;
 public enum ScriptEvents {
     CLICK("click"),
     DOUBLE_CLICK("dblclick"),
+    CHANGE("CHANGE")
     ;
 
     private String value;

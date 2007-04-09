@@ -29,7 +29,11 @@ public class Button implements Renderable {
             encodedEvent = event;
 
         String buttonId = writer.newId(this);
-        writer.element("input", "type", "button", "id", buttonId, "value", label);
+        writer.selfClosedElement("input",
+                "type", "button",
+                "id", buttonId,
+                "class","wButton",
+                "value", label);
 
         writer.registerEvent(buttonId, ScriptEvents.CLICK, encodedEvent);
         

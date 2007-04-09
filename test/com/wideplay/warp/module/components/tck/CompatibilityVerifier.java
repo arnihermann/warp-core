@@ -110,7 +110,10 @@ public class CompatibilityVerifier {
                 elementCounter--;
             }
 
-            public void selfClosedElement(String name, Object[] nameValuePairs) {
+            public void selfClosedElement(String name, Object... nameValuePairs) {
+            }
+
+            public void selfClosedElementWithAttrs(String name, Object[] nameValuePairs) {
 
             }
 

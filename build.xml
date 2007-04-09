@@ -67,7 +67,7 @@
     </target>
 
     
-    <target name="deploy.tomcat.root" depends="assemble.war">
+    <target name="deploy.tomcat.root" depends="clean,assemble.war">
         <fail unless="tomcat.home">Please set tomcat.home value.</fail>
         <copy tofile="${tomcat.home}/webapps/ROOT.war" file="${dir.distribute}/${demo.artifact}"/>
     </target>

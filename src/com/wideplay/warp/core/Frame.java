@@ -54,7 +54,7 @@ public class Frame implements Renderable {
         writer.element("form", "name", HtmlWriter.FRAME_GLOBAL_FORM_NAME, "method", "post");
 
         //event ids are stored in a hidden field TODO make this nicer somehow (pull into HtmlWriter)        
-        writer.selfClosedElement("input", new Object[] { "type", "hidden", "name", RequestBinder.EVENT_PARAMETER_NAME });
+        writer.selfClosedElementWithAttrs("input", new Object[] { "type", "hidden", "name", RequestBinder.EVENT_PARAMETER_NAME });
 
         //dispatch to children
         ComponentSupport.renderMultiple(writer, nestedComponents, injector, reflection, page);
