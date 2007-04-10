@@ -9,6 +9,8 @@ import ognl.OgnlException;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 /**
  * Created with IntelliJ IDEA.
  * On: 25/03/2007
@@ -18,7 +20,9 @@ import java.util.Set;
  */
 @Singleton
 class OgnlRequestBinder implements RequestBinder {
+
     private final Set<String> reservedParameterNames;
+    private Logger log = Logger.getLogger(OgnlRequestBinder.class);
 
     @Inject
     public OgnlRequestBinder(@ReservedParameters Set<String> reservedParameterNames) {
@@ -26,8 +30,23 @@ class OgnlRequestBinder implements RequestBinder {
     }
 
     public void bindBean(Object bean, Map<String, String[]> parameters) {
+
+        log.debug("Binding "+parameters.size()+" params to a " + bean.getClass());
+
         //iterate the parameter set and bind the values to the provided bean
         for (String paramName : parameters.keySet()) {
+
+            String contents="[";
+            for (String var: parameters.get(paramName)) {
+
+                if (contents.length()>1)
+                    contents+=",";
+                contents+="\""+var+"\"";
+            }
+            contents+="]";
+
+            log.debug(paramName + " == " + contents);
+
             if (reservedParameterNames.contains(paramName))
                 continue;
 
@@ -36,7 +55,8 @@ class OgnlRequestBinder implements RequestBinder {
                 try {
                     for (String expression : parameters.get(paramName))
                         Ognl.getValue(expression, bean);
-                    continue;
+                    log.debug("bound via custom");
+                    continue; //Goto considered harmful? :)
                 } catch (OgnlException e) {
                     throw new RequestBindingException("Could not bind a request parameter (expression type) to the page object. Could be because of: a) missing setter, b) missing collection values, c) malformed request, or d) bug in the component that generated the binding expression", e);
                 }
@@ -44,8 +64,17 @@ class OgnlRequestBinder implements RequestBinder {
 
             //or else bind normally via ognl
             try {
-                Ognl.setValue(paramName, bean, parameters.get(paramName)[0]);
+                log.debug("Binding via ognl");
+
+
+                String value = parameters.get(paramName)[0];
+
+                log.debug("Attempting to set " + paramName + " to " + value + " on " + bean);
+                log.debug("old value = " + Ognl.getValue(paramName, bean));
+                Ognl.setValue(paramName, bean, value);
+                log.debug("new value = " + Ognl.getValue(paramName, bean));
             } catch (OgnlException e) {
+                //TODO: ignore depending on reason... if it's simply unbound request data who cares?
                 throw new RequestBindingException("Could not bind a request parameter to the page object. Could be because of: a) missing setter, b) malformed request, or c) bug in the component that generated the binding expression", e);
             }
         }

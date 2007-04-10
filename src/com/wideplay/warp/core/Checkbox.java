@@ -58,12 +58,19 @@ public class Checkbox implements Renderable {
 
         String id = writer.newId(this);
 
+        writer.selfClosedElement("input",
+                "type","hidden",
+                "name",bind,
+                "value","false");
+
         if(booleanValue) {
 
             writer.selfClosedElement("input",
                     "type", "checkbox",
                     "class","wCheckbox",
                     "checked","checked",
+                    "value","true",
+                    "name",bind,
                     "id", id);
 
         } else {
@@ -71,6 +78,8 @@ public class Checkbox implements Renderable {
             writer.selfClosedElement("input",
                     "type", "checkbox",
                     "class","wCheckbox",
+                    "value","true",
+                    "name",bind,
                     "id", id);
         }
 
