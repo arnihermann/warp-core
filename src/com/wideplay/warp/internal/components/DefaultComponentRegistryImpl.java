@@ -37,6 +37,7 @@ class DefaultComponentRegistryImpl implements ComponentRegistry {
         register("closure", Closure.class);
         register("dropzone", DropZone.class);
         register("checkbox", Checkbox.class);
+        register("dialog", Dialog.class);
         register(ComponentRegistry.VIEWPORT_COMPONENT_NAME, Viewport.class);
     }
 

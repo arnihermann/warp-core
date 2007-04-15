@@ -18,6 +18,8 @@ import java.util.List;
 public class OgnlTest {
     private List<String> strings = new ArrayList<String>();
     private String myString;
+    private boolean primBool;
+    private Boolean wrapBool;
 
     @BeforeClass
     public void startup() {
@@ -37,6 +39,27 @@ public class OgnlTest {
         System.out.println(myString);
     }
 
+    @Test
+    public final void testSetPrimitiveBoolean() throws OgnlException {
+        primBool = false;
+        Ognl.setValue("primBool", this, "true");
+        assert primBool;
+
+        primBool = true;
+        Ognl.setValue("primBool", this, "false");
+        assert !primBool : "false was not set";
+    }
+
+    @Test
+    public final void testSetWrapperBoolean() throws OgnlException {
+        wrapBool = false;
+        Ognl.setValue("wrapBool", this, "true");
+        assert wrapBool;
+
+        wrapBool = true;
+        Ognl.setValue("wrapBool", this, "false");
+        assert !wrapBool : "false was not set";
+    }
 
     
     public String getMyString() {
@@ -53,5 +76,22 @@ public class OgnlTest {
 
     public void setStrings(List<String> strings) {
         this.strings = strings;
+    }
+
+
+    public boolean isPrimBool() {
+        return primBool;
+    }
+
+    public void setPrimBool(boolean primBool) {
+        this.primBool = primBool;
+    }
+
+    public Boolean getWrapBool() {
+        return wrapBool;
+    }
+
+    public void setWrapBool(Boolean wrapBool) {
+        this.wrapBool = wrapBool;
     }
 }
