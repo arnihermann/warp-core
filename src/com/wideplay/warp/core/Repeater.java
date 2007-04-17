@@ -20,7 +20,7 @@ import java.util.List;
  * @since 1.0
  */
 @Component
-public class Closure implements Renderable {
+public class Repeater implements Renderable {
     private String items;
 
     public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector, PageClassReflection reflection, Object page) {

@@ -8,16 +8,16 @@
     <title>Warp :: thing goes here</title>
   </head>
   
-  <body w:component="frame" w:title="Closure component demo" w:css="assets/warp.css">
+  <body w:component="frame" w:title="Repeater component demo" w:css="assets/warp.css">
 
     <p>
-        This page demonstrates the use of the Closure component in Warp, which repeats enclosed components over items in a collection.
+        This page demonstrates the use of the Repeater component in Warp, which repeats enclosed components over items in a collection.
         <br/>
     </p>
 
     <p>
-        A closure over property expression "$ {movieName}"
-        <span w:component="closure" w:items="beans">
+        A repetition over property expression "$ {movieName}"
+        <span w:component="repeater" w:items="beans">
             <p>${movieName}</p>
         </span>
     </p>

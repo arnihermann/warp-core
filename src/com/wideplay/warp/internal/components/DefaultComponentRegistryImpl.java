@@ -34,7 +34,7 @@ class DefaultComponentRegistryImpl implements ComponentRegistry {
         register("textfield", TextField.class);
         register("selectbox", SelectBox.class);
         register("table", Table.class);
-        register("closure", Closure.class);
+        register("repeater", Repeater.class);
         register("dropzone", DropZone.class);
         register("checkbox", Checkbox.class);
         register("dialog", Dialog.class);

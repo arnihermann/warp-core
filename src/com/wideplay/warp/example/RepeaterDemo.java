@@ -12,7 +12,7 @@ import java.util.List;
  * @author Dhanji R. Prasanna
  * @since 1.0
  */
-public class ClosureDemo {
+public class RepeaterDemo {
     private List<TableDemo.MyDVD> beans;
 
     //borrow dvd list from the table demo via page-injection
