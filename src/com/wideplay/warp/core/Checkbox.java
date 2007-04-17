@@ -40,7 +40,7 @@ public class Checkbox implements Renderable {
         if (null != event)
             encodedEvent = event;
 
-        log.debug("binding to:" + bind);
+//        log.debug("binding to:" + bind);
 
         boolean booleanValue=false;
 
@@ -48,11 +48,11 @@ public class Checkbox implements Renderable {
             Object objValue = BeanUtils.getFromPropertyExpression(bind, page);
 
             if(null != objValue) {
-                log.debug("bind objValue instanceof " + objValue.getClass().getName() + " objValue=" + objValue);
+//                log.debug("bind objValue instanceof " + objValue.getClass().getName() + " objValue=" + objValue);
                 if (objValue instanceof Boolean)
                     booleanValue = (Boolean)objValue;
             } else {
-                log.debug("bind value is null");
+//                log.debug("bind value is null");
             }
         }
 

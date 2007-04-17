@@ -2,11 +2,14 @@ package com.wideplay.warp.internal;
 
 import ognl.Ognl;
 import ognl.OgnlException;
+import ognl.DefaultTypeConverter;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -59,6 +62,32 @@ public class OgnlTest {
         wrapBool = true;
         Ognl.setValue("wrapBool", this, "false");
         assert !wrapBool : "false was not set";
+    }
+
+    @Test
+    public final void testSetBooleanThruCustomConverter() throws OgnlException {
+        //setup Ognl defaults
+        Map hashMap = Ognl.createDefaultContext(new Object());
+        Ognl.setTypeConverter(hashMap, new DefaultTypeConverter() {
+
+            public Object convertValue(Map map, Object value, Class toType) {
+                Object result;
+                System.out.println("type converter invoked for " + value + " into type " + toType);
+
+                //coerce any string into a boolean (or delegate to the default type converter)
+                if ((boolean.class == toType || Boolean.class == toType) && value instanceof String) {
+                    result = Boolean.valueOf((String)value);
+                }
+                else
+                    result = super.convertValue(map, value, toType);
+
+                return result;
+            }
+        });
+
+        wrapBool = true;
+        Ognl.setValue("wrapBool", hashMap, this, "false");
+        assert !wrapBool : "false was not set thru converter";
     }
 
     
