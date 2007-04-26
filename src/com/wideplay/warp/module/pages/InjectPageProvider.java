@@ -21,7 +21,7 @@ import com.wideplay.warp.module.StateManager;
  * @since 1.0
  */
 public class InjectPageProvider<T> implements Provider<T> {
-    private PageClassReflection reflection;
+    private final PageClassReflection reflection;
     @Inject private Injector injector;
     @Inject private StateManager stateManager;
 
