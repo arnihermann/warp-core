@@ -5,11 +5,10 @@ import com.wideplay.warp.core.AttributesInjectable;
 import com.wideplay.warp.module.components.ComponentClassReflection;
 import com.wideplay.warp.module.components.PropertyDescriptor;
 import com.wideplay.warp.module.components.Renderable;
-import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.module.ioc.IocContextManager;
+import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
-import com.wideplay.warp.util.beans.BeanUtils;
 
 import java.util.Collections;
 import java.util.List;

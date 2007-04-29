@@ -1,12 +1,12 @@
 package com.wideplay.warp.internal.components;
 
-import com.wideplay.warp.module.ComponentRegistry;
-import com.wideplay.warp.module.components.Renderable;
-import com.wideplay.warp.module.components.ComponentClassReflection;
 import com.wideplay.warp.core.*;
+import com.wideplay.warp.module.ComponentRegistry;
+import com.wideplay.warp.module.components.ComponentClassReflection;
+import com.wideplay.warp.module.components.Renderable;
 
-import java.util.Map;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.

@@ -1,13 +1,12 @@
 package com.wideplay.warp.module;
 
 import com.google.inject.Injector;
-import com.google.inject.Key;
 import com.wideplay.warp.rendering.PageHandler;
 
-import java.util.Map;
 import java.util.HashMap;
-import java.util.Set;
 import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.

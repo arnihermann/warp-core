@@ -1,18 +1,18 @@
 package com.wideplay.warp.core;
 
+import com.google.inject.Injector;
+import com.wideplay.warp.annotations.Component;
 import com.wideplay.warp.module.components.Renderable;
 import com.wideplay.warp.module.pages.PageClassReflection;
+import com.wideplay.warp.rendering.ComponentHandler;
+import com.wideplay.warp.rendering.HtmlWriter;
+import com.wideplay.warp.rendering.ScriptEvents;
 import com.wideplay.warp.util.TextTools;
 import com.wideplay.warp.util.beans.BeanUtils;
-import com.wideplay.warp.rendering.HtmlWriter;
-import com.wideplay.warp.rendering.ComponentHandler;
-import com.wideplay.warp.rendering.ScriptEvents;
-import com.wideplay.warp.annotations.Component;
-import com.google.inject.Injector;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.List;
-
-import org.apache.log4j.Logger;
 
 
 /**
@@ -31,7 +31,7 @@ public class Checkbox implements Renderable {
     private String label = TextTools.EMPTY_STRING;
     private String bind;
 
-    private Logger log = Logger.getLogger(Checkbox.class);
+    private final Log log = LogFactory.getLog(Checkbox.class);
 
     public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector, PageClassReflection reflection, Object page) {
 

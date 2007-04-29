@@ -9,11 +9,6 @@
         </fileset>
     </path>
 
-    <!-- this class path is only needed if you're running the demo webapp with jetty from this script-->
-    <path id="jetty.plugin.classpath">
-        <fileset dir="${jetty.lib}" includes="**/*.jar"/>
-    </path>
-
     <target name="clean" description="Cleans up the build artifacts and temporary directories">
         <delete dir="${build}"/>
     </target>
@@ -24,7 +19,10 @@
     </target>
 
     <target name="build" depends="init" description="Compiles warp core and demo sources into binary class files">
-        <javac srcdir="${src}" destdir="${build}">
+        <javac sourcepath="" srcdir="${src}" destdir="${build}">
+            <include name="**/*.java"/>
+            <exclude name="com/wideplay/warp/example/**"/>
+
             <classpath refid="core.classpath"/>
         </javac>
 
@@ -34,6 +32,8 @@
                 <include name="**/*.xml"/>
                 <include name="**/*.properties"/>
                 <include name="**/*.js"/>
+
+                <exclude name="com/wideplay/warp/example/**"/>
             </fileset>
         </copy>
     </target>
@@ -42,33 +42,5 @@
         <jar basedir="${build}" destfile="${dir.distribute}/${core.artifact}">
             <exclude name="dist/**"/>
         </jar>
-    </target>
-
-    <target name="assemble.war" depends="assemble.jar" description="Assembles a deployable war of Warp and the standard demo webapp (contained in .example)">
-        <war basedir="${demo.resources}" destfile="${dir.distribute}/${demo.artifact}" webxml="${demo.webxml}">
-            <lib dir="${dir.distribute}">
-                <include name="${core.artifact}"/>
-            </lib>
-            <lib dir="${lib}">
-                <exclude name="javaee.jar"/>
-                <include name="**/*.jar"/>
-            </lib>
-            <classes dir="${build}"/>
-        </war>
-    </target>
-
-    <!-- targets to deploy the demo webapp in jetty -->
-
-    <target name="jetty.run" description="Runs the demo webapp (expects it is published to dist) using the Jetty web server">
-        <taskdef classpathref="jetty.plugin.classpath" resource="tasks.properties" loaderref="jetty.loader" />
-        <jetty>
-            <webapp name="${demo.webapp}" contextPath="${demo.context-path}" warfile="${dir.distribute}/${demo.artifact}"/>
-        </jetty>
-    </target>
-
-    
-    <target name="deploy.tomcat.root" depends="clean,assemble.war">
-        <fail unless="tomcat.home">Please set tomcat.home value.</fail>
-        <copy tofile="${tomcat.home}/webapps/ROOT.war" file="${dir.distribute}/${demo.artifact}"/>
     </target>
 </project>

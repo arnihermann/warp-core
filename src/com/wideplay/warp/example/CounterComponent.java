@@ -1,7 +1,5 @@
 package com.wideplay.warp.example;
 
-import com.wideplay.warp.annotations.Managed;
-import com.wideplay.warp.annotations.OnEvent;
 import com.wideplay.warp.annotations.Component;
 import com.wideplay.warp.annotations.Template;
 

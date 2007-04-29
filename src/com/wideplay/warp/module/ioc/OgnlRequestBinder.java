@@ -3,18 +3,15 @@ package com.wideplay.warp.module.ioc;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.wideplay.warp.rendering.RequestBinder;
+import ognl.DefaultTypeConverter;
 import ognl.Ognl;
 import ognl.OgnlException;
-import ognl.DefaultTypeConverter;
-
-import java.util.Map;
-import java.util.Set;
-import java.util.HashMap;
-import java.util.Arrays;
-
-import org.apache.log4j.Logger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.

@@ -21,6 +21,15 @@ public class GuiceTest {
         @Inject List<Integer> integers;
     }
 
+    @Singleton
+    public static class MyWiderScopeClass {
+        @Inject MyNoScopeClass myClass;
+    }
+
+    public static class MyNoScopeClass {
+        String name;
+    }
+
     @Test
     public final void testTypeLiterals() {
         Injector injector = Guice.createInjector(new AbstractModule() {
@@ -65,6 +74,24 @@ public class GuiceTest {
             }
         });
         assert null == injector.getBinding(Key.get(WarpModule.class));
+    }
+
+    //just some tests to see how guice behaves
+    @Test
+    public final void testWideningScopeInjection() {
+        Injector injector = Guice.createInjector(new AbstractModule() {
+
+            protected void configure() {
+
+            }
+        });
+
+        MyWiderScopeClass myWiderScopeClass = injector.getInstance(MyWiderScopeClass.class);
+
+        assert myWiderScopeClass == injector.getInstance(MyWiderScopeClass.class) : "singleton violated";
+
+        assert myWiderScopeClass.myClass == injector.getInstance(MyWiderScopeClass.class).myClass :
+               "singleton's down-scoped instance was different";
     }
 
 

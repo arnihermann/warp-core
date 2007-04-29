@@ -1,7 +1,7 @@
 package com.wideplay.warp.internal.pages;
 
-import com.wideplay.warp.rendering.PageHandler;
 import com.wideplay.warp.module.ComponentRegistry;
+import com.wideplay.warp.rendering.PageHandler;
 import org.apache.commons.io.FileUtils;
 
 import javax.servlet.ServletContext;
