@@ -5,6 +5,8 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.util.MissingResourceException;
 import java.util.Set;
@@ -23,10 +25,15 @@ class JsSupportUtils {
     //load support funcs
     static void loadResources() {
         try {
-            FN_PAGE_EVENT_PUBLISH = FileUtils.readFileToString(new File(HtmlWriter.class.getResource("warp-events.js").toURI()), null);
+            final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(HtmlWriter.class.getResourceAsStream("warp-events.js")));
+            StringBuilder builder = new StringBuilder();
+            while (bufferedReader.ready()) {
+                builder.append(bufferedReader.readLine());
+            }
+            
+            FN_PAGE_EVENT_PUBLISH = builder.toString();
+
         } catch (IOException e) {
-            throw new MissingResourceException("Missing javascript resources required by Warp (are you copying .js files from src to build?)", HtmlWriter.class.getName(), "warp-events.js");
-        } catch (URISyntaxException e) {
             throw new MissingResourceException("Missing javascript resources required by Warp (are you copying .js files from src to build?)", HtmlWriter.class.getName(), "warp-events.js");
         } catch (NullPointerException e) {
             throw new MissingResourceException("Missing javascript resources required by Warp (are you copying .js files from src to build?)", HtmlWriter.class.getName(), "warp-events.js");            
