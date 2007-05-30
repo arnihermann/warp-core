@@ -59,12 +59,15 @@ class PageRedirector {
         //redirect to the page's identity
         try {
             log.trace("Sending client-side forward page redirect to: " + forwardUri);
-            response.sendRedirect(forwardUri);
+            response.sendRedirect(formatRequestUri(request, forwardUri));
         } catch (IOException e) {
             throw new PageRenderException("The action was unsuccessful because an IO error occurred while sending a redirect to: " + forwardUri);
         }
     }
 
+    private static String formatRequestUri(HttpServletRequest request, String forwardUri) {
+        return String.format("%s%s", request.getContextPath(), forwardUri);
+    }
 
 
     private static void pageForward(Object forward, WarpModuleAssembly assembly, HttpServletRequest request, HttpServletResponse response) {

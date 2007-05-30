@@ -35,7 +35,7 @@ public class TemplatingFilter {
 
 
         //locate page handler from uri and handle page
-        PageHandler handler = assembly.getUserFacingPage(request.getRequestURI());
+        PageHandler handler = assembly.getUserFacingPage(request.getRequestURI().substring(request.getContextPath().length()));
 
         //render normally?, i.e. thru servlet
         if (null == handler)
