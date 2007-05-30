@@ -33,7 +33,7 @@
                 <include name="**/*.properties"/>
                 <include name="**/*.js"/>
 
-                <exclude name="com/wideplay/warp/example/**"/>
+                <!--<exclude name="com/wideplay/warp/example/**"/>-->
             </fileset>
         </copy>
     </target>
