@@ -1,5 +1,7 @@
 package com.wideplay.warp.example;
 
+import com.wideplay.warp.example.model.MyDVD;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,50 +31,4 @@ public class TableDemo {
     }
 
 
-    public class MyDVD {
-        private String movieName;
-        private Integer price;
-        private Long length;
-        private Date releasedOn;
-
-
-        public MyDVD(Long length, String movieName, Integer price, Date releasedOn) {
-            this.length = length;
-            this.movieName = movieName;
-            this.price = price;
-            this.releasedOn = releasedOn;
-        }
-
-        public Long getLength() {
-            return length;
-        }
-
-        public void setLength(Long length) {
-            this.length = length;
-        }
-
-        public String getMovieName() {
-            return movieName;
-        }
-
-        public void setMovieName(String movieName) {
-            this.movieName = movieName;
-        }
-
-        public Integer getPrice() {
-            return price;
-        }
-
-        public void setPrice(Integer price) {
-            this.price = price;
-        }
-
-        public Date getReleasedOn() {
-            return releasedOn;
-        }
-
-        public void setReleasedOn(Date releasedOn) {
-            this.releasedOn = releasedOn;
-        }
-    }
 }
