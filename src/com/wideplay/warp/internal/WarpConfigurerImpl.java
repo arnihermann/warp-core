@@ -5,6 +5,7 @@ import com.wideplay.warp.Warp;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Collections;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,8 +16,8 @@ import java.util.List;
 class WarpConfigurerImpl implements Warp {
     private final List<Module> guiceModules = new LinkedList<Module>();
 
-    public WarpConfigurerImpl(Module module) {
-        guiceModules.add(module);
+    public WarpConfigurerImpl(Module... modules) {
+        Collections.addAll(guiceModules, modules);
     }
 
     public void install(Module guiceModule) {

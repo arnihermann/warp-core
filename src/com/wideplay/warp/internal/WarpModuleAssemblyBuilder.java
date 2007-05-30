@@ -102,14 +102,20 @@ class WarpModuleAssemblyBuilder {
 
     
     private WarpModuleAssembly configureGuice(List<PageClassReflection> pageBindings, Map<String, PageHandler> pages, Map<Class<?>, String> pagesURIs) {
-        //load user defined guice module here
-        Module warpGuiceModule = IocContextManager.newDefaultGuiceModule(pageBindings);
-        module.configure(new WarpConfigurerImpl(warpGuiceModule));
-
-        //build an application injector from configured modules
+        //setup custom special-case provider for the assembly itself
         WarpModuleAssemblyProvider moduleAssemblyProvider = new WarpModuleAssemblyProvider();
         internalServicesModule.setWarpModuleAssemblyProvider(moduleAssemblyProvider);
-        Injector injector = Guice.createInjector(internalServicesModule, warpGuiceModule);
+
+        //configure various guice modules
+        Module warpGuiceModule = IocContextManager.newDefaultGuiceModule(pageBindings);
+        WarpConfigurerImpl warpConfigurer = new WarpConfigurerImpl(internalServicesModule, warpGuiceModule);
+        module.configure(warpConfigurer);
+
+        //build an application injector from configured modules
+        Injector injector = Guice.createInjector(warpConfigurer
+                .getGuiceModules()
+                .toArray(new Module[warpConfigurer.getGuiceModules().size()])   //embed modules as an array to the varargs method
+        );
 
         //make the assembly available to the guice injector via a pre-registered provider
         WarpModuleAssembly warpModuleAssembly = new WarpModuleAssembly(pages, injector, pagesURIs);
