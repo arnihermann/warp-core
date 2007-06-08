@@ -3,9 +3,9 @@ package com.wideplay.warp.internal;
 import com.google.inject.Module;
 import com.wideplay.warp.Warp;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Collections;
 
 /**
  * Created with IntelliJ IDEA.

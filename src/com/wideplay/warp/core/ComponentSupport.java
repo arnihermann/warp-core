@@ -11,9 +11,11 @@ import java.util.List;
  * Created with IntelliJ IDEA.
  * On: Mar 24, 2007 8:53:18 PM
  *
+ * A simple utility that is meant to factor out boilerplate for rendering child components.
+ *
  * @author Dhanji R. Prasanna
  */
-public class ComponentSupport {
+class ComponentSupport {
 
 
     private ComponentSupport() {

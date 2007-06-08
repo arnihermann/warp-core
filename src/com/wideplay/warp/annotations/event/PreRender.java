@@ -12,8 +12,11 @@ import java.lang.annotation.Target;
  * User: dprasanna
  * Date: 28/03/2007
  * Time: 15:23:29
- * <p/>
- * TODO: Describe me!
+ *
+ *
+ * An event resolution annotation provided by warp for event handler methods that wish
+ * to be invoked BEFORE the page has been rendered by the TemplatingFilter (but after state
+ * is synchronized with the user's view of the page).
  *
  * @author dprasanna
  * @since 1.0

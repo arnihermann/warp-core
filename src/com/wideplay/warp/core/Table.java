@@ -3,7 +3,6 @@ package com.wideplay.warp.core;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.wideplay.warp.annotations.Component;
-import com.wideplay.warp.internal.pages.PageBuilders;
 import com.wideplay.warp.module.components.ClassReflectionCache;
 import com.wideplay.warp.module.components.Renderable;
 import com.wideplay.warp.module.pages.PageClassReflection;

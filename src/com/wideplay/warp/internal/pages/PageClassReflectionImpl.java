@@ -21,6 +21,8 @@ import java.util.Set;
  * Created with IntelliJ IDEA.
  * On: 17/03/2007
  *
+ * TODO fix generics
+ *
  * @author Dhanji R. Prasanna
  * @since 1.0
  */

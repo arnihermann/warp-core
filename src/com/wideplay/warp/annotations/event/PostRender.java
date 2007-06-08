@@ -13,7 +13,10 @@ import java.lang.annotation.Target;
  * Date: 28/03/2007
  * Time: 15:23:41
  * <p/>
- * TODO: Describe me!
+ * 
+ * An event resolution annotation provided by warp for event handler methods that wish
+ * to be invoked AFTER the page has been rendered by the TemplatingFilter (not guaranteed to be
+ * at the client browser).
  *
  * @author dprasanna
  * @since 1.0

@@ -70,7 +70,7 @@ public class IocContextManager {
         throw new NotScopeableException(message);
     }
     
-    public static Object constructorInject(Class<?> pageClass, Constructor constructor, List<Key<?>> constructorArgs, Injector injector) {
+    public static <T> T constructorInject(Class<T> pageClass, Constructor<T> constructor, List<Key<?>> constructorArgs, Injector injector) {
         return ObjectInjector.constructorInject(pageClass, constructor, constructorArgs, injector);
     }
 

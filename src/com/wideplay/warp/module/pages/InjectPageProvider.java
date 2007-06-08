@@ -30,7 +30,7 @@ public class InjectPageProvider<T> implements Provider<T> {
     }
 
     public T get() {
-        //grab instance from guice
+        //grab instance from guice TODO fix typing
         T page = (T) reflection.instantiateForPageInjection(injector);
 
         //inject other members (EXCEPT those marked with @Page)

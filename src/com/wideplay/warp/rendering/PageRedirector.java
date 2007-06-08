@@ -14,6 +14,8 @@ import java.io.IOException;
  * Created with IntelliJ IDEA.
  * On: 22/03/2007
  *
+ * A utility class that encapsulates static functionality for either redirecting or forwarding to a returned page.
+ *
  * @author Dhanji R. Prasanna
  * @since 1.0
  */

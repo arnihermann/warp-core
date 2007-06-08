@@ -7,8 +7,8 @@ import java.util.Map;
  * User: dprasanna
  * Date: 26/03/2007
  * Time: 16:33:13
- * <p/>
- * TODO: Describe me!
+ *
+ * An interface that caches reflection (introspection) of frequently reflected classes.
  *
  * @author dprasanna
  * @since 1.0

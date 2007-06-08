@@ -13,8 +13,8 @@ import java.util.*;
  * User: dprasanna
  * Date: 26/03/2007
  * Time: 16:36:14
- * <p/>
- * TODO: Describe me!
+ *
+ * This is a simple impl that caches reflection (introspection) results so they can be speeded up.
  *
  * @author dprasanna
  * @since 1.0

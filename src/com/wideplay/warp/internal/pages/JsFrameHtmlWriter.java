@@ -19,8 +19,6 @@ class JsFrameHtmlWriter implements HtmlWriter {
     private final StringBuilder onFrameLoadWriter = new StringBuilder();
     private final Set<String> linkedScripts = new LinkedHashSet<String>();
 
-    private static final String PAGE_EVENT_FUNCTION = "fnPublishPageEvent";
-
     public void registerScriptLibrary(ScriptLibrary library) {
         linkedScripts.add(library.getLibraryURL());
     }

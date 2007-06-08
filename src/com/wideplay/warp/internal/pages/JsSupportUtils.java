@@ -1,14 +1,7 @@
 package com.wideplay.warp.internal.pages;
 
 import com.wideplay.warp.rendering.HtmlWriter;
-import org.apache.commons.io.FileUtils;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URISyntaxException;
-import java.util.MissingResourceException;
 import java.util.Set;
 
 /**
@@ -19,14 +12,6 @@ import java.util.Set;
  * @since 1.0
  */
 class JsSupportUtils {
-    //js functions start with FN_
-    private static final String FN_PAGE_EVENT_PUBLISH =
-            "function fnPublishPageEvent(e, eventAnnotation) {\n" +
-//            "    YAHOO.util.Event.stopEvent(e);\n" +
-            "    __warpForm.w_event.value = eventAnnotation;\n" +
-            "    __warpForm.submit();\n" +
-            "}";
-
     static String wrapOnFrameLoadFn(StringBuilder content) {
         //insert content in reverse order at index 0
         content.insert(0, "{");

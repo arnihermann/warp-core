@@ -1,7 +1,7 @@
 package com.wideplay.warp.internal.components;
 
-import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.module.ComponentRegistry;
+import com.wideplay.warp.rendering.ComponentHandler;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.testng.annotations.BeforeClass;

@@ -4,6 +4,7 @@ import com.google.inject.Injector;
 import com.wideplay.warp.annotations.event.PostRender;
 import com.wideplay.warp.annotations.event.PreRender;
 import com.wideplay.warp.module.StateManager;
+import com.wideplay.warp.module.WarpModuleAssembly;
 import com.wideplay.warp.rendering.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,10 +42,9 @@ class PageHandlerImpl implements PageHandler {
         stateManager.injectManaged(reflection, page); //move out to InjectionSupport
 
         //map request parameters back into page object (only on events)
-        if (null != request.getParameter(RequestBinder.EVENT_PARAMETER_NAME))
-            injector.getInstance(RequestBinder.class).bindBean(page, request.getParameterMap());
+        bindRequestParameters(request, injector, page);
 
-        Object forwardPage = null;
+        Object forwardPage;
         //fire lifecycle method pre-render
         forwardPage = reflection.fireEvent(page, PreRender.EVENT_ID);
         if (null != forwardPage)
@@ -67,7 +67,8 @@ class PageHandlerImpl implements PageHandler {
         try {
             response.getWriter().write(htmlWriter.getBuffer());
         } catch (IOException e) {
-            throw new PageRenderException("Error obtaining the response writer while rendering page: ", e); //TODO page name
+            throw new PageRenderException("Error obtaining the response writer while rendering page at: "
+                    + injector.getInstance(WarpModuleAssembly.class).resolvePageURI(page), e);
         }
 
         //fire lifecycle post-render
@@ -78,6 +79,12 @@ class PageHandlerImpl implements PageHandler {
 
         //everything was ok, so return forwardpage (if null it stays on same)
         return forwardPage;
+    }
+
+    @SuppressWarnings("unchecked")
+    private void bindRequestParameters(HttpServletRequest request, Injector injector, Object page) {
+        if (null != request.getParameter(RequestBinder.EVENT_PARAMETER_NAME))
+            injector.getInstance(RequestBinder.class).bindBean(page, request.getParameterMap());
     }
 
 

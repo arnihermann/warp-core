@@ -1,15 +1,14 @@
 package com.wideplay.warp.internal;
 
+import ognl.DefaultTypeConverter;
 import ognl.Ognl;
 import ognl.OgnlException;
-import ognl.DefaultTypeConverter;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.

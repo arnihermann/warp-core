@@ -17,7 +17,9 @@ import java.util.List;
  * Date: 22/03/2007
  * Time: 09:39:53
  * <p/>
- * TODO: Describe me!
+ *
+ * A static utility that factors out boilerplate for injecting objects (in cases where guice is insufficient--hopefully guice1.1
+ * and ctor interception will obviate the need for this).
  *
  * @author dprasanna
  * @since 1.0
@@ -38,12 +40,11 @@ class ObjectInjector {
         }
     }
 
-    //TODO fix generics
-    public static Object constructorInject(Class<?> pageClass, Constructor constructor, List<Key<?>> constructorArgs, Injector injector) {
+    public static <T> T constructorInject(Class<T> pageClass, Constructor<T> constructor, List<Key<?>> constructorArgs, Injector injector) {
         if (null == constructorArgs) //its a nullary ctor
             return ReflectUtils.instantiate(pageClass);
 
-
+                          
         //first obtain the ctor parameter instances from guice
         Object[] params = new Object[constructorArgs.size()];   //has to be fast so using an array
         for (int i = 0; i < constructorArgs.size(); i++) {
