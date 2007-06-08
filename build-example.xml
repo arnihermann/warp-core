@@ -31,13 +31,13 @@
     </target>
 
     <!-- targets to deploy the demo webapp in jetty -->
-
+<!-- Enable if you have jetty only...
     <target name="jetty.run" description="Runs the demo webapp (expects it is published to dist) using the Jetty web server">
         <taskdef classpathref="jetty.plugin.classpath" resource="tasks.properties" loaderref="jetty.loader" />
         <jetty>
             <webapp name="${demo.webapp}" contextPath="${demo.context-path}" warfile="${dir.distribute}/${demo.artifact}"/>
         </jetty>
-    </target>
+    </target>-->
 
 
     <target name="deploy.tomcat.root" depends="clean,assemble.war">
