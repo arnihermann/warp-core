@@ -20,25 +20,12 @@ import java.util.Set;
  */
 class JsSupportUtils {
     //js functions start with FN_
-    private static String FN_PAGE_EVENT_PUBLISH;
-
-    //load support funcs
-    static void loadResources() {
-        try {
-            final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(HtmlWriter.class.getResourceAsStream("warp-events.js")));
-            StringBuilder builder = new StringBuilder();
-            while (bufferedReader.ready()) {
-                builder.append(bufferedReader.readLine());
-            }
-            
-            FN_PAGE_EVENT_PUBLISH = builder.toString();
-
-        } catch (IOException e) {
-            throw new MissingResourceException("Missing javascript resources required by Warp (are you copying .js files from src to build?)", HtmlWriter.class.getName(), "warp-events.js");
-        } catch (NullPointerException e) {
-            throw new MissingResourceException("Missing javascript resources required by Warp (are you copying .js files from src to build?)", HtmlWriter.class.getName(), "warp-events.js");            
-        }
-    }
+    private static final String FN_PAGE_EVENT_PUBLISH =
+            "function fnPublishPageEvent(e, eventAnnotation) {\n" +
+//            "    YAHOO.util.Event.stopEvent(e);\n" +
+            "    __warpForm.w_event.value = eventAnnotation;\n" +
+            "    __warpForm.submit();\n" +
+            "}";
 
     static String wrapOnFrameLoadFn(StringBuilder content) {
         //insert content in reverse order at index 0
@@ -50,7 +37,7 @@ class JsSupportUtils {
         content.append("}");
 
         //append support functions to onFrameLoad
-        content.append(FN_PAGE_EVENT_PUBLISH);
+//        content.append(FN_PAGE_EVENT_PUBLISH);
 
         return content.toString();
     }

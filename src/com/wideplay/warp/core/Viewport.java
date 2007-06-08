@@ -54,8 +54,12 @@ public class Viewport implements Renderable, AttributesInjectable {
 
     public static final String EMBED_CLASS_PROPERTY = "embedClass";
 
+    private final WarpModuleAssembly assembly;
 
-    @Inject private WarpModuleAssembly assembly;
+    @Inject
+    public Viewport(WarpModuleAssembly assembly) {
+        this.assembly = assembly;
+    }
 
     public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector, PageClassReflection reflection, Object page) {
         //obtain the embedded page object (either directly injected or get via page class from guice)

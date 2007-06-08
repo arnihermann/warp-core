@@ -21,7 +21,7 @@ import java.util.List;
 @Component
 public class Button implements Renderable {
     private String event;
-    private String label = TextTools.EMPTY_STRING;
+    private String label = "";
 
     public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector, PageClassReflection reflection, Object page) {
         String encodedEvent = TextTools.EMPTY_STRING;

@@ -27,11 +27,12 @@ import java.util.Map;
 @Component
 public class Table implements Renderable {
     private String items;
-    private boolean asGrid = false;
+    private final ClassReflectionCache classCache;
 
-    private static final String GRID_CONVERSION_FUNCTION = PageBuilders.loadResource(Table.class, "Grid.js");
-
-    @Inject private ClassReflectionCache classCache;
+    @Inject
+    public Table(ClassReflectionCache classCache) {
+        this.classCache = classCache;
+    }
 
     public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector, PageClassReflection reflection, Object page) {
         String id = writer.newId(this);
@@ -79,25 +80,6 @@ public class Table implements Renderable {
             writer.end("tbody");
         }
         writer.end("table");
-
-
-        if (asGrid) {
-            //convert to grid
-            writer.registerScriptLibrary(CoreScriptLibraries.YUI_UTILITIES);
-            writer.registerScriptLibrary(CoreScriptLibraries.EXT_YUI_ADAPTER);
-            writer.registerScriptLibrary(CoreScriptLibraries.EXT_ALL);
-
-            //write out the function TODO minify or externalize
-            writer.writeToOnLoad(GRID_CONVERSION_FUNCTION);
-
-            //write out the conversion call
-            writer.writeToOnLoad(
-                    "var grid = new Ext.grid.TableGrid(\"");
-            writer.writeToOnLoad(id);
-            writer.writeToOnLoad("\");\n" +
-                    "grid.render();");
-        }
-
     }
 
     private void writeHeader(HtmlWriter writer, Map<String, String> propertiesAndLabels) {
@@ -129,9 +111,5 @@ public class Table implements Renderable {
 
     public void setItems(String items) {
         this.items = items;
-    }
-
-    public void setAsGrid(boolean asGrid) {
-        this.asGrid = asGrid;
     }
 }

@@ -26,7 +26,7 @@ public class PageBuilders {
         new PageHandlerBuilder(context, registry).build(pageClass, packageName, pages);
 
         //load resources
-        JsSupportUtils.loadResources();
+//        JsSupportUtils.loadResources();
     }
 
     public static String loadResource(Class<?> forClass, String name) {

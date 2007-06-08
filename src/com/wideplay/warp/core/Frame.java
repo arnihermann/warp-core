@@ -39,8 +39,8 @@ public class Frame implements Renderable {
         writer.writeRaw(HtmlWriter.LINKED_SCRIPTS_PLACEHOLDER);
 
         //register common script libraries needed by all components
-        writer.registerScriptLibrary(CoreScriptLibraries.YUI_MIN);
-        writer.registerScriptLibrary(CoreScriptLibraries.YUI_EVENT_MIN);
+//        writer.registerScriptLibrary(CoreScriptLibraries.YUI_MIN);
+//        writer.registerScriptLibrary(CoreScriptLibraries.YUI_EVENT_MIN);
 
         //write a placeholder for the onFrameLoad function
         writer.element("script", "type", "text/javascript");

@@ -14,7 +14,7 @@ import java.util.Set;
  * @author Dhanji R. Prasanna
  * @since 1.0
  */
-class YUIFrameHtmlWriter implements HtmlWriter {
+class JsFrameHtmlWriter implements HtmlWriter {
     private final StringBuilder writer = new StringBuilder();
     private final StringBuilder onFrameLoadWriter = new StringBuilder();
     private final Set<String> linkedScripts = new LinkedHashSet<String>();
@@ -26,16 +26,11 @@ class YUIFrameHtmlWriter implements HtmlWriter {
     }
 
     public void registerEvent(String elementName, ScriptEvents event, String annotation) {
-        onFrameLoadWriter.append("    YAHOO.util.Event.addListener(");
-        onFrameLoadWriter.append('"');
+        onFrameLoadWriter.append("document.getElementById(\"");
         onFrameLoadWriter.append(elementName);
-        onFrameLoadWriter.append("\", \"");
-        onFrameLoadWriter.append(event.toString());
-        onFrameLoadWriter.append("\", ");
-        onFrameLoadWriter.append(PAGE_EVENT_FUNCTION);
-        onFrameLoadWriter.append(", \"");
+        onFrameLoadWriter.append("\").onclick=function(){ __warpForm.w_event.value= \"");
         onFrameLoadWriter.append(annotation);
-        onFrameLoadWriter.append("\");\n");
+        onFrameLoadWriter.append("\"; __warpForm.submit(); return false;}; ");
     }
 
     //write raw text to the body load js func

@@ -26,6 +26,7 @@ class OgnlRequestBinder implements RequestBinder {
     private final Set<String> reservedParameterNames;
 
     //create a new context-less default context
+    @SuppressWarnings("unchecked")
     private static final Map<String, Object> defaultOgnlContext = Ognl.createDefaultContext(new Object());
 
     static {
@@ -56,13 +57,8 @@ class OgnlRequestBinder implements RequestBinder {
 
     public void bindBean(Object bean, Map<String, String[]> parameters) {
 
-        log.debug("Binding "+parameters.size()+" params to a " + bean.getClass());
-
         //iterate the parameter set and bind the values to the provided bean
         for (String paramName : parameters.keySet()) {
-
-            if (log.isDebugEnabled())
-                log.debug(Arrays.toString(parameters.get(paramName)));
 
             if (reservedParameterNames.contains(paramName))
                 continue;
@@ -81,17 +77,8 @@ class OgnlRequestBinder implements RequestBinder {
 
     private void bindAsProperty(String paramName, String value, Object bean) {
         try {
-            //TODO these debug statements are expensive... can we get rid of them in favor of a dumper?
-            if (log.isDebugEnabled()) {
-                log.debug("Attempting to set " + paramName + " to " + value + " on " + bean);
-                log.debug("old value = " + Ognl.getValue(paramName, bean));
-            }
-
             //set the value of the parameter to the appropriate bean path
             Ognl.setValue(paramName, defaultOgnlContext, bean, value);
-
-            if (log.isDebugEnabled())
-                log.debug("new value = " + Ognl.getValue(paramName, bean));
 
         } catch (OgnlException e) {
             //TODO: ignore depending on reason... if it's simply unbound request data who cares?
@@ -104,8 +91,6 @@ class OgnlRequestBinder implements RequestBinder {
         try {
             for (String expression : parameters.get(paramName))
                 Ognl.getValue(expression, bean);
-
-            log.debug("bound via custom");
         } catch (OgnlException e) {
             throw new RequestBindingException("Could not bind a request parameter (expression type) to the page object. Could be because of: a) missing setter, b) missing collection values, c) malformed request, or d) bug in the component that generated the binding expression", e);
         }

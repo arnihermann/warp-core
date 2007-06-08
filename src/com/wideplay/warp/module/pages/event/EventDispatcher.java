@@ -16,7 +16,11 @@ import java.util.Set;
  * Date: 22/03/2007
  * Time: 09:47:01
  * <p/>
- * TODO: Describe me!
+ *
+ * This is a simple dispatch utility that dispatches events to various handlers in order:
+ *
+ *  - First events are dispatched to the page object's event handlers
+ *  - Next any event delegates that are eligible
  *
  * @author dprasanna
  * @since 1.0
@@ -35,7 +39,8 @@ public class EventDispatcher {
 
             //yes try to fire it
             for (Method method : allEventHandlers) {
-                log.trace("Firing 'any' event handler: " + method.getName());
+                if (log.isTraceEnabled())
+                    log.trace("Firing 'any' event handler: " + method.getName());
                 result = ReflectUtils.invokeMethod(method, bean, null);
 
                 //check for short-circuiting requests
@@ -52,7 +57,8 @@ public class EventDispatcher {
                     continue;
 
                 for (Method method : delegate.getAllEventHandlers()) {
-                    log.trace("Firing 'any' event handler in delegate: " + method.getName());
+                    if (log.isTraceEnabled())
+                        log.trace("Firing 'any' event handler in delegate: " + method.getName());
                     //read the delegate out of the page object and try to invoke its method
                     result = ReflectUtils.invokeMethod(method, ReflectUtils.readField(delegate.getDelegateFieldDescriptor().getField(), bean), null);
 
@@ -66,7 +72,7 @@ public class EventDispatcher {
         }
 
         //OTHERWISE:
-
+        if (log.isTraceEnabled())
         log.trace("Looking for event handler for: " + event);
         //fire specific handlers
         Object result = null;
@@ -92,7 +98,8 @@ public class EventDispatcher {
             if (!delegate.isSupported(event))
                 continue;
 
-            log.trace("Firing event handler thru delegate for: " + event);
+            if (log.isTraceEnabled())
+                log.trace("Firing event handler thru delegate for: " + event);
 
 
             for (Method method : delegate.getDisambiguationEventHandlers().get(event)) {
