@@ -6,6 +6,10 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import sun.misc.Regexp;
 
 /**
  * Created with IntelliJ IDEA.
@@ -87,19 +91,18 @@ public class TextTools {
         return (null == string || EMPTY_STRING.equals(string.trim()));
     }
 
+    //URI test regex: (([a-zA-Z][0-9a-zA-Z+\\-\\.]*:)?/{0,2}[0-9a-zA-Z;/?:@&=+$\\.\\-_!~*'()%]+)?(#[0-9a-zA-Z;/?:@&=+$\\.\\-_!~*'()%]+)?
+    //Taken from stylus studio message board http://www.stylusstudio.com/xmldev/200108/post10890.html
 
-    //expensive method tests whether string is a valid URI
+    private final static Pattern uriPattern = Pattern.compile("(([a-zA-Z][0-9a-zA-Z+\\\\-\\\\.]*:)?/{0,2}[0-9a-zA-Z;" +
+            "/?:@&=+$\\\\.\\\\-_!~*'()%]+)?(#[0-9a-zA-Z;/?:@&=+$\\\\.\\\\-_!~*'()%]+)?");
+
+
+    //less expensive method tests whether string is a valid URI
     public static boolean isValidURI(String uri) {
         if (null == uri)
             return false;
 
-        boolean isValid = true;
-        try {
-            URI.create(uri);
-        } catch(IllegalArgumentException e) {
-            isValid = false;
-        }
-
-        return isValid;
+        return uriPattern.matcher(uri).matches();
     }
 }
