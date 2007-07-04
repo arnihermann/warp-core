@@ -19,13 +19,14 @@ public class ExampleModule extends AbstractModule implements WarpModule, Startup
         warp.install(this);
 
         //install me as the startup listener (another hacky convenience -- note that some methods in this class will be called prior to injection!)
-        //this is not a good example to follow in practice =)
+        //this is not a good example to follow in practice =). Ideally you would create your own startup listener impl(s)
         warp.addStartupListener(ExampleModule.class);
     }
 
 
     protected void configure() {
         //bind custom impls here as you would in guice
+        //....
     }
 
 
