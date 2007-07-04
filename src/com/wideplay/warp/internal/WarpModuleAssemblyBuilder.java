@@ -46,11 +46,11 @@ class WarpModuleAssemblyBuilder {
         //discover page classes location
         URL url = null;
         try {
-            log.debug("Classes are in: " + classLocation + " and in package: " + packageName);
+            if (log.isDebugEnabled())
+                log.debug(String.format("Classes are at: %s and in package: %s", classLocation, packageName));
             url = new URL(classLocation);
         } catch(MalformedURLException e) {
             log.error("could not create classfactory for module", e);
-            System.out.println("could not create classfactory for module");
         }
 
         //load warp user module classes
@@ -113,12 +113,11 @@ class WarpModuleAssemblyBuilder {
 
         //build an application injector from configured modules
         Injector injector = Guice.createInjector(warpConfigurer
-                .getGuiceModules()
-                .toArray(new Module[warpConfigurer.getGuiceModules().size()])   //embed modules as an array to the varargs method
+                .getGuiceModules()   //pass in modules as an iterable
         );
 
         //make the assembly available to the guice injector via a pre-registered provider
-        WarpModuleAssembly warpModuleAssembly = new WarpModuleAssembly(pages, injector, pagesURIs);
+        WarpModuleAssembly warpModuleAssembly = new WarpModuleAssembly(pages, injector, pagesURIs, warpConfigurer.getStartupListeners());
         moduleAssemblyProvider.setAssembly(warpModuleAssembly);
         
         return warpModuleAssembly;

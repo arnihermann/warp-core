@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
  * Created with IntelliJ IDEA.
  * On: 17/03/2007
  *
+ * An HTML templating filter for warp (generates dispatch type) 
+ *
  * @author Dhanji R. Prasanna
  * @since 1.0
  */
@@ -19,7 +21,7 @@ public class TemplatingFilter {
     private final WarpModuleAssembly assembly;
     private final ServletContext context;
 
-    private final Log log = LogFactory.getLog(getClass());
+    private final Log log = LogFactory.getLog(TemplatingFilter.class);
 
     public TemplatingFilter(WarpModuleAssembly assembly, ServletContext context) {
         this.assembly = assembly;
@@ -41,7 +43,8 @@ public class TemplatingFilter {
         if (null == handler)
             return false;
 
-        log.trace("filter active for page: " + request.getRequestURI() + " ; handled by: " + handler);
+        if (log.isTraceEnabled())
+            log.trace(String.format("Filter active for page: %s; handled by: %s",request.getRequestURI(), handler));
 
 
         //locate template and render to response

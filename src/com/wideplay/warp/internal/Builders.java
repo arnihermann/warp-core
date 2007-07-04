@@ -22,7 +22,8 @@ public class Builders {
     }
 
     public static WarpModuleAssembly buildWarpModuleAssembly(Class<WarpModule> moduleClass, ServletContext servletContext, String moduleRootDir, String modulePackage) {
-        return new WarpModuleAssemblyBuilder(ReflectUtils.instantiate(moduleClass),servletContext).build(moduleRootDir, modulePackage);
+        return new WarpModuleAssemblyBuilder(ReflectUtils.instantiate(moduleClass), servletContext)
+                .build(moduleRootDir, modulePackage);
     }
 
     public static Set<String> getReservedParameterNames() {

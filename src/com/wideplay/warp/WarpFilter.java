@@ -56,36 +56,54 @@ public class WarpFilter implements Filter {
         String modulePackage = filterConfig.getServletContext().getInitParameter(WARP_PACKAGE);
 
         //try to load module class
-        Class<WarpModule> moduleClass = null;
-        try {
-             moduleClass = (Class<WarpModule>) Class.forName(warpModuleName);
-        } catch (Throwable e) {
-            e.printStackTrace();
-            throw new ServletException("error could not locate the warp module class: " + warpModuleName, e);
-        }
+        Class<WarpModule> moduleClass = loadModuleClass(warpModuleName);
 
 
-        
+        String moduleRootDir;
         try {
             //guess module name & root dirs from module class package if not specified
             if (null == modulePackage)
                 modulePackage = moduleClass.getPackage().getName();
-            String moduleRootDir = moduleClass.getResource(moduleClass.getSimpleName() + CLASS_EXT).toString();
+            moduleRootDir = moduleClass.getResource(String.format("%s.class", moduleClass.getSimpleName())).toString();
 
             //strip ModuleName.class from module root dir url to get the directory name
-            moduleRootDir = moduleRootDir.substring(0, moduleRootDir.length() - (CLASS_EXT.length() + moduleClass.getSimpleName().length()));
+            moduleRootDir = extractModuleDir(moduleRootDir, moduleClass);
 
-            log.info("Using module package: " + modulePackage + " ; server module root dir: " + moduleRootDir);
+            log.info(String.format("Using module package: %s ; server module root dir: %s", modulePackage, moduleRootDir));
 
+
+        } catch (Exception e) {
+            log.fatal(e);
+            throw new ServletException("error while discovering module location(s)", e);
+        }
+
+        try {
             //build the warp module pages, components and handlers into an assembly
             WarpModuleAssembly assembly = Builders.buildWarpModuleAssembly(moduleClass, filterConfig.getServletContext(), moduleRootDir, modulePackage);
 
             //build internal services
             templatingFilter = new TemplatingFilter(assembly, filterConfig.getServletContext());
-            
-        } catch(Throwable e) {
-            e.printStackTrace();
+
+            //initialize user services
+            assembly.fireStartupEvents();
+
+        } catch(Exception e) {
+            log.fatal(e);
             throw new ServletException("error during WarpFilter init", e);
+        }
+    }
+
+    private String extractModuleDir(String moduleRootDir, Class<WarpModule> moduleClass) {
+        return moduleRootDir.substring(0, moduleRootDir.length() - (CLASS_EXT.length() + moduleClass.getSimpleName().length()));
+    }
+
+    @SuppressWarnings("unchecked")
+    private Class<WarpModule> loadModuleClass(String warpModuleName) throws ServletException {
+        try {
+            return (Class<WarpModule>) Class.forName(warpModuleName);
+        } catch (Exception e) {
+            log.fatal(e);
+            throw new ServletException("error could not locate the warp module class: " + warpModuleName, e);
         }
     }
 }

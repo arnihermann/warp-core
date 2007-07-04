@@ -74,7 +74,7 @@ class PageClassReflectionImpl implements PageClassReflection {
 
     //fires all event handlers (default action)
     public Object fireEvent(Object bean, String event) {
-        return EventDispatcher.resolveAndDispatchWithDelegates(bean, event, allEventHandlers, disambiguationEventHandlers, eventHandlerDelegateFields);
+        return EventDispatcher.resolveAndDispatch(bean, event, allEventHandlers, disambiguationEventHandlers, eventHandlerDelegateFields);
     }
 
     public Set<FieldDescriptor> getManagedFields() {

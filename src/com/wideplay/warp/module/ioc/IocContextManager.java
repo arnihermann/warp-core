@@ -20,6 +20,7 @@ import java.util.List;
  * @since 1.0
  */
 public class IocContextManager {
+    //local http context (for managing the current request/scope)
     static final ThreadLocal<Context> localContext = new ThreadLocal<Context>();
 
     private IocContextManager() {
@@ -35,7 +36,7 @@ public class IocContextManager {
 
     static HttpServletRequest getRequest() {
         Context context = localContext.get();
-        if (context == null) {
+        if (null == context) {
           throw new NotScopeableException("Cannot access scoped object. It appears we"
               + " are not currently inside an HTTP Servlet request");
         }

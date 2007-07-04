@@ -1,7 +1,9 @@
 package com.wideplay.warp.internal;
 
 import com.google.inject.Module;
+import com.google.inject.Key;
 import com.wideplay.warp.Warp;
+import com.wideplay.warp.StartupListener;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -15,6 +17,7 @@ import java.util.List;
  */
 class WarpConfigurerImpl implements Warp {
     private final List<Module> guiceModules = new LinkedList<Module>();
+    private final List<Key<? extends StartupListener>> startupListeners = new LinkedList<Key<? extends StartupListener>>();
 
     public WarpConfigurerImpl(Module... modules) {
         Collections.addAll(guiceModules, modules);
@@ -25,7 +28,20 @@ class WarpConfigurerImpl implements Warp {
     }
 
 
+    public void addStartupListener(Class<? extends StartupListener> startupListener) {
+        startupListeners.add(Key.get(startupListener));
+    }
+
+
+    public void addStartupListener(Key<? extends StartupListener> startupListener) {
+        startupListeners.add(startupListener);
+    }
+
     public List<Module> getGuiceModules() {
         return guiceModules;
+    }
+
+    public List<Key<? extends StartupListener>> getStartupListeners() {
+        return startupListeners;
     }
 }

@@ -26,9 +26,10 @@ import java.util.Set;
  * @since 1.0
  */
 public class EventDispatcher {
+    //ugh
     private static Log log = LogFactory.getLog(EventDispatcher.class);
 
-    public static Object resolveAndDispatchWithDelegates(Object bean, String event, List<Method> allEventHandlers,
+    public static Object resolveAndDispatch(Object bean, String event, List<Method> allEventHandlers,
                                             Map<String, Set<Method>> disambiguationEventHandlers,
                                             List<EventHandlerDelegate> eventHandlerDelegateFields) {
 
@@ -40,7 +41,7 @@ public class EventDispatcher {
             //yes try to fire it
             for (Method method : allEventHandlers) {
                 if (log.isTraceEnabled())
-                    log.trace("Firing 'any' event handler: " + method.getName());
+                    log.trace(String.format("Firing 'any' event handler: %s", method.getName()));
                 result = ReflectUtils.invokeMethod(method, bean, null);
 
                 //check for short-circuiting requests
@@ -73,7 +74,7 @@ public class EventDispatcher {
 
         //OTHERWISE:
         if (log.isTraceEnabled())
-        log.trace("Looking for event handler for: " + event);
+            log.trace(String.format("Looking for event handler for: %s", event));
         //fire specific handlers
         Object result = null;
 

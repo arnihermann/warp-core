@@ -1,12 +1,11 @@
 package com.wideplay.warp.module;
 
 import com.google.inject.Injector;
+import com.google.inject.Key;
 import com.wideplay.warp.rendering.PageHandler;
+import com.wideplay.warp.StartupListener;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,15 +18,18 @@ public class WarpModuleAssembly {
     private final Map<String, PageHandler> pages;
     private final Map<Class<?>, String> pageURIs;
     private final Map<String, Class<?>> pagesByClassName;
+    private final List<Key<? extends StartupListener>> startupListeners;
 
     private final Map<String, PageHandler> userFacingPages = new LinkedHashMap<String, PageHandler>();
 
     private final Injector injector;
 
-    public WarpModuleAssembly(Map<String, PageHandler> pages, Injector injector, Map<Class<?>, String> pageURIs) {
+    public WarpModuleAssembly(Map<String, PageHandler> pages, Injector injector, Map<Class<?>, String> pageURIs,
+                              List<Key<? extends StartupListener>> startupListeners) {
         this.pages = pages;
         this.injector = injector;
         this.pageURIs = pageURIs;
+        this.startupListeners = startupListeners;
 
         //create a "masking" map for retrieving user-facing pages
         userFacingPages.putAll(pages);
@@ -96,5 +98,11 @@ public class WarpModuleAssembly {
     public void hidePages(Set<Class<?>> classes) {
         //hides pages we dont want seen by the user
         userFacingPages.values().removeAll(classes);
+    }
+
+    public void fireStartupEvents() {
+        //fire all startup lifecycle events
+        for (Key<? extends StartupListener> key : startupListeners)
+            injector.getInstance(key).onStartup();
     }
 }
