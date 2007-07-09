@@ -80,9 +80,8 @@ class OgnlRequestBinder implements RequestBinder {
             Ognl.setValue(paramName, defaultOgnlContext, bean, value);
 
         } catch (OgnlException e) {
-            //TODO: ignore depending on reason... if it's simply unbound request data who cares?
-            throw new RequestBindingException("Could not bind a request parameter to the page object. Could be because of: a) missing setter, b) malformed request, or c) bug in the component that generated the binding expression", e);
-
+            //ignore... if it's simply unbound request data who cares?
+            log.debug(String.format("Could not bind request parameter '%s' to the page object. Could be because of: a) missing setter, b) malformed request, or c) bug in the component that generated the binding expression", paramName));
         }
     }
 

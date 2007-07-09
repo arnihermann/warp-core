@@ -1,10 +1,13 @@
 package com.wideplay.warp.example;
 
 import com.google.inject.Inject;
+import com.google.inject.cglib.proxy.Proxy;
 import com.wideplay.warp.annotations.OnEvent;
 import com.wideplay.warp.annotations.OnEvents;
 import com.wideplay.warp.annotations.Page;
 import com.wideplay.warp.module.pages.event.Redirect;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,6 +18,8 @@ import com.wideplay.warp.module.pages.event.Redirect;
  */
 public class PageInjectDemo {
     private String title = "This is the title!";
+
+    private final Log log = LogFactory.getLog(PageInjectDemo.class);
 
 
     /**
@@ -39,12 +44,9 @@ public class PageInjectDemo {
      */
     @OnEvent @NextPage
     public Next goToNextEventHandler() {
-        //set counter on next page
+        //set counter on next page (should force instantiation of Next)
         next.setNumber(50);
-
-        //proof that @Inject @Page does not virally cascade injections!
-        assert null == next.pageInjectDemo;
-
+        
         //redirect to 'next' page (unless overriden by another handler-which it's not =)
         return next;
     }

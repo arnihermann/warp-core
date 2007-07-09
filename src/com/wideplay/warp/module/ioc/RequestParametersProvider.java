@@ -8,6 +8,8 @@ import java.util.Map;
  * Created with IntelliJ IDEA.
  * On: 25/03/2007
  *
+ * TODO why is this class final (it is package local anyway)?
+ *
  * @author Dhanji R. Prasanna
  * @since 1.0
  */
