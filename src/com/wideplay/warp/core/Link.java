@@ -7,7 +7,9 @@ import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.rendering.ScriptEvents;
+import com.wideplay.warp.rendering.RequestBinder;
 import com.wideplay.warp.util.TextTools;
+import com.wideplay.warp.util.beans.BeanUtils;
 
 import java.util.List;
 
@@ -21,6 +23,7 @@ import java.util.List;
 @Component
 public class Link implements Renderable {
     private String event;
+    private String topic;
 
     public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector, PageClassReflection reflection, Object page) {
         String encodedEvent = TextTools.EMPTY_STRING;
@@ -29,6 +32,12 @@ public class Link implements Renderable {
 
         //write the anchor with a generated id
         String id = writer.newId(this);
+
+        //get topic value from page
+        final Object topicValue = BeanUtils.getFromPropertyExpression(topic, page);
+
+        //TODO try and move this off into a javascript remoting module
+        writer.element("input", "type", "hidden", RequestBinder.EVENT_TOPIC_PARAMETER_NAME, topicValue);
         writer.element("a", "id", id, "href", "#");
 
         //register event publication
@@ -45,5 +54,9 @@ public class Link implements Renderable {
 
     public void setEvent(String event) {
         this.event = event;
+    }
+
+    public void setTopic(String topic) {
+        this.topic = topic;
     }
 }

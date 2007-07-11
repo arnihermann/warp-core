@@ -13,6 +13,7 @@ import java.util.Map;
  */
 public interface RequestBinder {
     String EVENT_PARAMETER_NAME = "w_event";
+    String EVENT_TOPIC_PARAMETER_NAME = "w_event_topic";
     String EXPR_PARAMETER_NAME = "__eval_as_expr_";
 
     void bindBean(Object bean, @RequestParameters Map<String, String[]> parameters);

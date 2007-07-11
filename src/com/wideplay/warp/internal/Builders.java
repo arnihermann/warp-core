@@ -29,6 +29,7 @@ public class Builders {
     public static Set<String> getReservedParameterNames() {
         Set<String> reserved = new HashSet<String>();
         reserved.add(RequestBinder.EVENT_PARAMETER_NAME);
+        reserved.add(RequestBinder.EVENT_TOPIC_PARAMETER_NAME);
 
         return reserved;
     }
