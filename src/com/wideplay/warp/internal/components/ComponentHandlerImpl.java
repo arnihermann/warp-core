@@ -1,7 +1,7 @@
 package com.wideplay.warp.internal.components;
 
 import com.google.inject.Injector;
-import com.wideplay.warp.core.AttributesInjectable;
+import com.wideplay.warp.components.core.AttributesInjectable;
 import com.wideplay.warp.module.components.ComponentClassReflection;
 import com.wideplay.warp.module.components.PropertyDescriptor;
 import com.wideplay.warp.module.components.Renderable;

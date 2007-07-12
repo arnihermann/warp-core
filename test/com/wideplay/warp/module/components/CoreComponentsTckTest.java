@@ -1,8 +1,8 @@
 package com.wideplay.warp.module.components;
 
-import com.wideplay.warp.core.Frame;
-import com.wideplay.warp.core.Link;
-import com.wideplay.warp.core.RawText;
+import com.wideplay.warp.components.core.Frame;
+import com.wideplay.warp.components.core.Link;
+import com.wideplay.warp.components.core.RawText;
 import com.wideplay.warp.module.components.tck.CompatibilityVerifier;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;

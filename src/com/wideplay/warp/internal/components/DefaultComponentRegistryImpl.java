@@ -1,6 +1,6 @@
 package com.wideplay.warp.internal.components;
 
-import com.wideplay.warp.core.*;
+import com.wideplay.warp.components.core.*;
 import com.wideplay.warp.module.ComponentRegistry;
 import com.wideplay.warp.module.components.ComponentClassReflection;
 import com.wideplay.warp.module.components.Renderable;

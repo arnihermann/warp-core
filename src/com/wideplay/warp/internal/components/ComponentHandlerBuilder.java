@@ -1,7 +1,7 @@
 package com.wideplay.warp.internal.components;
 
-import com.wideplay.warp.core.RawText;
-import com.wideplay.warp.core.Viewport;
+import com.wideplay.warp.components.core.RawText;
+import com.wideplay.warp.components.core.Viewport;
 import com.wideplay.warp.module.ComponentRegistry;
 import com.wideplay.warp.module.WarpConfigurationException;
 import com.wideplay.warp.module.components.ComponentClassReflection;
