@@ -52,7 +52,7 @@ public class TemplatingFilter {
 
 
         //get event id and dispatch with the appropriate page object
-        Object forward = handler.handleRequest(request, response, assembly.getInjector(), request.getParameter(RequestBinder.EVENT_PARAMETER_NAME), page);
+        Object forward = handler.handleRequest(request, response, assembly.getInjector(), page);
 
         //do forward if necessary (really a client-side redirect)
         if (null != forward)

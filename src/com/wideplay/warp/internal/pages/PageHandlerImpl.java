@@ -31,11 +31,14 @@ class PageHandlerImpl implements PageHandler {
 
 
     public Object handleRequest(HttpServletRequest request, HttpServletResponse response, Injector injector,
-                                String eventId, Object page) {
+                                Object page) {
         //obtain the page object from guice (makes sure it is properly injected) ONLY if it is not provided
         if (null == page)
             page = injector.getInstance(reflection.getPageClass());
 
+        //locate event id & topic
+        String eventId = request.getParameter(RequestBinder.EVENT_PARAMETER_NAME);
+//        Object topic TODO
 
         //place persistent fields back into the page
         StateManager stateManager = injector.getInstance(StateManager.class);
