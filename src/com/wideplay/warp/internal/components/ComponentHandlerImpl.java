@@ -28,7 +28,7 @@ class ComponentHandlerImpl implements ComponentHandler {
     private final Map<String, Object> arbitraryAttributes;
 
     public ComponentHandlerImpl(ComponentClassReflection reflection, Map<String, PropertyDescriptor> propertyValues,
-                            List<ComponentHandler> nestedComponents, Map<String, Object> arbitraryAttributes) {
+                                List<ComponentHandler> nestedComponents, Map<String, Object> arbitraryAttributes) {
         
         this.reflection = reflection;
         this.propertyValueExpressions = Collections.unmodifiableMap(propertyValues);
@@ -47,6 +47,7 @@ class ComponentHandlerImpl implements ComponentHandler {
         //bind the page model (ognl expressions) to the components attributes
         IocContextManager.injectProperties(propertyValueExpressions.values(), renderable, page);
 
+        //pass through arbitrary non-warp attributes for the component to do with as it likes
         if (renderable instanceof AttributesInjectable)
             ((AttributesInjectable)renderable).setAttributeNameValuePairs(arbitraryAttributes);
 

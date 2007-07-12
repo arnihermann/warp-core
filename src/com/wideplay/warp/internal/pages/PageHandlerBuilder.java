@@ -117,7 +117,7 @@ class PageHandlerBuilder {
             try {
                 documentText = FileUtils.readFileToString(new File(context.getRealPath(template + ".xhtml")), null);
             } catch (IOException e) {
-                log.info("Class found that did not have a matching template (not an error or warning, just letting u know) : " + pageClass.getName());
+                log.info(String.format("Class found that did not have a matching template (not an error or warning, just letting u know) : %s", pageClass.getName()));
             }
 
         } catch (IOException e) {

@@ -42,6 +42,7 @@ class StateManagerImpl implements StateManager {
      */
     public synchronized void injectManaged(PageClassReflection reflection, Object page) {
         //lookup scoped cube (repository of all managed properties keyed by page and field)
+        @SuppressWarnings("unchecked")  //TODO fix generics may need to wait until java7??
         Cube<Class<?>, String, Object> pagesAndProperties = injector.getInstance(Key.get(Cube.class, SessionWide.class));
 
         //go over each @Managed field and restore it from the cube or else obtain from injector, inject it & and store into cube

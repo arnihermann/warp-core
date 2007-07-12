@@ -25,7 +25,9 @@ import java.util.List;
 @Component
 public class Column implements Renderable {
     private String property;
+    private String title;
     static final String PROPERTY = "property";
+    static final String TITLE = "title";
 
     public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector, PageClassReflection reflection, Object page) {
         ComponentSupport.renderMultiple(writer, nestedComponents, injector, reflection, page);
@@ -33,5 +35,9 @@ public class Column implements Renderable {
 
     public void setProperty(String property) {
         this.property = property;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

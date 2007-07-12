@@ -30,7 +30,7 @@ class ComponentHandlerBuilder {
     private final ComponentRegistry registry;
     private static final String WARP_PREFIX = "w";  //TODO discover this from document namespace (or just test the namespace directly)
 
-    private final Log log = LogFactory.getLog(getClass());
+    private final Log log = LogFactory.getLog(ComponentHandlerBuilder.class);
 
     public ComponentHandlerBuilder(ComponentRegistry registry) {
         this.registry = registry;
@@ -57,7 +57,9 @@ class ComponentHandlerBuilder {
 
         //lookup the component name (we only worry about components marked with warp attribs)
         String componentName = node.valueOf("@w:component");
-        log.debug("Discovered node " + componentName + " of type: " + node);
+
+        if (log.isTraceEnabled())
+            log.trace(String.format("Discovered node %s of type: %s", componentName, node));
 
         //we treat text and cdata nodes as RawText type
         if (Node.TEXT_NODE == node.getNodeType() || Node.CDATA_SECTION_NODE == node.getNodeType() || Node.COMMENT_NODE == node.getNodeType()
@@ -133,7 +135,9 @@ class ComponentHandlerBuilder {
         List<ComponentHandler> nestedComponentHandlers = new LinkedList<ComponentHandler>();
         if (Node.ELEMENT_NODE == node.getNodeType()) {
             Element element = (Element)node;
-            log.debug("Processing child nodes for <" + element.getName() + ">");
+
+            if (log.isTraceEnabled())
+                log.trace(String.format("Processing child nodes for <%s>", element.getName()));
 
             //iterate child nodes and recursively build their handlers
             for (Object object : element.content()) {
