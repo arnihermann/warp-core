@@ -1,6 +1,6 @@
 package com.wideplay.warp.components.core;
 
-import com.wideplay.warp.module.components.Renderable;
+import com.wideplay.warp.module.componentry.Renderable;
 import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.annotations.Component;
 import com.wideplay.warp.rendering.HtmlWriter;

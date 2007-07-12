@@ -1,11 +1,11 @@
-package com.wideplay.warp.internal.components;
+package com.wideplay.warp.internal.componentry;
 
 import com.wideplay.warp.components.core.RawText;
 import com.wideplay.warp.components.core.Viewport;
 import com.wideplay.warp.module.ComponentRegistry;
 import com.wideplay.warp.module.WarpConfigurationException;
-import com.wideplay.warp.module.components.ComponentClassReflection;
-import com.wideplay.warp.module.components.PropertyDescriptor;
+import com.wideplay.warp.module.componentry.ComponentClassReflection;
+import com.wideplay.warp.module.componentry.PropertyDescriptor;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.util.TextTools;
 import org.apache.commons.logging.Log;

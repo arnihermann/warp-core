@@ -1,6 +1,6 @@
 package com.wideplay.warp.module;
 
-import com.wideplay.warp.module.components.ComponentClassReflection;
+import com.wideplay.warp.module.componentry.ComponentClassReflection;
 
 /**
  * Created with IntelliJ IDEA.

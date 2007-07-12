@@ -1,7 +1,7 @@
-package com.wideplay.warp.internal.components;
+package com.wideplay.warp.internal.componentry;
 
-import com.wideplay.warp.module.components.ComponentClassReflection;
-import com.wideplay.warp.module.components.Renderable;
+import com.wideplay.warp.module.componentry.ComponentClassReflection;
+import com.wideplay.warp.module.componentry.Renderable;
 
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;

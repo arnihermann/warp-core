@@ -2,7 +2,7 @@ package com.wideplay.warp.rendering;
 
 import com.google.inject.Injector;
 import com.wideplay.warp.module.pages.PageClassReflection;
-import com.wideplay.warp.module.components.PropertyDescriptor;
+import com.wideplay.warp.module.componentry.PropertyDescriptor;
 
 import java.util.List;
 import java.util.Map;

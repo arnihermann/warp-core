@@ -1,6 +1,6 @@
 package com.wideplay.warp.internal;
 
-import com.wideplay.warp.module.components.ClassReflectionCache;
+import com.wideplay.warp.module.componentry.ClassReflectionCache;
 import com.wideplay.warp.util.reflect.ReflectUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

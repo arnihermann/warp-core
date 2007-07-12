@@ -3,7 +3,7 @@ package com.wideplay.warp.module.ioc;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.Module;
-import com.wideplay.warp.module.components.PropertyDescriptor;
+import com.wideplay.warp.module.componentry.PropertyDescriptor;
 import com.wideplay.warp.module.pages.PageClassReflection;
 
 import javax.servlet.http.HttpServletRequest;

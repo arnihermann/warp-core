@@ -1,4 +1,4 @@
-package com.wideplay.warp.internal.components;
+package com.wideplay.warp.internal.componentry;
 
 import com.wideplay.warp.module.ComponentRegistry;
 import com.wideplay.warp.rendering.ComponentHandler;

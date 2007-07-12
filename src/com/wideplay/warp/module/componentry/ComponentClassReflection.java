@@ -1,4 +1,4 @@
-package com.wideplay.warp.module.components;
+package com.wideplay.warp.module.componentry;
 
 import com.wideplay.warp.util.beans.BeanUtils;
 

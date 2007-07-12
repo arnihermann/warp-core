@@ -3,7 +3,7 @@ package com.wideplay.warp.module.ioc;
 import com.google.inject.Binding;
 import com.google.inject.Injector;
 import com.google.inject.Key;
-import com.wideplay.warp.module.components.PropertyDescriptor;
+import com.wideplay.warp.module.componentry.PropertyDescriptor;
 import com.wideplay.warp.util.beans.BeanUtils;
 import com.wideplay.warp.util.reflect.ReflectUtils;
 

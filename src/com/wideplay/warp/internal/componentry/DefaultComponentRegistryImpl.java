@@ -1,9 +1,9 @@
-package com.wideplay.warp.internal.components;
+package com.wideplay.warp.internal.componentry;
 
 import com.wideplay.warp.components.core.*;
 import com.wideplay.warp.module.ComponentRegistry;
-import com.wideplay.warp.module.components.ComponentClassReflection;
-import com.wideplay.warp.module.components.Renderable;
+import com.wideplay.warp.module.componentry.ComponentClassReflection;
+import com.wideplay.warp.module.componentry.Renderable;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

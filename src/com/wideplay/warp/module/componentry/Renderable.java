@@ -1,4 +1,4 @@
-package com.wideplay.warp.module.components;
+package com.wideplay.warp.module.componentry;
 
 import com.google.inject.Injector;
 import com.wideplay.warp.module.pages.PageClassReflection;
