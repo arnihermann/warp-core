@@ -6,7 +6,7 @@ import com.wideplay.warp.annotations.event.PreRender;
 import com.wideplay.warp.module.StateManager;
 import com.wideplay.warp.module.WarpModuleAssembly;
 import com.wideplay.warp.rendering.*;
-import com.wideplay.warp.conversation.InternalConversation;
+import com.wideplay.warp.internal.conversation.InternalConversation;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

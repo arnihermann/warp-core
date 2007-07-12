@@ -1,4 +1,4 @@
-package com.wideplay.warp.conversation;
+package com.wideplay.warp.internal.conversation;
 
 import com.google.inject.servlet.SessionScoped;
 

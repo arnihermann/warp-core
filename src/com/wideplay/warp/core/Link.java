@@ -8,10 +8,9 @@ import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.rendering.ScriptEvents;
-import com.wideplay.warp.rendering.RequestBinder;
 import com.wideplay.warp.util.TextTools;
 import com.wideplay.warp.util.beans.BeanUtils;
-import com.wideplay.warp.conversation.InternalConversation;
+import com.wideplay.warp.internal.conversation.InternalConversation;
 
 import java.util.List;
 
