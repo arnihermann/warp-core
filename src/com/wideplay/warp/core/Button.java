@@ -35,7 +35,7 @@ public class Button implements Renderable {
                 "class","wButton",
                 "value", label);
 
-        writer.registerEvent(buttonId, ScriptEvents.CLICK, encodedEvent);
+        writer.registerEvent(buttonId, ScriptEvents.CLICK, encodedEvent, 0);
         
         ComponentSupport.renderMultiple(writer, nestedComponents, injector, reflection, page);
         writer.end("input");

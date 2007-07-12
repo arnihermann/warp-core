@@ -1,8 +1,6 @@
 package com.wideplay.warp.internal.pages;
 
-import com.google.inject.Injector;
 import com.google.inject.Key;
-import com.wideplay.warp.module.ioc.IocContextManager;
 import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.module.pages.event.EventDispatcher;
 import com.wideplay.warp.module.pages.event.EventHandlerDelegate;
@@ -73,16 +71,12 @@ class PageClassReflectionImpl implements PageClassReflection {
     }
 
     //fires all event handlers (default action)
-    public Object fireEvent(Object bean, String event) {
-        return EventDispatcher.resolveAndDispatch(bean, event, allEventHandlers, disambiguationEventHandlers, eventHandlerDelegateFields);
+    public Object fireEvent(Object bean, String event, Object topic) {
+        return EventDispatcher.resolveAndDispatch(bean, event, topic, allEventHandlers, disambiguationEventHandlers, eventHandlerDelegateFields);
     }
 
     public Set<FieldDescriptor> getManagedFields() {
         return managedFields;
-    }
-
-    public Object instantiateForPageInjection(Injector injector) {
-        return IocContextManager.constructorInject(pageClass, constructor, constructorArgs, injector);
     }
 
 

@@ -19,9 +19,8 @@ public interface PageClassReflection {
 
     Class<?> getPageClass();//fires all event handlers (default action)
 
-    Object fireEvent(Object bean, String event);
+    Object fireEvent(Object bean, String event, Object topic);
 
     Set<FieldDescriptor> getManagedFields();
 
-    Object instantiateForPageInjection(Injector injector);
 }

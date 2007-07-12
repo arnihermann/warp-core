@@ -20,7 +20,7 @@ public class CoreComponentsTckTest {
         return new Object[][] {
                 { new Frame() },
                 { new RawText() },
-                { new Link() },
+                { new Link(null) },
         };
     }
 

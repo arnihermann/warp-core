@@ -22,6 +22,8 @@ import java.util.Map;
  * Created with IntelliJ IDEA.
  * On: 22/03/2007
  *
+ * THIS KIT IS BROKEN AND NEEDS REWORK
+ *
  * @author Dhanji R. Prasanna
  * @since 1.0
  */
@@ -55,7 +57,7 @@ public class CompatibilityVerifier {
         Renderable renderable = (Renderable)component;
 
         try {
-            renderable.render(newTestingHtmlWriter(), newTestingComponentHandlers(), newThrowingTestingGuiceInjector(complaints), null, new Object());
+            renderable.render(null, newTestingComponentHandlers(), newThrowingTestingGuiceInjector(complaints), null, new Object());
         } catch(GuiceInjectionRequestedError err) {
             complaints.add("Component requests resources from guice injector. This indicates tight coupling to the deployment environment");
         } catch(NullPointerException npe) {
@@ -99,58 +101,58 @@ public class CompatibilityVerifier {
 
         return handlers;
     }
-
-    private HtmlWriter newTestingHtmlWriter() {
-        return new HtmlWriter() {
-
-            //convenience varargs method
-            public void element(String name, Object... nameValuePairs) {
-                elementCounter++;
-            }
-
-            public void elementWithAttrs(String name, Object[] nameValuePairs) {
-                elementCounter++;
-            }
-
-            public void end(String name) {
-                elementCounter--;
-            }
-
-            public void selfClosedElement(String name, Object... nameValuePairs) {
-            }
-
-            public void selfClosedElementWithAttrs(String name, Object[] nameValuePairs) {
-
-            }
-
-            public void writeRaw(String text) {
-
-            }
-
-            public void registerScriptLibrary(ScriptLibrary library) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public void registerEvent(String elementName, ScriptEvents event, String annotation)//write raw text to the body load js func
-            {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public void writeToOnLoad(String text) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public String newId(Object object)//convenience varargs method
-            {
-                return null;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-
-            public String getBuffer() {
-                return null;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-        };
-    }
+//
+//    private HtmlWriter newTestingHtmlWriter() {
+//        return new HtmlWriter() {
+//
+//            //convenience varargs method
+//            public void element(String name, Object... nameValuePairs) {
+//                elementCounter++;
+//            }
+//
+//            public void elementWithAttrs(String name, Object[] nameValuePairs) {
+//                elementCounter++;
+//            }
+//
+//            public void end(String name) {
+//                elementCounter--;
+//            }
+//
+//            public void selfClosedElement(String name, Object... nameValuePairs) {
+//            }
+//
+//            public void selfClosedElementWithAttrs(String name, Object[] nameValuePairs) {
+//
+//            }
+//
+//            public void writeRaw(String text) {
+//
+//            }
+//
+//            public void registerScriptLibrary(ScriptLibrary library) {
+//                //To change body of implemented methods use File | Settings | File Templates.
+//            }
+//
+//            public void registerEvent(String elementName, ScriptEvents event, String annotation)//write raw text to the body load js func
+//            {
+//                //To change body of implemented methods use File | Settings | File Templates.
+//            }
+//
+//            public void writeToOnLoad(String text) {
+//                //To change body of implemented methods use File | Settings | File Templates.
+//            }
+//
+//            public String newId(Object object)//convenience varargs method
+//            {
+//                return null;  //To change body of implemented methods use File | Settings | File Templates.
+//            }
+//
+//
+//            public String getBuffer() {
+//                return null;  //To change body of implemented methods use File | Settings | File Templates.
+//            }
+//        };
+//    }
 
     public enum Compatibility { ACCEPTED, MISBEHAVED, REJECTED }
 

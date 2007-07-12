@@ -2,6 +2,7 @@ package com.wideplay.warp.internal.pages;
 
 import com.wideplay.warp.annotations.OnEvent;
 import com.wideplay.warp.util.reflect.ReflectUtils;
+import com.wideplay.warp.module.WarpConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -17,22 +18,27 @@ import java.util.*;
  * @since 1.0
  */
 class EventHandlerDiscovery {
-    private static Log log = LogFactory.getLog(EventHandlerDiscovery.class);
 
     static Set<Method> discoverDisambiguationHandlers(List<Method> anyEventHandlers, Map<String, Set<Method>> disambiguationEventHandlers) {
+        Log log = LogFactory.getLog(EventHandlerDiscovery.class);
+
+
         Set<Method> methodsToRemove = new HashSet<Method>();
         for (Method eventHandler : anyEventHandlers) {
             //make methods accessible by reflection if they are not
             if (!eventHandler.isAccessible())
                 eventHandler.setAccessible(true);
 
-            log.debug("Processing event handler for disambiguation annotations: " + eventHandler.getName());
+            //validate event method
+            validate(eventHandler);
+
             for (Annotation annotation : eventHandler.getDeclaredAnnotations()) {
                 //skip OnEvent
                 if (OnEvent.class.isAssignableFrom(annotation.getClass()))
                     continue;
 
-                log.debug("Looking at method: " + eventHandler.getName() + " and its annotation: " + annotation.annotationType().getName());
+                if (log.isDebugEnabled())
+                    log.debug(String.format("Looking at method '%s' and its annotation: %s", eventHandler.getName(), annotation.annotationType().getName()));
 
 
                 //if tagged with a custom annotation that is also tagged with OnEvent, we have a disambiguation handler!
@@ -43,7 +49,8 @@ class EventHandlerDiscovery {
                     String key = ReflectUtils.extractAnnotationSimpleName(annotation.annotationType());
                     Set<Method> handlers = disambiguationEventHandlers.get(key);
 
-                    log.debug("Found event handler for disambiguation annotation: " + key);
+                    if (log.isDebugEnabled())
+                        log.debug(String.format("Found event handler for disambiguation annotation: %s", key));
 
                     //create a new set if there isnt one
                     if (null == handlers) {
@@ -57,5 +64,10 @@ class EventHandlerDiscovery {
             }
         }
         return methodsToRemove;
+    }
+
+    private static void validate(Method eventHandler) {
+        if (eventHandler.getParameterTypes().length > 1)
+            throw new WarpConfigurationException("Event handler methods can take at most one argument (topic): " + eventHandler.getName());
     }
 }

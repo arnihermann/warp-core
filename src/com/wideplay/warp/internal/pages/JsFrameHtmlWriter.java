@@ -23,11 +23,16 @@ class JsFrameHtmlWriter implements HtmlWriter {
         linkedScripts.add(library.getLibraryURL());
     }
 
-    public void registerEvent(String elementName, ScriptEvents event, String annotation) {
+    public void registerEvent(String elementName, ScriptEvents event, String annotation, int topicId) {
         onFrameLoadWriter.append("document.getElementById(\"");
         onFrameLoadWriter.append(elementName);
         onFrameLoadWriter.append("\").onclick=function(){ __warpForm.w_event.value= \"");
         onFrameLoadWriter.append(annotation);
+
+        if (0 != topicId) {
+            onFrameLoadWriter.append("\"; __warpForm.w_event_topic.value= \"");
+            onFrameLoadWriter.append(topicId);
+        }
         onFrameLoadWriter.append("\"; __warpForm.submit(); return false;}; ");
     }
 
@@ -37,7 +42,7 @@ class JsFrameHtmlWriter implements HtmlWriter {
     }
 
     public String newId(Object object) {
-        return object.getClass().getName() + "_" + object.hashCode();
+        return String.format("%s_%s", object.getClass().getSimpleName(), object.hashCode());
     }
 
     //convenience varargs method

@@ -88,7 +88,7 @@ public class Checkbox implements Renderable {
         writer.writeRaw(label);
         writer.end("label");
 
-        writer.registerEvent(id, ScriptEvents.CHANGE, encodedEvent);
+        writer.registerEvent(id, ScriptEvents.CHANGE, encodedEvent, 0);
 
         ComponentSupport.renderMultiple(writer, nestedComponents, injector, reflection, page);
         writer.end("input");

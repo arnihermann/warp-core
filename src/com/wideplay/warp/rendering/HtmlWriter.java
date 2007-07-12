@@ -20,7 +20,7 @@ public interface HtmlWriter {
 
     void registerScriptLibrary(ScriptLibrary library);
 
-    void registerEvent(String elementName, ScriptEvents event, String annotation);//write raw text to the body load js func
+    void registerEvent(String elementName, ScriptEvents event, String annotation, int topicId);//write raw text to the body load js func
 
     void writeToOnLoad(String text);
 

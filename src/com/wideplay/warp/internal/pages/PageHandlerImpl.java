@@ -6,6 +6,7 @@ import com.wideplay.warp.annotations.event.PreRender;
 import com.wideplay.warp.module.StateManager;
 import com.wideplay.warp.module.WarpModuleAssembly;
 import com.wideplay.warp.rendering.*;
+import com.wideplay.warp.conversation.InternalConversation;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,7 +39,17 @@ class PageHandlerImpl implements PageHandler {
 
         //locate event id & topic
         String eventId = request.getParameter(RequestBinder.EVENT_PARAMETER_NAME);
-//        Object topic TODO
+        final String topicParam = request.getParameter(RequestBinder.EVENT_TOPIC_PARAMETER_NAME);
+
+        //read topic out of conversation if available
+        Object topic = null;
+        final InternalConversation conversation = injector.getInstance(InternalConversation.class);
+        if (null != topicParam) {
+            topic = conversation.recall(Integer.parseInt(topicParam));
+        }
+
+        //clear out internal monologue!!!
+        conversation.forgetAll();
 
         //place persistent fields back into the page
         StateManager stateManager = injector.getInstance(StateManager.class);
@@ -49,13 +60,13 @@ class PageHandlerImpl implements PageHandler {
 
         Object forwardPage;
         //fire lifecycle method pre-render
-        forwardPage = reflection.fireEvent(page, PreRender.EVENT_ID);
+        forwardPage = reflection.fireEvent(page, PreRender.EVENT_ID, topic);
         if (null != forwardPage)
             return forwardPage;
 
         //fire page event handlers as necessary
         if (null != eventId)
-            forwardPage = reflection.fireEvent(page, eventId);
+            forwardPage = reflection.fireEvent(page, eventId, topic);
 
         //test if we need to forward to a different page
         if (null != forwardPage)
@@ -75,7 +86,7 @@ class PageHandlerImpl implements PageHandler {
         }
 
         //fire lifecycle post-render
-        forwardPage = reflection.fireEvent(page, PostRender.EVENT_ID);
+        forwardPage = reflection.fireEvent(page, PostRender.EVENT_ID, topic);
 
         //ok now reabsorb managed properties into the statemanager
         stateManager.extractAndStore(reflection, page);

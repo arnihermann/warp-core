@@ -46,7 +46,7 @@ class PageClassReflectionBuilder {
             throw new WarpConfigurationException("Page class cannot be an enum or an annotation type: " + pageClass.getName());
 
 
-        log.debug("Attempting to build class reflection for page class: " + pageClass.getName());
+        log.debug(String.format("Attempting to build class reflection for page class: %s", pageClass.getName()));
         final Map<String, Method> setters = new LinkedHashMap<String, Method>();
         final Map<String, Method> getters = new LinkedHashMap<String, Method>();
         discoverGettersAndSetters(setters, getters);
@@ -99,7 +99,7 @@ class PageClassReflectionBuilder {
 
 
 
-        log.debug("Registered 'any' handlers: " + anyEventHandlers);
+        log.debug(String.format("Registered 'any' handlers: %s", anyEventHandlers));
 
 
         //discover managed property fields and store them

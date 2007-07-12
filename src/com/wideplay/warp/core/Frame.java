@@ -39,8 +39,6 @@ public class Frame implements Renderable {
         writer.writeRaw(HtmlWriter.LINKED_SCRIPTS_PLACEHOLDER);
 
         //register common script libraries needed by all components
-//        writer.registerScriptLibrary(CoreScriptLibraries.YUI_MIN);
-//        writer.registerScriptLibrary(CoreScriptLibraries.YUI_EVENT_MIN);
 
         //write a placeholder for the onFrameLoad function
         writer.element("script", "type", "text/javascript");
@@ -53,8 +51,9 @@ public class Frame implements Renderable {
         writer.element("body");
         writer.element("form", "name", HtmlWriter.FRAME_GLOBAL_FORM_NAME, "method", "post");
 
-        //event ids are stored in a hidden field TODO make this nicer somehow (pull into HtmlWriter?)        
+        //event & topic ids are stored in a hidden field TODO make this nicer somehow (pull into HtmlWriter?)        
         writer.selfClosedElementWithAttrs("input", new Object[] { "type", "hidden", "name", RequestBinder.EVENT_PARAMETER_NAME });
+        writer.selfClosedElementWithAttrs("input", new Object[] { "type", "hidden", "name", RequestBinder.EVENT_TOPIC_PARAMETER_NAME });
 
         //dispatch to children
         ComponentSupport.renderMultiple(writer, nestedComponents, injector, reflection, page);

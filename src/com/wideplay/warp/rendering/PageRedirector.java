@@ -20,7 +20,6 @@ import java.io.IOException;
  * @since 1.0
  */
 class PageRedirector {
-    private static final Log log = LogFactory.getLog(PageRedirector.class);
     public static final String WARP_REDIRECTED_NEXT_PAGE_OBJECT = "__warpRedirectedNextPageObject";
 
 
@@ -51,6 +50,8 @@ class PageRedirector {
 
 
     private static void pageRedirect(WarpModuleAssembly assembly, Object forward, HttpServletRequest request, HttpServletResponse response) {
+        final Log log = LogFactory.getLog(PageRedirector.class);
+        
         String forwardUri = assembly.resolvePageURI(forward);
         if (null == forwardUri)
             throw new PageRenderException("The object returned for forwarding was not a registered Warp Page class: " + forward.getClass().getName());
@@ -60,7 +61,8 @@ class PageRedirector {
 
         //redirect to the page's identity
         try {
-            log.trace("Sending client-side forward page redirect to: " + forwardUri);
+            if (log.isTraceEnabled())
+                log.trace(String.format("Sending client-side forward page redirect to: %s", forwardUri));
             response.sendRedirect(formatRequestUri(request, forwardUri));
         } catch (IOException e) {
             throw new PageRenderException("The action was unsuccessful because an IO error occurred while sending a redirect to: " + forwardUri);
@@ -73,22 +75,27 @@ class PageRedirector {
 
 
     private static void pageForward(Object forward, WarpModuleAssembly assembly, HttpServletRequest request, HttpServletResponse response) {
+        final Log log = LogFactory.getLog(PageRedirector.class);
+
         Forward.PageForwarding forwardPage = (Forward.PageForwarding)forward;
         PageHandler forwardPageHandler = assembly.getPage(assembly.resolvePageURI(forwardPage.getPage()));
 
-        log.trace("Forwarding server-side to page: " + forwardPage.getPage());
+        if (log.isTraceEnabled())
+            log.trace(String.format("Forwarding server-side to page: %s", forwardPage.getPage()));
 
         //process forward & return (events do not get forwarded)
-        forwardPageHandler.handleRequest(request, response, assembly.getInjector(), null, forwardPage.getPage());
+        forwardPageHandler.handleRequest(request, response, assembly.getInjector(), forwardPage.getPage());
     }
 
 
 
     
     private static void urlRedirect(Object forward, HttpServletResponse response) {
+        final Log log = LogFactory.getLog(PageRedirector.class);
         Redirect.URLRedirection redirection = ((Redirect.URLRedirection) forward);
         try {
-            log.trace("Sending client-side arbitrary redirect: " + redirection.getUrl());
+            if (log.isTraceEnabled())
+                log.trace(String.format("Sending client-side arbitrary redirect: %s", redirection.getUrl()));
             response.sendRedirect(redirection.getUrl());
 
         } catch (IOException e) {

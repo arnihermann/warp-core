@@ -26,13 +26,13 @@ import java.util.Set;
  * @since 1.0
  */
 public class EventDispatcher {
-    //ugh
-    private static Log log = LogFactory.getLog(EventDispatcher.class);
 
-    public static Object resolveAndDispatch(Object bean, String event, List<Method> allEventHandlers,
+    public static Object resolveAndDispatch(Object bean, String event, Object topic, List<Method> allEventHandlers,
                                             Map<String, Set<Method>> disambiguationEventHandlers,
                                             List<EventHandlerDelegate> eventHandlerDelegateFields) {
 
+        //dont make this static (better memory cadence this way)
+        Log log = LogFactory.getLog(EventDispatcher.class);
 
         //is this a page global event?
          if (TextTools.isEmptyString(event)) {
@@ -42,7 +42,8 @@ public class EventDispatcher {
             for (Method method : allEventHandlers) {
                 if (log.isTraceEnabled())
                     log.trace(String.format("Firing 'any' event handler: %s", method.getName()));
-                result = ReflectUtils.invokeMethod(method, bean, null);
+
+                result = invokeEventMethod(method, bean, topic);
 
                 //check for short-circuiting requests
                 if (result instanceof Redirection)
@@ -61,7 +62,7 @@ public class EventDispatcher {
                     if (log.isTraceEnabled())
                         log.trace("Firing 'any' event handler in delegate: " + method.getName());
                     //read the delegate out of the page object and try to invoke its method
-                    result = ReflectUtils.invokeMethod(method, ReflectUtils.readField(delegate.getDelegateFieldDescriptor().getField(), bean), null);
+                    result = invokeEventMethod(method, ReflectUtils.readField(delegate.getDelegateFieldDescriptor().getField(), bean), topic);
 
                     //check for short-circuiting requests
                     if (result instanceof Redirection)
@@ -82,7 +83,7 @@ public class EventDispatcher {
         Set<Method> eventMethods = disambiguationEventHandlers.get(event);
         if (null != eventMethods) {
             for (Method method : eventMethods) {
-                result = ReflectUtils.invokeMethod(method, bean, null);
+                result = invokeEventMethod(method, bean, topic);
 
                 //check for short-circuiting requests
                 if (result instanceof Redirection)
@@ -105,7 +106,7 @@ public class EventDispatcher {
 
             for (Method method : delegate.getDisambiguationEventHandlers().get(event)) {
                 //read the delegate out of the page object and try to invoke its method
-                result = ReflectUtils.invokeMethod(method, ReflectUtils.readField(delegate.getDelegateFieldDescriptor().getField(), bean), null);
+                result = invokeEventMethod(method, ReflectUtils.readField(delegate.getDelegateFieldDescriptor().getField(), bean), topic);
 
                 //check for short-circuiting requests
                 if (result instanceof Redirection)
@@ -115,5 +116,12 @@ public class EventDispatcher {
 
 
         return result;
+    }
+
+    //invokes the given event method with null or with a topic argument if its parameter size is not zero (TODO should be validated at startup)
+    private static Object invokeEventMethod(Method method, Object bean, Object topic) {
+        return (0 == method.getParameterTypes().length) ?
+                ReflectUtils.invokeMethod(method, bean, null) :
+                ReflectUtils.invokeMethod(method, bean, new Object[] { topic } );
     }
 }

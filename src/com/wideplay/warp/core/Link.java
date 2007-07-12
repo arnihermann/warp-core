@@ -42,21 +42,20 @@ public class Link implements Renderable {
         String id = writer.newId(this);
 
         //manage event topics via the internal conversation (tracker of user's behavior across requests)
+        int topicId = 0;
         if (null != topic) {
             //get topic value from page
             final Object topicValue = BeanUtils.getFromPropertyExpression(topic, page);
+            topicId = topicValue.hashCode();
 
             //store it into the internal conversation for later retrieval if necessary...
             conversation.remember(topicValue);
-
-            //TODO try and move this off into a javascript remoting module
-            writer.element("input", "type", "hidden", RequestBinder.EVENT_TOPIC_PARAMETER_NAME, topicValue);
         }
 
         writer.element("a", "id", id, "href", "#");
 
         //register event publication
-        writer.registerEvent(id, ScriptEvents.CLICK, encodedEvent);
+        writer.registerEvent(id, ScriptEvents.CLICK, encodedEvent, topicId);
 
         ComponentSupport.renderMultiple(writer, nestedComponents, injector, reflection, page);
         writer.end("a");
