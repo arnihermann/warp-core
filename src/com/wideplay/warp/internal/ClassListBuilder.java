@@ -28,7 +28,7 @@ class ClassListBuilder {
         //ensure class is loaded
         for (String className : classNames)
             try {
-                classes.add(Class.forName(packageName + "." + className));
+                classes.add(Class.forName(String.format("%s.%s", packageName, className)));
             } catch (ClassNotFoundException e) {
                 log.error("Could not load target page classes", e);
                 e.printStackTrace();

@@ -59,7 +59,6 @@ public class Table implements Renderable {
                     Map<String, PropertyDescriptor> map = columnHandler.getPropertyValueExpressions();
 
                     //look for custom columns, w:property and w:title are mutually exclusive (title takes precedence)
-                    LogFactory.getLog(Table.class).info(map);
                     if (map.containsKey(Column.TITLE)) {
                         this.customColumns.put(map.get(Column.TITLE).getValue(), columnHandler);
 

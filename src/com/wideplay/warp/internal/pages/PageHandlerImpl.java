@@ -7,6 +7,7 @@ import com.wideplay.warp.module.StateManager;
 import com.wideplay.warp.module.WarpModuleAssembly;
 import com.wideplay.warp.rendering.*;
 import com.wideplay.warp.internal.conversation.InternalConversation;
+import com.wideplay.warp.util.TextTools;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,7 +46,8 @@ class PageHandlerImpl implements PageHandler {
         Object topic = null;
         final InternalConversation conversation = injector.getInstance(InternalConversation.class);
         if (null != topicParam) {
-            topic = conversation.recall(Integer.parseInt(topicParam));
+            if (!"".equals(topicParam))
+                topic = conversation.recall(Integer.parseInt(topicParam));
         }
 
         //clear out internal monologue!!!

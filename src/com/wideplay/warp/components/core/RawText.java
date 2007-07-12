@@ -56,7 +56,13 @@ public class RawText implements Renderable, AttributesInjectable {
             for (Token token : tokens) {
                 if (token.isExpression()) {
                     try {
-                        writer.writeRaw(Ognl.getValue(token.getToken(), page).toString());
+                        Object value = Ognl.getValue(token.getToken(), page);
+
+                        //stringize the property only if it is not null
+                        if (null != value)
+                            value = value.toString();
+
+                        writer.writeRaw((String)value);
                     } catch (OgnlException e) {
                         throw new PageRenderException("Error while evaluating expression: " + token.getToken(), e);
                     }
