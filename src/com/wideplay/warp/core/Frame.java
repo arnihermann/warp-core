@@ -50,7 +50,7 @@ public class Frame implements Renderable {
         writer.end("head");
 
         //write body
-        writer.element("body", "onLoad", HtmlWriter.ON_FRAME_LOAD_FUNCTION);
+        writer.element("body");
         writer.element("form", "name", HtmlWriter.FRAME_GLOBAL_FORM_NAME, "method", "post");
 
         //event ids are stored in a hidden field TODO make this nicer somehow (pull into HtmlWriter?)        

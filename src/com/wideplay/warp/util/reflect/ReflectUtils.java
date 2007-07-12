@@ -195,7 +195,7 @@ public class ReflectUtils {
         return "@" + simpleName;
     }
 
-    //converts a getter or setter to a property name
+    //converts a getter or setter to a property name TODO change to use String.format
     public static String extractPropertyNameFromAccessor(String accessor) {
         return Character.toLowerCase(accessor.charAt(3)) + accessor.substring(4);
     }

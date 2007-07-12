@@ -16,10 +16,10 @@ class JsSupportUtils {
         //insert content in reverse order at index 0
         content.insert(0, "{");
         content.insert(0, HtmlWriter.ON_FRAME_LOAD_FUNCTION);
-        content.insert(0, "function ");
+        content.insert(0, "window.onload=function ");
 
         //close func
-        content.append("}");
+        content.append("};");
 
         //append support functions to onFrameLoad
 //        content.append(FN_PAGE_EVENT_PUBLISH);

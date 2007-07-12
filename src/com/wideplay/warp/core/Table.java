@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import com.wideplay.warp.annotations.Component;
 import com.wideplay.warp.module.components.ClassReflectionCache;
 import com.wideplay.warp.module.components.Renderable;
+import com.wideplay.warp.module.components.PropertyDescriptor;
 import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
@@ -13,12 +14,14 @@ import com.wideplay.warp.util.beans.BeanUtils;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.LinkedHashMap;
 
 /**
  * Created with IntelliJ IDEA.
  * On: 24/03/2007
  *
- * Generates a select box from a collection of values.
+ * Generates a table from a collection of values with columns mapped to JavaBean
+ * properties of the first bean's class.
  *
  * @author Dhanji R. Prasanna
  * @since 1.0
@@ -27,6 +30,7 @@ import java.util.Map;
 public class Table implements Renderable {
     private String items;
     private final ClassReflectionCache classCache;
+    private Map<String, ComponentHandler> columns;
 
     @Inject
     public Table(ClassReflectionCache classCache) {
@@ -39,6 +43,23 @@ public class Table implements Renderable {
 
         //obtain the bound object
         Object itemsObject = BeanUtils.getFromPropertyExpression(items, page);
+
+        //build a cache of child columns (if we havent already) TODO validate these "columns" in the template at startup time
+        if (null == columns) {
+            this.columns = new LinkedHashMap<String, ComponentHandler>();
+
+            //only populate the cache if there are child components
+            if (null != nestedComponents)
+                for (ComponentHandler columnHandler : nestedComponents) {
+                    Map<String, PropertyDescriptor> map = columnHandler.getPropertyValueExpressions();
+                    if (!map.containsKey(Column.PROPERTY))
+                        continue;
+
+
+                    PropertyDescriptor propertyDescriptor = map.get(Column.PROPERTY);
+                    this.columns.put(propertyDescriptor.getValue(), columnHandler);
+                }
+        }
 
         //see if it is an iterable
         if (itemsObject instanceof Iterable) {
@@ -56,7 +77,7 @@ public class Table implements Renderable {
                     writer.element("tbody");
                 }
 
-                writeRow(item, writer, propertiesAndLabels);
+                writeRow(item, writer, propertiesAndLabels, injector, reflection);
             }
 
             writer.end("tbody");
@@ -74,7 +95,7 @@ public class Table implements Renderable {
                     writer.element("tbody");
                 }
 
-                writeRow(item, writer, propertiesAndLabels);
+                writeRow(item, writer, propertiesAndLabels, injector, reflection);
             }
             writer.end("tbody");
         }
@@ -94,11 +115,26 @@ public class Table implements Renderable {
         writer.end("thead");
     }
 
-    private void writeRow(Object item, HtmlWriter writer, Map<String, String> propertiesAndLabels) {
+    private void writeRow(Object item, HtmlWriter writer, Map<String, String> propertiesAndLabels, Injector injector, PageClassReflection reflection) {
         writer.element("tr");
         for (String property : propertiesAndLabels.keySet()) {
             writer.element("td");
-            writer.writeRaw(BeanUtils.getFromPropertyExpression(property, item).toString());
+
+            //see if this particular property should be rendered by an overriding column component
+            ComponentHandler child = columns.get(property);
+            if (null != child) {
+                //render using column component override (children)
+                child.handleRender(writer, injector, reflection, item);
+
+            } else {    //write normally
+                //stringize the property value only if it is not null (prevent NPE)
+                Object value = BeanUtils.getFromPropertyExpression(property, item);
+                if (null != value)
+                    writer.writeRaw(value.toString());
+                else
+                    writer.writeRaw(null);
+            }
+
             writer.end("td");
         }
         writer.end("tr");        

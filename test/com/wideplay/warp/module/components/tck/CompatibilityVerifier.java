@@ -3,6 +3,7 @@ package com.wideplay.warp.module.components.tck;
 import com.google.inject.Injector;
 import com.wideplay.warp.annotations.Component;
 import com.wideplay.warp.module.components.Renderable;
+import com.wideplay.warp.module.components.PropertyDescriptor;
 import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
@@ -15,6 +16,7 @@ import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -87,6 +89,10 @@ public class CompatibilityVerifier {
                 }
 
                 public List<? extends ComponentHandler> getNestedComponents() {
+                    return null;  //To change body of implemented methods use File | Settings | File Templates.
+                }
+
+                public Map<String, PropertyDescriptor> getPropertyValueExpressions() {
                     return null;  //To change body of implemented methods use File | Settings | File Templates.
                 }
             });

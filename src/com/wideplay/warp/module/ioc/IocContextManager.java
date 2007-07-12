@@ -49,6 +49,7 @@ public class IocContextManager {
     }
 
 
+
     static class Context {
         final HttpServletRequest request;
         final HttpServletResponse response;
@@ -70,6 +71,11 @@ public class IocContextManager {
     static void throwNotScopeableException(String message) {
         throw new NotScopeableException(message);
     }
+
+    static void throwNotScopeableException(String message, RuntimeException re) {
+        throw new NotScopeableException(message, re);
+    }
+
     
     public static <T> T constructorInject(Class<T> pageClass, Constructor<T> constructor, List<Key<?>> constructorArgs, Injector injector) {
         return ObjectInjector.constructorInject(pageClass, constructor, constructorArgs, injector);

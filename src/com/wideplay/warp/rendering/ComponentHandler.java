@@ -2,8 +2,10 @@ package com.wideplay.warp.rendering;
 
 import com.google.inject.Injector;
 import com.wideplay.warp.module.pages.PageClassReflection;
+import com.wideplay.warp.module.components.PropertyDescriptor;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,4 +17,6 @@ public interface ComponentHandler {
     void handleRender(HtmlWriter writer, Injector injector, PageClassReflection pageReflection, Object page);
 
     List<? extends ComponentHandler> getNestedComponents();
+
+    Map<String, PropertyDescriptor> getPropertyValueExpressions();
 }

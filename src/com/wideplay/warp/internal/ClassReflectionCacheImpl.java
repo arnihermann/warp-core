@@ -44,14 +44,20 @@ class ClassReflectionCacheImpl implements ClassReflectionCache {
     //this method is deliberately unsynchronized so 2 threads caching the same class can overwrite the other, thus avoiding competition for the map
     private Map<String, String> buildPropertiesAndLabels(Class<? extends Object> aClass) {
         Map<String, String> propertyLabels = new LinkedHashMap<String, String>();   //MUST preserve order
-        ResourceBundle labels = PropertyResourceBundle.getBundle(aClass.getName());
+
+        ResourceBundle labels;
+        try {
+            labels = PropertyResourceBundle.getBundle(aClass.getName());
+        } catch (MissingResourceException mre) {
+            labels = null;
+        }
 
         for (Method method : aClass.getMethods()) {
 
             //check for getters and cache them as a property
             String name = method.getName();
-            if (0 == method.getParameterTypes().length &&name.length() > 3 && !void.class.equals(method.getReturnType())
-                    && name.startsWith("get") ) {
+            if (0 == method.getParameterTypes().length && name.length() > 3 && !void.class.equals(method.getReturnType())
+                    && name.startsWith("get")) {
 
                 //skip reserved
                 if ("getClass".equals(name))
@@ -59,9 +65,12 @@ class ClassReflectionCacheImpl implements ClassReflectionCache {
 
                 String key = ReflectUtils.extractPropertyNameFromAccessor(method.getName());
 
-                if (null != labels)
-                    propertyLabels.put(key, labels.getString(key));
-                else
+                if (null != labels) {
+                    //watch for column hides (empty property)
+                    String value = labels.getString(key);
+                    if (null != value && !"".equals(value.trim()))
+                        propertyLabels.put(key, value);
+                } else
                     propertyLabels.put(key, key);
             }
         }

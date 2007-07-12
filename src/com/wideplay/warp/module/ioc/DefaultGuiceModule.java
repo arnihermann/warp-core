@@ -36,7 +36,8 @@ class DefaultGuiceModule extends AbstractModule {
         bindScope(RequestScoped.class, WarpScopes.REQUEST);
 
         //bind state manager and its deps
-        bind(Cube.class).annotatedWith(SessionWide.class).to(HashCube.class).in(SessionScoped.class);
+        bind(new TypeLiteral<Cube<Class<?>, String, Object>>() { }).annotatedWith(SessionWide.class)
+                .to(new TypeLiteral<HashCube<Class<?>, String, Object>>() { }).in(SessionScoped.class);
         bind(StateManager.class).to(StateManagerImpl.class).in(Singleton.class);
 
         bind(ClassReflectionCache.class).toInstance(Builders.newClassReflectionCache());

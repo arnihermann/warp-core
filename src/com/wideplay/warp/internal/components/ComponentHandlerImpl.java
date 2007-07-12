@@ -55,6 +55,10 @@ class ComponentHandlerImpl implements ComponentHandler {
     }
 
 
+    public Map<String, PropertyDescriptor> getPropertyValueExpressions() {
+        return propertyValueExpressions;
+    }
+
     public List<? extends ComponentHandler> getNestedComponents() {
         return nestedComponents;
     }
