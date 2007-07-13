@@ -32,7 +32,7 @@ class PageHandlerBuilder {
     private final ServletContext context;
     private final ComponentRegistry registry;
 
-    private final Log log = LogFactory.getLog(getClass());
+    private final Log log = LogFactory.getLog(PageHandlerBuilder.class);
 
     public PageHandlerBuilder(ServletContext context, ComponentRegistry registry) {
         this.context = context;

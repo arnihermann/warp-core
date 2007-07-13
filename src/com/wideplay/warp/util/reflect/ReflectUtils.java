@@ -87,7 +87,7 @@ public class ReflectUtils {
         }
     }
 
-    @SuppressWarnings("unchecked")
+    /*@SuppressWarnings("unchecked")
     static <E> Class<? super E> findInterfaceWithAnnotation(Class<E> base, Class<? extends Annotation> annotation) {
         //walk all interfaces of base and determine if they are marked with annotation
         for (Class<? super E> iface : base.getInterfaces())
@@ -96,7 +96,7 @@ public class ReflectUtils {
 
         //nothing found
         return null;
-    }
+    }*/
 
     static MethodDescriptor findMethodDescriptorWithAnnotation(Class<?> base, Class<? extends Annotation> annotation) {
         //walk all methods of base and determine if they are marked with annotation
@@ -161,9 +161,9 @@ public class ReflectUtils {
     @SuppressWarnings("unchecked")
     //returns the first constructor with the matching annotation or null (does not search up the class hierarchy)
     public static <T> Constructor<T> findDeclaredConstructorWithAnnotation(Class<T> base, Class<? extends Annotation> annotation) {
-        for (Constructor<T> constructor : base.getDeclaredConstructors())
+        for (Constructor<?> constructor : base.getDeclaredConstructors())
             if (constructor.isAnnotationPresent(annotation))
-                return constructor;
+                return (Constructor<T>) constructor;
 
         return null;
     }

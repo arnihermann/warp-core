@@ -122,7 +122,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="Groovy from GroovyJ 0.1.9 (Demetra)" level="application" />
     <orderEntryProperties />
   </component>
   <component name="WebModuleBuildComponent">

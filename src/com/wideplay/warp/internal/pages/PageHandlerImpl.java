@@ -43,19 +43,11 @@ class PageHandlerImpl implements PageHandler {
         final String topicParam = request.getParameter(RequestBinder.EVENT_TOPIC_PARAMETER_NAME);
 
         //read topic out of conversation if available
-        Object topic = null;
-        final InternalConversation conversation = injector.getInstance(InternalConversation.class);
-        if (null != topicParam) {
-            if (!"".equals(topicParam))
-                topic = conversation.recall(Integer.parseInt(topicParam));
-        }
-
-        //clear out internal monologue!!!
-        conversation.forgetAll();
+        Object topic = retrieveEventTopicAndClear(injector, topicParam);
 
         //place persistent fields back into the page
         StateManager stateManager = injector.getInstance(StateManager.class);
-        stateManager.injectManaged(reflection, page); //move out to InjectionSupport
+        stateManager.injectManaged(reflection, page); //todo move out to InjectionSupport
 
         //map request parameters back into page object (only on events)
         bindRequestParameters(request, injector, page);
@@ -75,6 +67,19 @@ class PageHandlerImpl implements PageHandler {
             return forwardPage;
 
         //render template with the page as its model
+        renderPage(injector, page, response);
+
+        //fire lifecycle post-render
+        forwardPage = reflection.fireEvent(page, PostRender.EVENT_ID, topic);
+
+        //ok now reabsorb managed properties into the statemanager
+        stateManager.extractAndStore(reflection, page);
+
+        //everything was ok, so return forwardpage (if null it stays on same)
+        return forwardPage;
+    }
+
+    private void renderPage(Injector injector, Object page, HttpServletResponse response) {
         //write response to a new HtmlWriter using the component handler tree
         HtmlWriter htmlWriter = new JsFrameHtmlWriter();
         rootComponentHandler.handleRender(htmlWriter, injector, reflection, page);
@@ -86,15 +91,21 @@ class PageHandlerImpl implements PageHandler {
             throw new PageRenderException("Error obtaining the response writer while rendering page at: "
                     + injector.getInstance(WarpModuleAssembly.class).resolvePageURI(page), e);
         }
+    }
 
-        //fire lifecycle post-render
-        forwardPage = reflection.fireEvent(page, PostRender.EVENT_ID, topic);
+    private Object retrieveEventTopicAndClear(Injector injector, String topicParam) {
+        Object topic = null;
 
-        //ok now reabsorb managed properties into the statemanager
-        stateManager.extractAndStore(reflection, page);
+        final InternalConversation conversation = injector.getInstance(InternalConversation.class);
+        if (null != topicParam) {
+            if (!TextTools.isEmptyString(topicParam))
+                topic = conversation.recall(Integer.parseInt(topicParam));
+        }
 
-        //everything was ok, so return forwardpage (if null it stays on same)
-        return forwardPage;
+        //clear out internal monologue!!!
+        conversation.forgetAll();
+
+        return topic;
     }
 
     @SuppressWarnings("unchecked")

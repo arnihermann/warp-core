@@ -44,7 +44,7 @@ public class TemplatingFilter {
             return false;
 
         if (log.isTraceEnabled())
-            log.trace(String.format("Filter active for page: %s; handled by: %s",request.getRequestURI(), handler));
+            log.trace(String.format("Filter active for page: %s; handled by: %s", request.getRequestURI(), handler));
 
 
         //locate template and render to response
