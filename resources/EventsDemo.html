@@ -4,12 +4,20 @@
         xmlns="http://www.w3.org/1999/xhtml"
         xml:lang="en" lang="en">
 
-  <head w:component="meta">
+  <!-- specifying w:onload="off" tells warp not to automatically register js wrapper scripts on window load
+        it implies you will invoke the warp scripts manually (see <script> tag below for an example) -->
+  <head w:component="meta" w:onload="off">
     <title>Warp :: Events demo</title>
 
     <style type="text/css">
         @import "assets/warp.css";
     </style>
+
+    <script type="text/javascript">
+        window.onload=function() {
+            window.warpOnload();    /* demonstrates hook for invoking warp wrapper scripts manually (i.e. from your own js) */
+        };
+    </script>
   </head>
   
   <body w:component="frame">

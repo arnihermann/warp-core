@@ -16,7 +16,7 @@ class JsSupportUtils {
         //insert content in reverse order at index 0
         content.insert(0, "{");
         content.insert(0, HtmlWriter.ON_FRAME_LOAD_FUNCTION);
-        content.insert(0, "window.onload=function ");
+        content.insert(0, "function ");
 
         //close func
         content.append("};");
