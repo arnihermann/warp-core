@@ -2,11 +2,15 @@
         xmlns="http://www.w3.org/1999/xhtml"
         xml:lang="en" lang="en">
 
-  <head>
-    <title>Warp :: Page Injection Demo</title>
+  <head w:component="meta">
+    <title>Warp :: ${title}</title>
+
+    <style type="text/css">
+        @import "assets/warp.css";
+    </style>
   </head>
   
-  <body w:component="frame" w:title="${title}">
+  <body w:component="frame">
     Demonstrates some dynamic text mixed with static html content:<br/>
 
     Dynamic: ${hello}

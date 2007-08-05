@@ -27,6 +27,7 @@ class DefaultComponentRegistryImpl implements ComponentRegistry {
     public DefaultComponentRegistryImpl() {
         //register default components
         register("frame", Frame.class);
+        register("meta", Meta.class);
         register("link", Link.class);
         register(ComponentRegistry.TEXT_COMPONENT_NAME, RawText.class);
         register("button", Button.class);

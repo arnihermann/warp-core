@@ -69,11 +69,11 @@ class WarpModuleAssemblyBuilder {
                 continue;
 
             //also build as page if necessary
-            if (isShouldBuildAsPage(pageClass))
+            if (shouldBuildAsPage(pageClass))
                 PageBuilders.buildAndStorePageHandler(context, componentRegistry, pageClass, packageName, pages);
 
             //should be built as a custom component?
-            if (isComponentClass(pageClass)) {
+            if (shouldBuildAsComponent(pageClass)) {
                 ComponentBuilders.buildAndRegisterComponent(context, componentRegistry, pageClass, packageName, pages);
                 componentClasses.add(pageClass);
             }
@@ -130,11 +130,11 @@ class WarpModuleAssemblyBuilder {
         return pageClass.isAnnotation() || pageClass.isEnum() || pageClass.isInterface();
     }
 
-    private boolean isComponentClass(Class<?> clazz) {
+    private boolean shouldBuildAsComponent(Class<?> clazz) {
         return clazz.isAnnotationPresent(Component.class);
     }
 
-    private boolean isShouldBuildAsPage(Class<?> clazz) {
+    private boolean shouldBuildAsPage(Class<?> clazz) {
         return !(Renderable.class.isAssignableFrom(clazz));
     }
 

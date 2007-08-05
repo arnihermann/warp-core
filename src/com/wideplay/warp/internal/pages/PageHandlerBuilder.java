@@ -63,9 +63,16 @@ class PageHandlerBuilder {
             throw new WarpConfigurationException("could not parse xhtml template for: " + template, e);
         }
 
-        String[] uris;
-
         //check for the explicit presence of a URI mapping or use the conventional name
+        String[] uris = discoverUriMappings(pageClass, template);
+
+        //store different instances of the pagehandler for the given URIs
+        for (String uri : uris)
+            pages.put(uri, new PageHandlerImpl(uri, new PageClassReflectionBuilder(pageClass).build(), buildComponentHandler(document)));
+    }
+
+    private String[] discoverUriMappings(Class<?> pageClass, String template) {
+        String[] uris;
         if (pageClass.isAnnotationPresent(URIMapping.class)) {
             uris = pageClass.getAnnotation(URIMapping.class).value();
 
@@ -75,11 +82,9 @@ class PageHandlerBuilder {
                     throw new WarpConfigurationException(pageClass.getName() + " specified an invalid URI mapping: " + uri);
         }
         else
-            uris = new String[] { "/" + template };
-
-        //store different instances of the pagehandler for the given URIs
-        for (String uri : uris)
-            pages.put(uri, new PageHandlerImpl(uri, new PageClassReflectionBuilder(pageClass).build(), buildComponentHandler(document)));
+            uris = new String[] { String.format("/%s", template) };
+        
+        return uris;
     }
 
 

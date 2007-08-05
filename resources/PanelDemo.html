@@ -4,11 +4,15 @@
         xmlns="http://www.w3.org/1999/xhtml"
         xml:lang="en" lang="en">
 
-  <head>
-    <title>Warp :: Preview title</title>
+  <head w:component="meta">
+    <title>Warp :: Panel Component demo</title>
+
+    <style type="text/css">
+        @import "assets/warp.css";
+    </style>
   </head>
   
-  <body w:component="frame" w:title="Panel demo">
+  <body w:component="frame">
 
     <p>
         This page demonstrates the use of the Panel component in Warp.
@@ -17,22 +21,6 @@
         Panel:
         <div w:component="panel" w:visible="${visible}">
             <b>This text is inside the panel.</b>
-        </div>
-    </p>
-
-    <p>
-        This panel is draggable:
-        <div w:component="panel" w:drag="dragId1">
-            <label>This inside-panel text should move with the panel.</label>
-        </div>
-    </p>
-
-    <p>
-        This is a dropzone:
-        <div w:component="dropzone" w:drop="dragId1" w:event="@Fwd">
-            <table border="1">
-                <tr><td><label>${text}</label></td></tr>
-            </table>
         </div>
     </p>
 

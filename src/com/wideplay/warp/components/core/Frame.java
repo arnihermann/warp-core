@@ -24,8 +24,9 @@ public class Frame implements Renderable {
     private String css;
     private Map<String, String> metaInfo;
 
-    public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector, PageClassReflection reflection, Object page) {
-        writer.element("html");
+    public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector,
+                       PageClassReflection reflection, Object page) {
+        /*writer.element("html");
         writer.element("head");
         
         writer.element("title");
@@ -45,7 +46,7 @@ public class Frame implements Renderable {
         writer.writeRaw(HtmlWriter.ON_FRAME_LOAD_PLACEHOLDER);
         writer.end("script");
 
-        writer.end("head");
+        writer.end("head");*/
 
         //write body
         writer.element("body");
@@ -60,7 +61,7 @@ public class Frame implements Renderable {
 
         writer.end("form");
         writer.end("body");
-        writer.end("html");
+//        writer.end("html");
     }
 
     private void writeCss(HtmlWriter writer) {
