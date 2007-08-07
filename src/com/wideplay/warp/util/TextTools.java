@@ -84,6 +84,11 @@ public class TextTools {
         return Collections.unmodifiableList(tokens);
     }
 
+    //TODO make this better (use a regex to validate URI tempalates)
+    public static boolean isValidTemplateUri(String uri) {
+        return null != uri && uri.contains("{") && uri.contains("}");
+    }
+
     private enum TokenizerState { READING_TEXT, READING_EXPRESSION }
 
 
@@ -95,6 +100,10 @@ public class TextTools {
     //Taken from stylus studio message board http://www.stylusstudio.com/xmldev/200108/post10890.html
 
     private final static Pattern uriPattern = Pattern.compile("(([a-zA-Z][0-9a-zA-Z+\\\\-\\\\.]*:)?/{0,2}[0-9a-zA-Z;" +
+            "/?:@&=+$\\\\.\\\\-_!~*'()%]+)?(#[0-9a-zA-Z;/?:@&=+$\\\\.\\\\-_!~*'()%]+)?");
+
+    //TODO
+    private final static Pattern TEMPLATE_URI_PATTERN = Pattern.compile("(([a-zA-Z][0-9a-zA-Z+\\\\-\\\\.]*:)?/{0,2}[0-9a-zA-Z;" +
             "/?:@&=+$\\\\.\\\\-_!~*'()%]+)?(#[0-9a-zA-Z;/?:@&=+$\\\\.\\\\-_!~*'()%]+)?");
 
 

@@ -18,20 +18,23 @@ public class WarpModuleAssembly {
     private final Map<String, PageHandler> pages;
     private final Map<Class<?>, String> pageURIs;
     private final Map<String, Class<?>> pagesByClassName;
+    private final Map<String, Object> pagesByTemplate;
     private final List<Key<? extends StartupListener>> startupListeners;
 
     private final Map<String, PageHandler> userFacingPages = new LinkedHashMap<String, PageHandler>();
 
     private final Injector injector;
+    private final UriMatcher uriMatcher = new UriMatcher();
 
     public WarpModuleAssembly(Map<String, PageHandler> pages, Injector injector, Map<Class<?>, String> pageURIs,
-                              List<Key<? extends StartupListener>> startupListeners) {
+                              List<Key<? extends StartupListener>> startupListeners, Map<String, Object> pagesByTemplate) {
         this.pages = pages;
         this.injector = injector;
         this.pageURIs = pageURIs;
         this.startupListeners = startupListeners;
+        this.pagesByTemplate = pagesByTemplate;
 
-        //create a "masking" map for retrieving user-facing pages
+        //create a "masking" map for retrieving user-facing pages (some pages, e.g. component templates are not mapped to URIs)
         userFacingPages.putAll(pages);
 
         //create a quickmap for retrieving page classes by name
@@ -41,7 +44,7 @@ public class WarpModuleAssembly {
     }
 
     public PageHandler getPage(String uri) {
-        return pages.get(uri);
+        return pages.get(uri);    
     }
 
     public PageHandler getUserFacingPage(String uri) {
@@ -87,6 +90,7 @@ public class WarpModuleAssembly {
         }
 
         //tail recurse
+        //TODO do we want a class-hierarchy-depth panic?
         return resolveFromParents(originalClass, clazz.getSuperclass());
     }
 
@@ -104,5 +108,9 @@ public class WarpModuleAssembly {
         //fire all startup lifecycle events
         for (Key<? extends StartupListener> key : startupListeners)
             injector.getInstance(key).onStartup();
+    }
+
+    public UriMatcher.MatchTuple getPageUriMatch(String requestURI) {
+        return uriMatcher.extractMatch(requestURI, pagesByTemplate);
     }
 }

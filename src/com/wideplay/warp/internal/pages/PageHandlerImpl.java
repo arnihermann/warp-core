@@ -33,7 +33,7 @@ class PageHandlerImpl implements PageHandler {
 
 
     public Object handleRequest(HttpServletRequest request, HttpServletResponse response, Injector injector,
-                                Object page) {
+                                Object page, String uriPart) {
         //obtain the page object from guice (makes sure it is properly injected) ONLY if it is not provided
         if (null == page)
             page = injector.getInstance(reflection.getPageClass());
@@ -53,8 +53,9 @@ class PageHandlerImpl implements PageHandler {
         bindRequestParameters(request, injector, page);
 
         Object forwardPage;
-        //fire lifecycle method pre-render
-        forwardPage = reflection.fireEvent(page, PreRender.EVENT_ID, topic);
+
+        //fire lifecycle method pre-render (its topic is extracted from the URI)
+        forwardPage = reflection.fireEvent(page, PreRender.EVENT_ID, uriPart);
         if (null != forwardPage)
             return forwardPage;
 

@@ -13,7 +13,8 @@ import java.util.Map;
  * but *not* @Managed properties.
  *
  * This is primarily intended to store internal stuff in pseudo flash-scope between consecutive
- * requests to a page. For example, event "subjects" or other temporary metadata.
+ * requests to a page. For example, event "subjects" or other temporary metadata. This is different
+ * from a "user" conversation which may be scoped differently (i.e. wider than session).
  *
  * @author Dhanji R. Prasanna
  * @since 1.0

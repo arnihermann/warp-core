@@ -3,6 +3,7 @@ package com.wideplay.warp.internal.pages;
 import com.wideplay.warp.annotations.Template;
 import com.wideplay.warp.annotations.URIMapping;
 import com.wideplay.warp.internal.componentry.ComponentBuilders;
+import com.wideplay.warp.internal.UriMatchTreeBuilder;
 import com.wideplay.warp.module.ComponentRegistry;
 import com.wideplay.warp.module.WarpConfigurationException;
 import com.wideplay.warp.rendering.ComponentHandler;
@@ -39,7 +40,7 @@ class PageHandlerBuilder {
         this.registry = registry;
     }
 
-    public void build(Class<?> pageClass, String packageName, Map<String, PageHandler> pages) {
+    public void build(Class<?> pageClass, String packageName, Map<String, PageHandler> pages, Map<String, Object> pagesByTemplate) {
         //resolve template name from class name
         String template = pageClass.getName().substring(packageName.length() + 1);   //remove leading "."
 
@@ -67,8 +68,20 @@ class PageHandlerBuilder {
         String[] uris = discoverUriMappings(pageClass, template);
 
         //store different instances of the pagehandler for the given URIs
-        for (String uri : uris)
-            pages.put(uri, new PageHandlerImpl(uri, new PageClassReflectionBuilder(pageClass).build(), buildComponentHandler(document)));
+        for (String uri : uris) {
+            //check if this is a simple URI first
+            if (isStaticUri(uri))
+                pages.put(uri, new PageHandlerImpl(uri, new PageClassReflectionBuilder(pageClass).build(), buildComponentHandler(document)));
+            else
+                new UriMatchTreeBuilder().buildAndStore(uri,
+                        new PageHandlerImpl(uri, new PageClassReflectionBuilder(pageClass).build(), buildComponentHandler(document)), 
+                        pagesByTemplate);
+        }
+    }
+
+    //a URI is not allowed to have both { } -- unless it is dynamic, i.e. a template
+    private boolean isStaticUri(String uri) {
+        return (!uri.contains("{")) && (!uri.contains("}"));
     }
 
     private String[] discoverUriMappings(Class<?> pageClass, String template) {
@@ -77,9 +90,11 @@ class PageHandlerBuilder {
             uris = pageClass.getAnnotation(URIMapping.class).value();
 
             //validate uris
-            for (String uri : uris)
-                if (!TextTools.isValidURI(uri))
+            for (String uri : uris) {
+                //validate template & static uris
+                if (!TextTools.isValidURI(uri) && !TextTools.isValidTemplateUri(uri))
                     throw new WarpConfigurationException(pageClass.getName() + " specified an invalid URI mapping: " + uri);
+            }
         }
         else
             uris = new String[] { String.format("/%s", template) };

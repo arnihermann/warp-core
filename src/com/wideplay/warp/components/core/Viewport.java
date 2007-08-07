@@ -13,6 +13,7 @@ import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.rendering.PageHandler;
+import com.wideplay.warp.components.AttributesInjectable;
 
 import java.util.List;
 import java.util.Map;

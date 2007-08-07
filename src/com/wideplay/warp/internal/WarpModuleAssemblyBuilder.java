@@ -10,6 +10,7 @@ import com.wideplay.warp.internal.componentry.ComponentBuilders;
 import com.wideplay.warp.internal.pages.PageBuilders;
 import com.wideplay.warp.module.ComponentRegistry;
 import com.wideplay.warp.module.WarpModuleAssembly;
+import com.wideplay.warp.module.WarpConfigurationException;
 import com.wideplay.warp.module.componentry.Renderable;
 import com.wideplay.warp.module.ioc.IocContextManager;
 import com.wideplay.warp.module.pages.PageClassReflection;
@@ -51,6 +52,7 @@ class WarpModuleAssemblyBuilder {
             url = new URL(classLocation);
         } catch(MalformedURLException e) {
             log.error("could not create classfactory for module", e);
+            throw new WarpConfigurationException("could not create classfactory for module");
         }
 
         //load warp user module classes
@@ -62,29 +64,29 @@ class WarpModuleAssemblyBuilder {
 
         //build page reflections and assemble them into the module
         Map<String, PageHandler> pages = new LinkedHashMap<String, PageHandler>();
+        Map<String, Object> pagesByTemplate = new HashMap<String, Object>();
         Set<Class<?>> componentClasses = new LinkedHashSet<Class<?>>();
-        for (Class<?> pageClass : allClasses) {
-            //only build handlers for page classes (skips enums, etc.)
-            if (isNonClass(pageClass))
-                continue;
-
-            //also build as page if necessary
-            if (shouldBuildAsPage(pageClass))
-                PageBuilders.buildAndStorePageHandler(context, componentRegistry, pageClass, packageName, pages);
-
-            //should be built as a custom component?
-            if (shouldBuildAsComponent(pageClass)) {
-                ComponentBuilders.buildAndRegisterComponent(context, componentRegistry, pageClass, packageName, pages);
-                componentClasses.add(pageClass);
-            }
-        }
+        
+        buildPageAndComponentHandlers(allClasses, componentRegistry, packageName, pages, componentClasses, pagesByTemplate);
 
         //build a guice module out of the loaded pages
         List<PageClassReflection> pageBindings = new ArrayList<PageClassReflection>(pages.size());
         Map<Class<?>, String> pagesURIs = new LinkedHashMap<Class<?>, String>();
+
+        bindPages(pages, pageBindings, pagesURIs);
+
+        WarpModuleAssembly warpModuleAssembly = configureGuice(pageBindings, pages, pagesURIs, pagesByTemplate);
+        warpModuleAssembly.hidePages(componentClasses);
+
+        return warpModuleAssembly;
+    }
+
+    private void bindPages(Map<String, PageHandler> pages, List<PageClassReflection> pageBindings, Map<Class<?>, String> pagesURIs) {
         for (String pageURI : pages.keySet()) {
-            
-            log.debug("Binding page to provider (in guice) and to URI : " + pageURI);
+
+            if (log.isDebugEnabled())
+                log.debug(String.format("Binding page to provider (in guice) and to URI : %s", pageURI));
+
             PageHandler pageHandler = pages.get(pageURI);
             Class<?> pageClass = pageHandler.getPageClassReflection().getPageClass();
 
@@ -92,16 +94,32 @@ class WarpModuleAssemblyBuilder {
             pageBindings.add(pageHandler.getPageClassReflection());
             pagesURIs.put(pageClass, pageURI);
         }
+    }
 
-        WarpModuleAssembly warpModuleAssembly = configureGuice(pageBindings, pages, pagesURIs);
-        warpModuleAssembly.hidePages(componentClasses);
+    private void buildPageAndComponentHandlers(List<Class<?>> allClasses, ComponentRegistry componentRegistry, String packageName,
+                                               Map<String, PageHandler> pages, Set<Class<?>> componentClasses,
+                                               Map<String, Object> pagesByTemplate) {
+        for (Class<?> pageClass : allClasses) {
+            //only build handlers for page classes (skips enums, etc.)
+            if (isNonClass(pageClass))
+                continue;
 
-        return warpModuleAssembly;
+            //also build as page if necessary
+            if (shouldBuildAsPage(pageClass))
+                PageBuilders.buildAndStorePageHandler(context, componentRegistry, pageClass, packageName, pages, pagesByTemplate);
+
+            //should be built as a custom component?
+            if (shouldBuildAsComponent(pageClass)) {
+                ComponentBuilders.buildAndRegisterComponent(context, componentRegistry, pageClass, packageName, pages);
+                componentClasses.add(pageClass);
+            }
+        }
     }
 
 
-    
-    private WarpModuleAssembly configureGuice(List<PageClassReflection> pageBindings, Map<String, PageHandler> pages, Map<Class<?>, String> pagesURIs) {
+    private WarpModuleAssembly configureGuice(List<PageClassReflection> pageBindings, Map<String, PageHandler> pages, Map<Class<?>, String> pagesURIs,
+                                              Map<String, Object> pagesByTemplate) {
+
         //setup custom special-case provider for the assembly itself
         WarpModuleAssemblyProvider moduleAssemblyProvider = new WarpModuleAssemblyProvider();
         internalServicesModule.setWarpModuleAssemblyProvider(moduleAssemblyProvider);
@@ -117,7 +135,8 @@ class WarpModuleAssemblyBuilder {
         );
 
         //make the assembly available to the guice injector via a pre-registered provider
-        WarpModuleAssembly warpModuleAssembly = new WarpModuleAssembly(pages, injector, pagesURIs, warpConfigurer.getStartupListeners());
+        WarpModuleAssembly warpModuleAssembly = new WarpModuleAssembly(pages, injector, pagesURIs,
+                warpConfigurer.getStartupListeners(), pagesByTemplate);
         moduleAssemblyProvider.setAssembly(warpModuleAssembly);
         
         return warpModuleAssembly;

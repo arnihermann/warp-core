@@ -15,4 +15,6 @@ import java.util.Map;
  */
 public interface ClassReflectionCache {
     Map<String, String> getPropertyLabelMap(Object object);
+
+    Map<String, Class<?>> getPropertyTypeMap(Object theBean);
 }

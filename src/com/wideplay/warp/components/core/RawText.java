@@ -8,6 +8,7 @@ import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.rendering.PageRenderException;
 import com.wideplay.warp.util.Token;
+import com.wideplay.warp.components.AttributesInjectable;
 import ognl.Ognl;
 import ognl.OgnlException;
 

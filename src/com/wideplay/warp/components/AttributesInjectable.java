@@ -1,4 +1,4 @@
-package com.wideplay.warp.components.core;
+package com.wideplay.warp.components;
 
 import java.util.Map;
 

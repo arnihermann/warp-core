@@ -84,7 +84,7 @@ class PageRedirector {
             log.trace(String.format("Forwarding server-side to page: %s", forwardPage.getPage()));
 
         //process forward & return (events do not get forwarded)
-        forwardPageHandler.handleRequest(request, response, assembly.getInjector(), forwardPage.getPage());
+        forwardPageHandler.handleRequest(request, response, assembly.getInjector(), forwardPage.getPage(), null);
     }
 
 

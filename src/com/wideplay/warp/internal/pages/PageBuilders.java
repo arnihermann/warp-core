@@ -17,8 +17,9 @@ public class PageBuilders {
     private PageBuilders() {
     }
 
-    public static void buildAndStorePageHandler(ServletContext context, ComponentRegistry registry, Class<?> pageClass, String packageName, Map<String, PageHandler> pages) {
-        new PageHandlerBuilder(context, registry).build(pageClass, packageName, pages);
+    public static void buildAndStorePageHandler(ServletContext context, ComponentRegistry registry, Class<?> pageClass, String packageName,
+                                                Map<String, PageHandler> pages, Map<String, Object> pagesByTemplate) {
+        new PageHandlerBuilder(context, registry).build(pageClass, packageName, pages, pagesByTemplate);
 
         //load resources
         //..

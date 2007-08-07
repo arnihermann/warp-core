@@ -1,6 +1,7 @@
 package com.wideplay.warp.rendering;
 
 import com.wideplay.warp.module.WarpModuleAssembly;
+import com.wideplay.warp.module.UriMatcher;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -37,11 +38,21 @@ public class TemplatingFilter {
 
 
         //locate page handler from uri and handle page
-        PageHandler handler = assembly.getUserFacingPage(request.getRequestURI().substring(request.getContextPath().length()));
+        final String contextualUri = request.getRequestURI().substring(request.getContextPath().length());
+        PageHandler handler = assembly.getUserFacingPage(contextualUri);
 
-        //render normally?, i.e. thru servlet
-        if (null == handler)
-            return false;
+        String uriPart = null;
+        if (null == handler) {
+            UriMatcher.MatchTuple matchTuple = assembly.getPageUriMatch(contextualUri);
+
+            //render normally?, i.e. thru servlet
+            if (null == matchTuple)
+                return false;
+
+            handler = matchTuple.pageHandler;
+            uriPart = matchTuple.uriExtract;
+        }
+
 
         if (log.isTraceEnabled())
             log.trace(String.format("Filter active for page: %s; handled by: %s", request.getRequestURI(), handler));
@@ -52,7 +63,7 @@ public class TemplatingFilter {
 
 
         //get event id and dispatch with the appropriate page object
-        Object forward = handler.handleRequest(request, response, assembly.getInjector(), page);
+        Object forward = handler.handleRequest(request, response, assembly.getInjector(), page, uriPart);
 
         //do forward if necessary (really a client-side redirect)
         if (null != forward)

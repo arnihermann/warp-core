@@ -21,18 +21,20 @@ import java.util.*;
  */
 class ClassReflectionCacheImpl implements ClassReflectionCache {
     private final Map<Class<?>, Map<String, String>> classPropertyLabelMap = new HashMap<Class<?>, Map<String, String>>();
-    private final Log log = LogFactory.getLog(getClass());
+    private final Map<Class<?>, Map<String, Class<?>>> classPropertyTypeMap = new LinkedHashMap<Class<?>, Map<String, Class<?>>>();
+
+    private final Log log = LogFactory.getLog(ClassReflectionCacheImpl.class);
 
     public Map<String, String> getPropertyLabelMap(Object object) {
         Class<? extends Object> objectClass = object.getClass();
         Map<String, String> propertyLabels = classPropertyLabelMap.get(objectClass);
 
         if (null != propertyLabels)
-            log.debug("cache hit! returning class: " + objectClass);
+            log.debug(String.format("cache hit! returning class: %s", objectClass));
 
         //build a property map via reflection
         if (null == propertyLabels) {
-            log.debug("cache miss, introspecting and caching class: " + objectClass);
+            log.debug(String.format("cache miss, introspecting and caching class: %s", objectClass));
 
             propertyLabels = buildPropertiesAndLabels(objectClass);
             classPropertyLabelMap.put(objectClass, propertyLabels);
@@ -40,6 +42,46 @@ class ClassReflectionCacheImpl implements ClassReflectionCache {
 
         return propertyLabels;
     }
+
+
+    public Map<String, Class<?>> getPropertyTypeMap(Object object) {
+        Class<? extends Object> objectClass = object.getClass();
+        Map<String, Class<?>> propertiesAndTypes = classPropertyTypeMap.get(objectClass);
+
+        //build a property/type map via reflection
+        if (null == propertiesAndTypes) {
+            propertiesAndTypes = buildPropertiesAndTypes(objectClass);
+            classPropertyTypeMap.put(objectClass, propertiesAndTypes);
+        }
+
+        return propertiesAndTypes;
+    }
+
+    private Map<String, Class<?>> buildPropertiesAndTypes(Class<? extends Object> objectClass) {
+        Map<String, Class<?>> propertyTypes = new LinkedHashMap<String, Class<?>>();   //MUST preserve order
+
+        //TODO replace with Bean introspector??
+        for (Method method : objectClass.getMethods()) {
+
+
+            //check for getters and cache them as a property
+            String name = method.getName();
+            if (0 == method.getParameterTypes().length && name.length() > 3 && !void.class.equals(method.getReturnType())
+                    && name.startsWith("get")) {
+
+                if ("getClass".equals(method.getName()))
+                    continue;
+
+                String key = ReflectUtils.extractPropertyNameFromAccessor(method.getName());
+
+                propertyTypes.put(key, method.getReturnType());
+
+            }
+        }
+
+        return propertyTypes;
+    }
+
 
     //this method is deliberately unsynchronized so 2 threads caching the same class can overwrite the other, thus avoiding competition for the map
     private Map<String, String> buildPropertiesAndLabels(Class<? extends Object> aClass) {
@@ -52,6 +94,7 @@ class ClassReflectionCacheImpl implements ClassReflectionCache {
             labels = null;
         }
 
+        //TODO replace with Bean introspector??
         for (Method method : aClass.getMethods()) {
 
             //check for getters and cache them as a property

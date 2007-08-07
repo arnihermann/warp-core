@@ -44,6 +44,16 @@ public class IocContextManager {
         return context.getRequest();
     }
 
+    static HttpServletResponse getResponse() {
+        Context context = localContext.get();
+        if (null == context) {
+          throw new NotScopeableException("Cannot access scoped object. It appears we"
+              + " are not currently inside an HTTP Servlet request");
+        }
+
+        return context.getResponse();
+    }
+
     public static void injectProperties(Collection<PropertyDescriptor> propertyDescriptors, Object target, Object source) {
         ObjectInjector.injectAll(propertyDescriptors, target, source);
     }

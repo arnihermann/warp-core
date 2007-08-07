@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 public interface PageHandler {
 
     Object handleRequest(HttpServletRequest request, HttpServletResponse response, Injector injector,
-                               Object page);
+                         Object page, String uriPart);
 
     PageClassReflection getPageClassReflection();
 

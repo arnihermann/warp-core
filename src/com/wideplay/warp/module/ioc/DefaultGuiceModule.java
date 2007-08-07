@@ -15,6 +15,8 @@ import com.wideplay.warp.rendering.RequestBinder;
 import com.wideplay.warp.util.Cube;
 import com.wideplay.warp.util.HashCube;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -34,6 +36,10 @@ class DefaultGuiceModule extends AbstractModule {
         //bind warp scopes
         bindScope(SessionScoped.class, WarpScopes.SESSION);
         bindScope(RequestScoped.class, WarpScopes.REQUEST);
+
+        //bind request & response providers
+        bind(HttpServletRequest.class).toProvider(RequestProvider.class);
+        bind(HttpServletResponse.class).toProvider(ResponseProvider.class);
 
         //bind state manager and its deps
         bind(Cube.class).annotatedWith(SessionWide.class).to(HashCube.class).in(SessionScoped.class);
