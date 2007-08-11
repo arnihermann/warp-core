@@ -53,7 +53,7 @@ class DefaultGuiceModule extends AbstractModule {
                 .toInstance(Builders.getReservedParameterNames());
 
         //bind request binder that uses ognl to bind request parameters to a page
-        bind(RequestBinder.class).to(OgnlRequestBinder.class);
+        bind(RequestBinder.class).to(MvelRequestBinder.class);
 
         //bind pages to our InjectPageProvider providers (ones that only inject managed props)
         for (Class<?> clazz : pagesAndProviders.keySet())

@@ -29,12 +29,14 @@ class ClassReflectionCacheImpl implements ClassReflectionCache {
         Class<? extends Object> objectClass = object.getClass();
         Map<String, String> propertyLabels = classPropertyLabelMap.get(objectClass);
 
-        if (null != propertyLabels)
+        if (log.isDebugEnabled() && null != propertyLabels)
             log.debug(String.format("cache hit! returning class: %s", objectClass));
 
         //build a property map via reflection
         if (null == propertyLabels) {
-            log.debug(String.format("cache miss, introspecting and caching class: %s", objectClass));
+
+            if(log.isDebugEnabled())
+                log.debug(String.format("cache miss, introspecting and caching class: %s", objectClass));
 
             propertyLabels = buildPropertiesAndLabels(objectClass);
             classPropertyLabelMap.put(objectClass, propertyLabels);

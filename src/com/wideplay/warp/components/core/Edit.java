@@ -46,7 +46,6 @@ public class Edit implements Renderable {
 
         Map<String, String> propertiesAndLabels = cache.getPropertyLabelMap(theBean);
 
-        //TODO JIT-cache these nested components so that "this" component instance's pool eventually warms up
         Map<String, Class<?>> propertiesAndTypes = cache.getPropertyTypeMap(theBean);
 
         for (Map.Entry<String, Class<?>> propertyType : propertiesAndTypes.entrySet()) {

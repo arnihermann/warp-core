@@ -16,7 +16,7 @@ import java.util.List;
  * @since 1.0
  */
 public class Meta implements Renderable {
-    private boolean onload;
+    private boolean onload = true;
 
     public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector,
                        PageClassReflection reflection, Object page) {

@@ -6,11 +6,9 @@ import com.wideplay.warp.module.componentry.Renderable;
 import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
-import com.wideplay.warp.rendering.PageRenderException;
 import com.wideplay.warp.util.Token;
+import com.wideplay.warp.util.beans.BeanUtils;
 import com.wideplay.warp.components.AttributesInjectable;
-import ognl.Ognl;
-import ognl.OgnlException;
 
 import java.util.List;
 import java.util.Map;
@@ -56,17 +54,13 @@ public class RawText implements Renderable, AttributesInjectable {
         if (null != tokens) {
             for (Token token : tokens) {
                 if (token.isExpression()) {
-                    try {
-                        Object value = Ognl.getValue(token.getToken(), page);
+                    Object value = BeanUtils.getFromPropertyExpression(token.getToken(), page);
 
-                        //stringize the property only if it is not null
-                        if (null != value)
-                            value = value.toString();
+                    //stringize the property only if it is not null
+                    if (null != value)
+                        value = value.toString();
 
-                        writer.writeRaw((String)value);
-                    } catch (OgnlException e) {
-                        throw new PageRenderException("Error while evaluating expression: " + token.getToken(), e);
-                    }
+                    writer.writeRaw((String)value);
                 } else
                     writer.writeRaw(token.getToken());
             }

@@ -1,6 +1,7 @@
 package com.wideplay.warp.components.core;
 
 import com.google.inject.Injector;
+import com.google.inject.Inject;
 import com.wideplay.warp.annotations.Component;
 import com.wideplay.warp.module.componentry.Renderable;
 import com.wideplay.warp.module.pages.PageClassReflection;
@@ -26,10 +27,20 @@ public class SelectBox implements Renderable {
     private String items;
     private String label;
 
+    private final RequestBinder requestBinder;
+
+    @Inject
+    public SelectBox(RequestBinder requestBinder) {
+        this.requestBinder = requestBinder;
+    }
+
     public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector, PageClassReflection reflection, Object page) {
         Object boundItem = null;
         if (null != bind) {
-            writer.element("select", "name", RequestBinder.EXPR_PARAMETER_NAME);    //bind as expression
+            //write special collection binding parameter name
+            String bindingExpression = requestBinder.createCollectionBindingExpression(items, bind);
+
+            writer.element("select", "name", bindingExpression);    //bind as expression
             boundItem = BeanUtils.getFromPropertyExpression(bind, page);
         }
         else
@@ -57,7 +68,9 @@ public class SelectBox implements Renderable {
 
         //bind it as an expression (selecting the user's value from the item list by matching hashcode):
         if (null != bind)
-            indexValue = bind + " = " + items + ".{? #this.hashCode() == " + indexValue + "}[0]";
+           indexValue = String.valueOf(item.hashCode());
+
+//            indexValue = bind + " = " + items + ".{? #this.hashCode() == " + indexValue + "}[0]";
 
         //resolve label from either set value or use the item itself
         String labelValue = this.label;

@@ -29,7 +29,7 @@
     </p>
 
     <span w:component="repeater" w:items="beans">
-        <a w:component="link" w:topic="#this">${#this}</a>  <!-- current bean is topic -->
+        <a w:component="link" w:topic="this">${this}</a>  <!-- current bean is topic -->
     </span>
   </body>
 </html>
