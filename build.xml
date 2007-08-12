@@ -44,4 +44,15 @@
             <exclude name="dist/**"/>
         </jar>
     </target>
+
+    <target name="assemble.jar.deps" depends="build" description="Assembles an archive of Warp core classes (for use in WEB-INF/lib for example) along with all deps">
+        <zip basedir="${dir.distribute}" destfile="${dir.distribute}/${deps.artifact}">
+            <include name="${core.artifact}"/>
+            <fileset dir="${lib}">
+                <exclude name="javaee.jar"/>
+                <exclude name="testng*"/>
+                <exclude name="log4j*"/>
+            </fileset>
+        </zip>
+    </target>
 </project>
