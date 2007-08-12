@@ -22,6 +22,8 @@ import java.util.List;
  *
  * <a w:component="hyperlink" w:target="mytarget/page" w:topic="expression">goto target</a>
  *
+ * ...navigates from current page to URI "mytarget/page/{expression}"
+ *
  */
 public class HyperLink implements Renderable {
     private String target;
@@ -29,8 +31,13 @@ public class HyperLink implements Renderable {
 
     public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector,
                        PageClassReflection reflection, Object page) {
-
-        String href = String.format("%s/%s", target, topic);
+        String href;
+        if (null == topic)
+            href = target;
+        else if (null == target)
+            href = topic;
+        else
+            href = String.format("%s/%s", target, topic);
 
         writer.element("a", "href", href);
         ComponentSupport.renderMultiple(writer, nestedComponents, injector, reflection, page);

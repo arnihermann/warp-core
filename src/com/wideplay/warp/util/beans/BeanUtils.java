@@ -1,6 +1,7 @@
 package com.wideplay.warp.util.beans;
 
 import org.mvel.MVEL;
+import org.mvel.PropertyAccessException;
 import org.apache.commons.logging.LogFactory;
 
 import java.io.Serializable;

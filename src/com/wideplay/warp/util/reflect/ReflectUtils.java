@@ -19,11 +19,15 @@ public class ReflectUtils {
 
     public static <T> T instantiate(Class<T> clazz) {
         try {
-            return clazz.newInstance();
+            return clazz.getConstructor().newInstance();
         } catch (InstantiationException e) {
-            throw new IllegalArgumentException("cannot instantiate object, probably because there is no nullary ctor", e);
+            throw new IllegalArgumentException("cannot instantiate object: " + e.getMessage(), e);
         } catch (IllegalAccessException e) {
             throw new IllegalArgumentException("cannot instantiate bean due to access visibility", e);
+        } catch (NoSuchMethodException e) {
+            throw new IllegalArgumentException("cannot instantiate object, because there is no nullary ctor", e);
+        } catch (InvocationTargetException e) {
+            throw new IllegalArgumentException("cannot instantiate object, because the ctor threw an exception: " + e.getMessage(), e);
         }
     }
 
@@ -59,7 +63,7 @@ public class ReflectUtils {
         } catch (IllegalAccessException e) {
             throw new IllegalArgumentException("cannot invoke method due to access visibility", e);
         } catch (InvocationTargetException e) {
-            throw new IllegalArgumentException("cannot complete invoke method due to it throwing an exception", e);
+            throw new IllegalArgumentException("cannot complete invoke method due to it throwing an exception: " + e.getMessage(), e);
         }
     }
 
