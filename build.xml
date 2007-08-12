@@ -21,7 +21,7 @@
     <target name="build" depends="init" description="Compiles warp core and demo sources into binary class files">
         <javac sourcepath="" srcdir="${src}" destdir="${build}">
             <include name="**/*.java"/>
-            <!--<exclude name="com/wideplay/warp/example/**"/>-->
+            <exclude name="com/wideplay/warp/example/**"/>
 
             <classpath refid="core.classpath"/>
         </javac>
@@ -33,13 +33,14 @@
                 <include name="**/*.properties"/>
                 <include name="**/*.js"/>
 
-                <!--<exclude name="com/wideplay/warp/example/**"/>-->
+                <exclude name="com/wideplay/warp/example/**"/>
             </fileset>
         </copy>
     </target>
 
     <target name="assemble.jar" depends="build" description="Assembles a library jar of Warp core classes (for use in WEB-INF/lib for example)">
         <jar basedir="${build}" destfile="${dir.distribute}/${core.artifact}">
+            <exclude name="com/wideplay/warp/example/**"/>
             <exclude name="dist/**"/>
         </jar>
     </target>
