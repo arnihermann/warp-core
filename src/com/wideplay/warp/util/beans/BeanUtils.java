@@ -34,8 +34,6 @@ public class BeanUtils {
             }
 
             //compile expression
-            LogFactory.getLog(BeanUtils.class).debug(String.format("Compiling expression %s from original %s", preparedExpression, expr));
-
             compiled = MVEL.compileExpression(preparedExpression);
 
             //place into map under original key (i.e. as it came in)
