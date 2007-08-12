@@ -17,6 +17,13 @@
         The movie name was: ${movie}
     </p>
 
+    <p>
+        Demonstration of the HyperLink component (generates an HTTP GET to this page):
+        <br/>
+        <br/>
+        <a w:component="hyperlink" w:target="movie" w:topic="${movie + '...'}">${movie} + "..."</a>
+    </p>
+
     <br/>
   </body>
 </html>

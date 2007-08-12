@@ -29,6 +29,7 @@ class DefaultComponentRegistryImpl implements ComponentRegistry {
         register("frame", Frame.class);
         register("meta", Meta.class);
         register("link", Link.class);
+        register("hyperlink", HyperLink.class);
         register(ComponentRegistry.TEXT_COMPONENT_NAME, RawText.class);
         register("button", Button.class);
         register("panel", Panel.class);

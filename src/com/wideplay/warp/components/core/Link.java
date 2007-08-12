@@ -20,11 +20,51 @@ import java.util.List;
  *
  * @author Dhanji R. Prasanna
  * @since 1.0
+ *
+ * Generates an on-page link, that when clicked, triggers an event to the page object.
+ *
+ * Events can be subscribed to with the @OnEvent annotation on a method. Specifying a w:event attribute
+ * will fire events to a custom event annotation. Example:
+ *
+ * <a w:component="link" w:event="@Add">add!</a>
+ *
+ * will fire events *only* to the following event handler (and similar ones):
+ *
+ * <pre>
+ * @OnEvent @Add
+ * public void myEventHandler() {
+ *
+ * }
+ * </pre>
+ *
+ * Use topics to specify an argument to your event handler. A topic maybe any property from the page object
+ * or a suitable MVEL expression. Topics are useful inside repeaters where you want to specify what object
+ * was clicked.
+ *
+ * <span w:component="repeater" w:items="myCollection">
+ *      <a w:component="link" w:topic="this">add!</a>
+ * </span>
+ *
+ * Then subscribe to it like so:
+ *
+ * <pre>
+ * @OnEvent
+ * public void onSelect(Object o) {
+ *     //link for "o" was clicked, do something...
+ * }
+ * </pre>
+ *
+ * Note that the event handler can be declared with any argument type (not just java.lang.Object) so long
+ * as the topic object can be coerced into that type (example: String can be coerced into Serializable).
+ *
+ * An event handler without a topic *must* take no arguments. An event handler with a topic *must* declare
+ * one argument exactly. 
+ *
  */
 @Component
 public class Link implements Renderable {
     private String event;
-    private String topic;
+    private Object topic;
     private final InternalConversation conversation;
 
     @Inject
@@ -44,7 +84,7 @@ public class Link implements Renderable {
         int topicId = 0;
         if (null != topic) {
             //get topic value from page
-            final Object topicValue = BeanUtils.getFromPropertyExpression(topic, page);
+            final Object topicValue = topic; //BeanUtils.getFromPropertyExpression(topic, page);
             topicId = topicValue.hashCode();
 
             //store it into the internal conversation for later retrieval if necessary...
@@ -69,7 +109,7 @@ public class Link implements Renderable {
         this.event = event;
     }
 
-    public void setTopic(String topic) {
+    public void setTopic(Object topic) {
         this.topic = topic;
     }
 }

@@ -31,7 +31,7 @@ import java.util.Map;
  */
 @Component
 public class Table implements Renderable {
-    private String items;
+    private Object items;
     private final ClassReflectionCache classCache;
     private Map<String, ComponentHandler> columns;
     private Map<String, ComponentHandler> customColumns;    //non-property columns
@@ -46,7 +46,7 @@ public class Table implements Renderable {
         writer.element("table", "id", id);
 
         //obtain the bound object
-        Object itemsObject = BeanUtils.getFromPropertyExpression(items, page);
+        Object itemsObject = items;//BeanUtils.getFromPropertyExpression(items, page);
 
         //build a cache of child columns (if we havent already) TODO validate these "columns" in the template at startup time
         if (null == columns) {
@@ -168,11 +168,8 @@ public class Table implements Renderable {
         writer.end("tr");
     }
 
-    public String getItems() {
-        return items;
-    }
 
-    public void setItems(String items) {
+    public void setItems(Object items) {
         this.items = items;
     }
 }

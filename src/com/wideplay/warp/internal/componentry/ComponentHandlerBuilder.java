@@ -231,10 +231,10 @@ class ComponentHandlerBuilder {
     }
 
     private PropertyDescriptor buildPropertyDescriptor(Attribute attribute) {
-        boolean isExpression = attribute.getValue().startsWith("${");
+        boolean isExpression = TextTools.isExpression(attribute.getValue());
 
         return new PropertyDescriptor(attribute.getName(),
-                isExpression ? stripExpression(attribute.getValue()) : attribute.getValue(),
+                isExpression ? TextTools.stripExpression(attribute.getValue()) : attribute.getValue(),
                 isExpression);
     }
 
@@ -255,12 +255,4 @@ class ComponentHandlerBuilder {
         return node.getText();
     }
 
-    public static String stripAttributePrefix(String attr, String prefix) {
-//        System.out.println(attr + " - " + prefix);
-        return attr.substring(prefix.length());
-    }
-
-    public static String stripExpression(String expr) {
-        return expr.substring(2, expr.length() - 1);
-    }
 }

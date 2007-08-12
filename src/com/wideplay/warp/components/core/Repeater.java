@@ -6,6 +6,7 @@ import com.wideplay.warp.module.componentry.Renderable;
 import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
+import com.wideplay.warp.rendering.PageRenderException;
 import com.wideplay.warp.util.beans.BeanUtils;
 
 import java.util.List;
@@ -21,30 +22,29 @@ import java.util.List;
  */
 @Component
 public class Repeater implements Renderable {
-    private String items;
+    private Object items;
 
     public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector, PageClassReflection reflection, Object page) {
 
         //obtain the bound object
-        Object itemsObject = BeanUtils.getFromPropertyExpression(items, page);
+        Object itemsObject = items; //BeanUtils.getFromPropertyExpression(items, page);
 
         //see if it is an iterable
         if (itemsObject instanceof Iterable)
             for (Object item : (Iterable) itemsObject)
                 ComponentSupport.renderMultiple(writer, nestedComponents, injector, null, item);
 
-        else
+        else if (itemsObject instanceof Object[])
             //must be an array
             for (Object item : (Object[])itemsObject)
                 ComponentSupport.renderMultiple(writer, nestedComponents, injector, null, item);
+        else 
+            throw new PageRenderException("Repeater can only repeat over instances of Iterables or arrays: " + items);
 
     }
 
-    public String getItems() {
-        return items;
-    }
 
-    public void setItems(String items) {
+    public void setItems(Object items) {
         this.items = items;
     }
 }

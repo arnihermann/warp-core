@@ -89,6 +89,19 @@ public class TextTools {
         return null != uri && uri.contains("{") && uri.contains("}");
     }
 
+    public static String stripAttributePrefix(String attr, String prefix) {
+//        System.out.println(attr + " - " + prefix);
+        return attr.substring(prefix.length());
+    }
+
+    public static String stripExpression(String expr) {
+        return expr.substring(2, expr.length() - 1);
+    }
+
+    public static boolean isExpression(String attribute) {
+        return attribute.startsWith("${");
+    }
+
     private enum TokenizerState { READING_TEXT, READING_EXPRESSION }
 
 
