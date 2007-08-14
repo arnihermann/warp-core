@@ -1,14 +1,12 @@
 package com.wideplay.warp.util.beans;
 
+import com.wideplay.warp.util.TextTools;
 import org.mvel.MVEL;
 import org.mvel.PropertyAccessException;
-import org.apache.commons.logging.LogFactory;
 
 import java.io.Serializable;
 import java.util.Map;
 import java.util.WeakHashMap;
-
-import com.wideplay.warp.util.TextTools;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,6 +16,8 @@ import com.wideplay.warp.util.TextTools;
  * @since 1.0
  */
 public class BeanUtils {
+
+    public static final Object[] EMPTY_ARRAY = new Object[] { };
 
     //lets do some caching of expressions to see if we cant go a bit faster
     private static final Map<String, Serializable> compiledExpressions = new WeakHashMap<String, Serializable>();

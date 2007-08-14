@@ -3,6 +3,7 @@ package com.wideplay.warp.components.core;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.wideplay.warp.annotations.Component;
+import com.wideplay.warp.components.AttributesInjectable;
 import com.wideplay.warp.module.componentry.ClassReflectionCache;
 import com.wideplay.warp.module.componentry.PropertyDescriptor;
 import com.wideplay.warp.module.componentry.Renderable;
@@ -10,7 +11,6 @@ import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.util.beans.BeanUtils;
-import org.apache.commons.logging.LogFactory;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -30,11 +30,16 @@ import java.util.Map;
  * @since 1.0
  */
 @Component
-public class Table implements Renderable {
+public class Table implements Renderable, AttributesInjectable {
     private Object items;
+    private String rowClass;
+    private String oddRowClass;
+
     private final ClassReflectionCache classCache;
     private Map<String, ComponentHandler> columns;
     private Map<String, ComponentHandler> customColumns;    //non-property columns
+
+    private Map<String, Object> attribs;
 
     @Inject
     public Table(ClassReflectionCache classCache) {
@@ -43,7 +48,7 @@ public class Table implements Renderable {
 
     public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector, PageClassReflection reflection, Object page) {
         String id = writer.newId(this);
-        writer.element("table", "id", id);
+        writer.elementWithAttrs("table", new Object[] { "id", id }, ComponentSupport.getTagAttributesExcept(attribs, "id"));
 
         //obtain the bound object
         Object itemsObject = items;//BeanUtils.getFromPropertyExpression(items, page);
@@ -134,7 +139,11 @@ public class Table implements Renderable {
     }
 
     private void writeRow(Object item, HtmlWriter writer, Map<String, String> propertiesAndLabels, Injector injector, PageClassReflection reflection) {
-        writer.element("tr");
+        if (null != rowClass)
+            writer.element("tr", "class", rowClass);
+        else
+            writer.element("tr");
+
         for (String property : propertiesAndLabels.keySet()) {
             writer.element("td");
 
@@ -171,5 +180,18 @@ public class Table implements Renderable {
 
     public void setItems(Object items) {
         this.items = items;
+    }
+
+
+    public void setOddRowClass(String oddRowClass) {
+        this.oddRowClass = oddRowClass;
+    }
+
+    public void setRowClass(String rowClass) {
+        this.rowClass = rowClass;
+    }
+
+    public void setAttributeNameValuePairs(Map<String, Object> attribs) {
+        this.attribs = attribs;
     }
 }

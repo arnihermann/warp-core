@@ -25,8 +25,7 @@ public class Panel implements Renderable {
 
     public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector, PageClassReflection reflection, Object page) {
         if (visible) {
-
-            //draw a div and add drag support to this panel if draggable only
+            //no tag is drawn around a panel (unless for dragging support?)
             ComponentSupport.renderMultiple(writer, nestedComponents, injector, reflection, page);
         }
     }

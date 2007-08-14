@@ -1,16 +1,15 @@
 package com.wideplay.warp.components.core;
 
+import com.google.inject.Injector;
+import com.wideplay.warp.components.AttributesInjectable;
 import com.wideplay.warp.module.componentry.Renderable;
 import com.wideplay.warp.module.pages.PageClassReflection;
-import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.rendering.ComponentHandler;
-import com.wideplay.warp.components.AttributesInjectable;
+import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.util.beans.BeanUtils;
-import com.google.inject.Injector;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Arrays;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,19 +27,12 @@ public class TextArea implements Renderable, AttributesInjectable {
     private String bind;
 
     public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector, PageClassReflection reflection, Object page) {
-        Object[] attributes = (Object[]) attribs.get(RawText.WARP_RAW_TEXT_PROP_ATTRS);
-        Object[] attrs = new Object[attributes.length + 2];
+        Object[] attributes = ComponentSupport.getTagAttributesExcept(attribs, "name");
 
-        attrs[0] = "name";
-        attrs[1] = bind;
-
-        System.arraycopy(attributes, 0, attrs, 2, attributes.length);
-
-        writer.elementWithAttrs("textarea", attrs);
+        writer.elementWithAttrs("textarea", new Object[] { "name", bind }, attributes);
         writer.writeRaw(BeanUtils.getFromPropertyExpression(bind, page).toString());
         writer.end("textarea");
     }
-
 
     public void setAttributeNameValuePairs(Map<String, Object> attribs) {
         this.attribs = attribs;

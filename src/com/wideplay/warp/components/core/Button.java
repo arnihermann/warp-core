@@ -2,6 +2,7 @@ package com.wideplay.warp.components.core;
 
 import com.google.inject.Injector;
 import com.wideplay.warp.annotations.Component;
+import com.wideplay.warp.components.AttributesInjectable;
 import com.wideplay.warp.module.componentry.Renderable;
 import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
@@ -10,6 +11,7 @@ import com.wideplay.warp.rendering.ScriptEvents;
 import com.wideplay.warp.util.TextTools;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,9 +21,10 @@ import java.util.List;
  * @since 1.0
  */
 @Component
-public class Button implements Renderable {
+public class Button implements Renderable, AttributesInjectable {
     private String event;
     private String label = "";
+    private Map<String, Object> attribs;
 
     public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector, PageClassReflection reflection, Object page) {
         String encodedEvent = TextTools.EMPTY_STRING;
@@ -29,11 +32,15 @@ public class Button implements Renderable {
             encodedEvent = event;
 
         String buttonId = writer.newId(this);
-        writer.selfClosedElement("input",
-                "type", "button",
-                "id", buttonId,
-                "class","wButton",
-                "value", label);
+        writer.elementWithAttrs("input",
+                new Object[] {
+                        "type", "button",
+                        "id", buttonId,
+                        "value", label
+                },
+
+                ComponentSupport.getTagAttributesExcept(attribs, "type", "id", "value", "onclick")
+        );
 
         writer.registerEvent(buttonId, ScriptEvents.CLICK, encodedEvent, 0);
         
@@ -57,5 +64,10 @@ public class Button implements Renderable {
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+
+    public void setAttributeNameValuePairs(Map<String, Object> attribs) {
+        this.attribs = attribs;
     }
 }

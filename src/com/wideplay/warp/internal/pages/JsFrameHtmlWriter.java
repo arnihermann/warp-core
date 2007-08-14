@@ -50,11 +50,12 @@ class JsFrameHtmlWriter implements HtmlWriter {
         elementWithAttrs(name, nameValuePairs);
     }
 
-
-    public void elementWithAttrs(String name, Object[] nameValuePairs) {
+    //use this method to output as many sets of attribs as u need
+    public void elementWithAttrs(String name, Object[]... nameValuePairs) {
         writer.append('<');
         writer.append(name);
-        attributes(nameValuePairs);
+        for (Object[] nameValuePairArray : nameValuePairs)
+            attributes(nameValuePairArray);
         writer.append('>');
     }
 

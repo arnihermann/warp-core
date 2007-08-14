@@ -1,15 +1,16 @@
 package com.wideplay.warp.components.core;
 
-import com.google.inject.Injector;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.wideplay.warp.annotations.Component;
+import com.wideplay.warp.components.AttributesInjectable;
+import static com.wideplay.warp.components.core.ComponentSupport.getTagAttributesExcept;
 import com.wideplay.warp.module.componentry.Renderable;
 import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.rendering.RequestBinder;
 import com.wideplay.warp.util.beans.BeanUtils;
-import com.wideplay.warp.components.AttributesInjectable;
 
 import java.util.List;
 import java.util.Map;
@@ -39,23 +40,16 @@ public class SelectBox implements Renderable, AttributesInjectable {
     }
 
     public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector, PageClassReflection reflection, Object page) {
-
-        String cssClass;
-        cssClass = ComponentSupport.discoverCssAttribute((Object[])injectableAttributes.get(RawText.WARP_RAW_TEXT_PROP_ATTRS));
-
-        if (null == cssClass)
-            cssClass = "wSelect";
-
         Object boundItem = null;
         if (null != bind) {
             //write special collection binding parameter name
             String bindingExpression = requestBinder.createCollectionBindingExpression(items, bind);
 
-            writer.element("select", "name", bindingExpression, "class", cssClass);    //bind as expression
+            writer.elementWithAttrs("select", new Object[] { "name", bindingExpression }, getTagAttributesExcept(injectableAttributes, "name"));    //bind as expression
             boundItem = BeanUtils.getFromPropertyExpression(bind, page);
         }
         else
-            writer.element("select", "class", cssClass);
+            writer.element("select", getTagAttributesExcept(injectableAttributes));
 
         //obtain the bound object
         Object itemsObject = BeanUtils.getFromPropertyExpression(items, page);

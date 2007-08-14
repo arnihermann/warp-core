@@ -4,6 +4,7 @@ import com.google.inject.*;
 import com.wideplay.warp.WarpModule;
 import org.testng.annotations.Test;
 
+import java.text.MessageFormat;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -60,7 +61,7 @@ public class GuiceTest {
         Object o = injector.getInstance(String.class);
 
         assert o instanceof String;
-        System.out.println("[" + o + "]");
+        System.out.println(MessageFormat.format("[{0}]", o));
     }
 
 

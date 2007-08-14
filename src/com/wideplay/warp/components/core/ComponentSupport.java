@@ -4,8 +4,11 @@ import com.google.inject.Injector;
 import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
+import com.wideplay.warp.util.beans.BeanUtils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -40,5 +43,41 @@ class ComponentSupport {
         }
 
         return null;
+    }
+
+    //returns everything except the specified "excepts"
+    static Object[] getTagAttributesExcept(Map<String, Object> attribs, String...excepts) {
+        //iterative copy (improve?)
+        Object[] attributes = (Object[]) attribs.get(RawText.WARP_RAW_TEXT_PROP_ATTRS);
+
+        if (null == attributes)
+            return BeanUtils.EMPTY_ARRAY;
+
+        List<String> targetAttributes = new ArrayList<String>(attributes.length);
+
+        for (int i = 0; i < attributes.length; i++) {
+            String attribute = (String) attributes[i];
+
+            if (isExcept(attribute, excepts)) {
+                i += 2;
+            } else {
+                targetAttributes.add(attribute);
+                targetAttributes.add((String) attributes[i + 1]);
+                i++;
+            }
+        }
+
+        return targetAttributes.toArray();
+    }
+
+    private static boolean isExcept(String attribute, String... excepts) {
+        for (String except : excepts) {
+            //skip this and the next
+            if (except.equalsIgnoreCase(attribute)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

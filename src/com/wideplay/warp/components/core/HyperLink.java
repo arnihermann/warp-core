@@ -1,17 +1,19 @@
 package com.wideplay.warp.components.core;
 
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.wideplay.warp.components.AttributesInjectable;
+import com.wideplay.warp.module.WarpConfiguration;
 import com.wideplay.warp.module.componentry.Renderable;
 import com.wideplay.warp.module.pages.PageClassReflection;
-import com.wideplay.warp.module.WarpConfiguration;
-import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.rendering.ComponentHandler;
+import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.rendering.PageRenderException;
-import com.google.inject.Injector;
-import com.google.inject.Inject;
 
-import java.util.List;
-import java.net.URLEncoder;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,9 +31,10 @@ import java.io.UnsupportedEncodingException;
  * ...navigates from current page to URI "mytarget/page/{expression}"
  *
  */
-public class HyperLink implements Renderable {
+public class HyperLink implements Renderable, AttributesInjectable {
     private String target;
     private String topic;
+    private Map<String, Object> attribs;
 
     private final WarpConfiguration configuration;
 
@@ -55,7 +58,7 @@ public class HyperLink implements Renderable {
                         + configuration.getUrlEncoding(), e);
             }
 
-        writer.element("a", "href", href);
+        writer.elementWithAttrs("a", new Object[] { "href", href }, ComponentSupport.getTagAttributesExcept(attribs, "href"));
         ComponentSupport.renderMultiple(writer, nestedComponents, injector, reflection, page);
 
         writer.end("a");
@@ -68,5 +71,9 @@ public class HyperLink implements Renderable {
 
     public void setTopic(String topic) {
         this.topic = topic;
+    }
+
+    public void setAttributeNameValuePairs(Map<String, Object> attribs) {
+        this.attribs = attribs;
     }
 }

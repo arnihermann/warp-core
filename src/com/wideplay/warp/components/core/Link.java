@@ -1,18 +1,19 @@
 package com.wideplay.warp.components.core;
 
-import com.google.inject.Injector;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.wideplay.warp.annotations.Component;
+import com.wideplay.warp.components.AttributesInjectable;
+import com.wideplay.warp.internal.conversation.InternalConversation;
 import com.wideplay.warp.module.componentry.Renderable;
 import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.rendering.ScriptEvents;
 import com.wideplay.warp.util.TextTools;
-import com.wideplay.warp.util.beans.BeanUtils;
-import com.wideplay.warp.internal.conversation.InternalConversation;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -62,10 +63,11 @@ import java.util.List;
  *
  */
 @Component
-public class Link implements Renderable {
+public class Link implements Renderable, AttributesInjectable {
     private String event;
     private Object topic;
     private final InternalConversation conversation;
+    private Map<String, Object> attribs;
 
     @Inject
     public Link(InternalConversation conversation) {
@@ -91,7 +93,7 @@ public class Link implements Renderable {
             conversation.remember(topicValue);
         }
 
-        writer.element("a", "id", id, "href", "#");
+        writer.elementWithAttrs("a", new Object[] { "id", id, "href", "#"}, ComponentSupport.getTagAttributesExcept(attribs, "id", "href", "onclick"));
 
         //register event publication
         writer.registerEvent(id, ScriptEvents.CLICK, encodedEvent, topicId);
@@ -111,5 +113,10 @@ public class Link implements Renderable {
 
     public void setTopic(Object topic) {
         this.topic = topic;
+    }
+
+
+    public void setAttributeNameValuePairs(Map<String, Object> attribs) {
+        this.attribs = attribs;
     }
 }
