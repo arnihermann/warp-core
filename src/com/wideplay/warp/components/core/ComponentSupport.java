@@ -29,4 +29,16 @@ class ComponentSupport {
         for (ComponentHandler handler : componentHandlers)
             handler.handleRender(writer, injector, pageReflection, page);
     }
+
+    static String discoverCssAttribute(Object[] attrs) {
+        for (int i = 0; i < attrs.length; i++) {
+            String attr = (String)attrs[i];
+
+            if ("class".equals(attr)) {
+                return (String) attrs[i + 1];
+            }
+        }
+
+        return null;
+    }
 }

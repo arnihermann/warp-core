@@ -1,6 +1,7 @@
 package com.wideplay.warp.module.componentry;
 
 import com.wideplay.warp.util.beans.BeanUtils;
+import com.wideplay.warp.components.AttributesInjectable;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -41,6 +42,10 @@ public class ComponentClassReflection {
 
     public Class<? extends Renderable> getComponentClass() {
         return componentClass;
+    }
+
+    public boolean isAttributesInjectable() {
+        return AttributesInjectable.class.isAssignableFrom(componentClass);
     }
 
     public Set<String> getWritableProperties() {

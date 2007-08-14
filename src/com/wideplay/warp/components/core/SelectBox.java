@@ -9,8 +9,10 @@ import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.rendering.RequestBinder;
 import com.wideplay.warp.util.beans.BeanUtils;
+import com.wideplay.warp.components.AttributesInjectable;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,10 +24,12 @@ import java.util.List;
  * @since 1.0
  */
 @Component
-public class SelectBox implements Renderable {
+public class SelectBox implements Renderable, AttributesInjectable {
     private String bind;
     private String items;
     private String label;
+
+    private Map<String, Object> injectableAttributes;
 
     private final RequestBinder requestBinder;
 
@@ -35,16 +39,23 @@ public class SelectBox implements Renderable {
     }
 
     public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector, PageClassReflection reflection, Object page) {
+
+        String cssClass;
+        cssClass = ComponentSupport.discoverCssAttribute((Object[])injectableAttributes.get(RawText.WARP_RAW_TEXT_PROP_ATTRS));
+
+        if (null == cssClass)
+            cssClass = "wSelect";
+
         Object boundItem = null;
         if (null != bind) {
             //write special collection binding parameter name
             String bindingExpression = requestBinder.createCollectionBindingExpression(items, bind);
 
-            writer.element("select", "name", bindingExpression);    //bind as expression
+            writer.element("select", "name", bindingExpression, "class", cssClass);    //bind as expression
             boundItem = BeanUtils.getFromPropertyExpression(bind, page);
         }
         else
-            writer.element("select");
+            writer.element("select", "class", cssClass);
 
         //obtain the bound object
         Object itemsObject = BeanUtils.getFromPropertyExpression(items, page);
@@ -69,8 +80,6 @@ public class SelectBox implements Renderable {
         //bind it as an expression (selecting the user's value from the item list by matching hashcode):
         if (null != bind)
            indexValue = String.valueOf(item.hashCode());
-
-//            indexValue = bind + " = " + items + ".{? #this.hashCode() == " + indexValue + "}[0]";
 
         //resolve label from either set value or use the item itself
         String labelValue = this.label;
@@ -112,5 +121,10 @@ public class SelectBox implements Renderable {
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+
+    public void setAttributeNameValuePairs(Map<String, Object> attribs) {
+        this.injectableAttributes = attribs;
     }
 }

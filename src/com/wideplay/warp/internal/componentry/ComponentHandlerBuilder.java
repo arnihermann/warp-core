@@ -125,7 +125,7 @@ class ComponentHandlerBuilder {
 
         //read text & arbitrary attributes if necessary and store them
         Map<String, Object> arbitraryAttributes = null;
-        if (rawText)
+        if (reflection.isAttributesInjectable())
             arbitraryAttributes = buildArbitraryAttributes(node);
 
         //chain to children

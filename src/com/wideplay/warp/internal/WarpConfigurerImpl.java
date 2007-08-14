@@ -4,6 +4,7 @@ import com.google.inject.Module;
 import com.google.inject.Key;
 import com.wideplay.warp.Warp;
 import com.wideplay.warp.StartupListener;
+import com.wideplay.warp.module.WarpConfiguration;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -15,9 +16,12 @@ import java.util.List;
  *
  * @author Dhanji R. Prasanna
  */
-class WarpConfigurerImpl implements Warp {
+class WarpConfigurerImpl implements Warp, WarpConfiguration {
     private final List<Module> guiceModules = new LinkedList<Module>();
     private final List<Key<? extends StartupListener>> startupListeners = new LinkedList<Key<? extends StartupListener>>();
+
+    //configurable options
+    private String urlEncodingScheme = "UTF-8";
 
     public WarpConfigurerImpl(Module... modules) {
         Collections.addAll(guiceModules, modules);
@@ -43,5 +47,14 @@ class WarpConfigurerImpl implements Warp {
 
     public List<Key<? extends StartupListener>> getStartupListeners() {
         return startupListeners;
+    }
+
+
+    public String getUrlEncoding() {
+        return urlEncodingScheme;
+    }
+
+    public void setUrlEncoding(String urlEncodingScheme) {
+        this.urlEncodingScheme = urlEncodingScheme;
     }
 }

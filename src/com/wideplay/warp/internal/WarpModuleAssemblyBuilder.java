@@ -11,6 +11,7 @@ import com.wideplay.warp.internal.pages.PageBuilders;
 import com.wideplay.warp.module.ComponentRegistry;
 import com.wideplay.warp.module.WarpModuleAssembly;
 import com.wideplay.warp.module.WarpConfigurationException;
+import com.wideplay.warp.module.WarpConfiguration;
 import com.wideplay.warp.module.componentry.Renderable;
 import com.wideplay.warp.module.ioc.IocContextManager;
 import com.wideplay.warp.module.pages.PageClassReflection;
@@ -129,7 +130,11 @@ class WarpModuleAssemblyBuilder {
         WarpConfigurerImpl warpConfigurer = new WarpConfigurerImpl(internalServicesModule, warpGuiceModule);
         module.configure(warpConfigurer);
 
-        //build an application injector from configured modules
+        //make the configuration available to guice injector
+        internalServicesModule.setWarpConfigurationProvider(new WarpConfigurationProvider(warpConfigurer));
+
+
+        //build an application-wide injector from configured modules
         Injector injector = Guice.createInjector(warpConfigurer
                 .getGuiceModules()   //pass in modules as an iterable
         );
@@ -138,6 +143,8 @@ class WarpModuleAssemblyBuilder {
         WarpModuleAssembly warpModuleAssembly = new WarpModuleAssembly(pages, injector, pagesURIs,
                 warpConfigurer.getStartupListeners(), pagesByTemplate);
         moduleAssemblyProvider.setAssembly(warpModuleAssembly);
+
+
         
         return warpModuleAssembly;
     }
@@ -159,11 +166,13 @@ class WarpModuleAssemblyBuilder {
 
     private class InternalServicesModule extends AbstractModule {
         private WarpModuleAssemblyProvider warpModuleAssemblyProvider;
+        private WarpConfigurationProvider warpConfigurationProvider;
         private ComponentRegistry componentRegistry;
 
         protected void configure() {
             bind(WarpModuleAssembly.class).toProvider(warpModuleAssemblyProvider);
             bind(ComponentRegistry.class).toInstance(componentRegistry);
+            bind(WarpConfiguration.class).toProvider(warpConfigurationProvider);
         }
 
         public void setWarpModuleAssemblyProvider(WarpModuleAssemblyProvider warpModuleAssemblyProvider) {
@@ -172,6 +181,10 @@ class WarpModuleAssemblyBuilder {
 
         public void setComponentRegistry(ComponentRegistry componentRegistry) {
             this.componentRegistry = componentRegistry;
+        }
+
+        public void setWarpConfigurationProvider(WarpConfigurationProvider warpConfigurationProvider) {
+            this.warpConfigurationProvider = warpConfigurationProvider;
         }
     }
 }

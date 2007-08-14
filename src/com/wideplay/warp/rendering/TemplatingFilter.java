@@ -2,12 +2,15 @@ package com.wideplay.warp.rendering;
 
 import com.wideplay.warp.module.WarpModuleAssembly;
 import com.wideplay.warp.module.UriMatcher;
+import com.wideplay.warp.module.WarpConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLDecoder;
+import java.io.UnsupportedEncodingException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -51,6 +54,10 @@ public class TemplatingFilter {
 
             handler = matchTuple.pageHandler;
             uriPart = matchTuple.uriExtract;
+
+            //decode URI part if necessary
+            if (null != uriPart)
+                uriPart = decodeUriPart(uriPart);
         }
 
 
@@ -69,10 +76,20 @@ public class TemplatingFilter {
         if (null != forward)
             PageRedirector.forwardOrRedirect(forward, response, request, assembly);
 
+        //Filter was active, meaning Warp handled the request so return true (i.e. no need to continue down filter chain)
         return true;
     }
 
-
+    //attempts to decode the (extracted) dynamic part of the URI using the configured encoding scheme
+    private String decodeUriPart(String uriPart) {
+        String scheme = assembly.getInjector().getInstance(WarpConfiguration.class).getUrlEncoding();
+        
+        try {
+            return URLDecoder.decode(uriPart, scheme);
+        } catch (UnsupportedEncodingException e) {
+            throw new PageRenderException("Unable to decode dynamic URI part, encoding scheme was not supported: " + scheme, e);
+        }
+    }
 
 
 }

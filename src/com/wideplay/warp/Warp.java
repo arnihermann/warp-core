@@ -15,4 +15,6 @@ public interface Warp {
 
     void addStartupListener(Class<? extends StartupListener> startupListener);
     void addStartupListener(Key<? extends StartupListener> startupListener);
+
+    void setUrlEncoding(String scheme);
 }

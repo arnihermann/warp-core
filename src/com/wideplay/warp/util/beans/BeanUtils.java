@@ -42,7 +42,11 @@ public class BeanUtils {
         }
 
         //lets use mvel to retrieve an expression instead of a prop
-        return MVEL.executeExpression(compiled, bean);
+        try {
+            return MVEL.executeExpression(compiled, bean);
+        } catch(PropertyAccessException e) {
+            throw new NotReadablePropertyException(String.format("Could not read property from expression %s (missing a getter?)", e));
+        }
     }
 
     public static void setFromPropertyExpression(String expr, Object bean, Object value) {

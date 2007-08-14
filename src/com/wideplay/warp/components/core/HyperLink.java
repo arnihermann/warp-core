@@ -2,12 +2,16 @@ package com.wideplay.warp.components.core;
 
 import com.wideplay.warp.module.componentry.Renderable;
 import com.wideplay.warp.module.pages.PageClassReflection;
+import com.wideplay.warp.module.WarpConfiguration;
 import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.rendering.ComponentHandler;
-import com.wideplay.warp.util.beans.BeanUtils;
+import com.wideplay.warp.rendering.PageRenderException;
 import com.google.inject.Injector;
+import com.google.inject.Inject;
 
 import java.util.List;
+import java.net.URLEncoder;
+import java.io.UnsupportedEncodingException;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,6 +33,13 @@ public class HyperLink implements Renderable {
     private String target;
     private String topic;
 
+    private final WarpConfiguration configuration;
+
+    @Inject
+    public HyperLink(WarpConfiguration configuration) {
+        this.configuration = configuration;
+    }
+
     public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector,
                        PageClassReflection reflection, Object page) {
         String href;
@@ -37,7 +48,12 @@ public class HyperLink implements Renderable {
         else if (null == target)
             href = topic;
         else
-            href = String.format("%s/%s", target, topic);
+            try {
+                href = String.format("%s/%s", target, URLEncoder.encode(topic, configuration.getUrlEncoding()));
+            } catch (UnsupportedEncodingException e) {
+                throw new PageRenderException("Could not encode topic into URI, the encoding scheme was not supported: "
+                        + configuration.getUrlEncoding(), e);
+            }
 
         writer.element("a", "href", href);
         ComponentSupport.renderMultiple(writer, nestedComponents, injector, reflection, page);
