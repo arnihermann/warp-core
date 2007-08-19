@@ -21,6 +21,7 @@ import java.io.IOException;
  */
 public class WarpFilter implements Filter {
     private TemplatingFilter templatingFilter;
+    private WarpModuleAssembly assembly;
 
     private static final String WARP_MODULE = "warp.module";
     private static final String WARP_PACKAGE = "warp.package";
@@ -31,6 +32,9 @@ public class WarpFilter implements Filter {
 
     
     public void destroy() {
+        assembly.fireShutdownEvents();
+        assembly = null;
+        templatingFilter = null;
     }
 
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
@@ -79,7 +83,7 @@ public class WarpFilter implements Filter {
 
         try {
             //build the warp module pages, components and handlers into an assembly
-            WarpModuleAssembly assembly = Builders.buildWarpModuleAssembly(moduleClass, filterConfig.getServletContext(), moduleRootDir, modulePackage);
+            assembly = Builders.buildWarpModuleAssembly(moduleClass, filterConfig.getServletContext(), moduleRootDir, modulePackage);
 
             //build internal services
             templatingFilter = new TemplatingFilter(assembly, filterConfig.getServletContext());

@@ -1,9 +1,10 @@
 package com.wideplay.warp.internal;
 
-import com.google.inject.Module;
 import com.google.inject.Key;
-import com.wideplay.warp.Warp;
+import com.google.inject.Module;
+import com.wideplay.warp.ShutdownListener;
 import com.wideplay.warp.StartupListener;
+import com.wideplay.warp.Warp;
 import com.wideplay.warp.module.WarpConfiguration;
 
 import java.util.Collections;
@@ -19,6 +20,7 @@ import java.util.List;
 class WarpConfigurerImpl implements Warp, WarpConfiguration {
     private final List<Module> guiceModules = new LinkedList<Module>();
     private final List<Key<? extends StartupListener>> startupListeners = new LinkedList<Key<? extends StartupListener>>();
+    private final List<Key<? extends ShutdownListener>> shutdownListeners = new LinkedList<Key<? extends ShutdownListener>>();
 
     //configurable options
     private String urlEncodingScheme = "UTF-8";
@@ -41,6 +43,14 @@ class WarpConfigurerImpl implements Warp, WarpConfiguration {
         startupListeners.add(startupListener);
     }
 
+    public void addShutdownListener(Class<? extends ShutdownListener> shutdownListener) {
+        shutdownListeners.add(Key.get(shutdownListener));
+    }
+
+    public void addShutdownListener(Key<? extends ShutdownListener> shutdownListener) {
+        shutdownListeners.add(shutdownListener);
+    }
+
     public List<Module> getGuiceModules() {
         return guiceModules;
     }
@@ -56,5 +66,9 @@ class WarpConfigurerImpl implements Warp, WarpConfiguration {
 
     public void setUrlEncoding(String urlEncodingScheme) {
         this.urlEncodingScheme = urlEncodingScheme;
+    }
+
+    public List<Key<? extends ShutdownListener>> getShutdownListeners() {
+        return shutdownListeners;
     }
 }

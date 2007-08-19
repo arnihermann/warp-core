@@ -1,7 +1,7 @@
 package com.wideplay.warp;
 
-import com.google.inject.Module;
 import com.google.inject.Key;
+import com.google.inject.Module;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,4 +17,7 @@ public interface Warp {
     void addStartupListener(Key<? extends StartupListener> startupListener);
 
     void setUrlEncoding(String scheme);
+
+    void addShutdownListener(Class<? extends ShutdownListener> shutdownListener);
+    void addShutdownListener(Key<? extends ShutdownListener> shutdownListener);
 }

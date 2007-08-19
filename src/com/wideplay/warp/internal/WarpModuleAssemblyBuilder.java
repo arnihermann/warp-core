@@ -9,9 +9,9 @@ import com.wideplay.warp.annotations.Component;
 import com.wideplay.warp.internal.componentry.ComponentBuilders;
 import com.wideplay.warp.internal.pages.PageBuilders;
 import com.wideplay.warp.module.ComponentRegistry;
-import com.wideplay.warp.module.WarpModuleAssembly;
-import com.wideplay.warp.module.WarpConfigurationException;
 import com.wideplay.warp.module.WarpConfiguration;
+import com.wideplay.warp.module.WarpConfigurationException;
+import com.wideplay.warp.module.WarpModuleAssembly;
 import com.wideplay.warp.module.componentry.Renderable;
 import com.wideplay.warp.module.ioc.IocContextManager;
 import com.wideplay.warp.module.pages.PageClassReflection;
@@ -141,7 +141,7 @@ class WarpModuleAssemblyBuilder {
 
         //make the assembly available to the guice injector via a pre-registered provider
         WarpModuleAssembly warpModuleAssembly = new WarpModuleAssembly(pages, injector, pagesURIs,
-                warpConfigurer.getStartupListeners(), pagesByTemplate);
+                warpConfigurer.getStartupListeners(), warpConfigurer.getShutdownListeners(), pagesByTemplate);
         moduleAssemblyProvider.setAssembly(warpModuleAssembly);
 
 
