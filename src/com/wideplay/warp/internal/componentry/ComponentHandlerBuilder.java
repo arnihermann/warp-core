@@ -31,6 +31,7 @@ class ComponentHandlerBuilder {
     private static final String WARP_PREFIX = "w";  //TODO discover this from document namespace (or just test the namespace directly)
 
     private final Log log = LogFactory.getLog(ComponentHandlerBuilder.class);
+    private static final String WARP_NAMESPACE_URI = "http://www.wideplay.com/warp/schema/warp_core.xsd";
 
     public ComponentHandlerBuilder(ComponentRegistry registry) {
         this.registry = registry;
@@ -195,6 +196,11 @@ class ComponentHandlerBuilder {
             List<String> elementAttributes = new ArrayList<String>();
             for (Object object : element.attributes()) {
                 Attribute attribute = (Attribute)object;
+
+                //do not add warp attribs
+                if (WARP_PREFIX.equals(attribute.getNamespacePrefix()) ||
+                        WARP_NAMESPACE_URI.equals(attribute.getNamespaceURI()))
+                    continue;
 
                 //store attributes in a flat list
                 elementAttributes.add(attribute.getName());
