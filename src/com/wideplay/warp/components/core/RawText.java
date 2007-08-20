@@ -42,7 +42,8 @@ public class RawText implements Renderable, AttributesInjectable {
 
         //self closed tags if there is no text to print
         if (nestedComponents.isEmpty() && null != warpRawTextTag) {
-            writer.selfClosedElementWithAttrs(warpRawTextTag, attributes);
+            writer.element(warpRawTextTag, attributes);
+            writer.end(warpRawTextTag); //html doesn't like self-closed attributes =(
             return;
         }
 
