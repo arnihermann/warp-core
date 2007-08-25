@@ -1,16 +1,17 @@
 package com.wideplay.warp.rendering;
 
-import com.wideplay.warp.module.WarpModuleAssembly;
 import com.wideplay.warp.module.UriMatcher;
 import com.wideplay.warp.module.WarpConfiguration;
+import com.wideplay.warp.module.WarpModuleAssembly;
+import com.wideplay.warp.util.TextTools;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.net.URLDecoder;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 /**
  * Created with IntelliJ IDEA.
@@ -41,7 +42,7 @@ public class TemplatingFilter {
 
 
         //locate page handler from uri and handle page
-        final String contextualUri = request.getRequestURI().substring(request.getContextPath().length());
+        final String contextualUri = TextTools.extractContextualUri(request);
         PageHandler handler = assembly.getUserFacingPage(contextualUri);
 
         String uriPart = null;

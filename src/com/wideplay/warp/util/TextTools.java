@@ -1,15 +1,14 @@
 package com.wideplay.warp.util;
 
+import com.wideplay.warp.WarpFilter;
+import com.wideplay.warp.WarpModule;
 import com.wideplay.warp.rendering.PageRenderException;
 
-import java.net.URI;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import sun.misc.Regexp;
 
 /**
  * Created with IntelliJ IDEA.
@@ -100,6 +99,14 @@ public class TextTools {
 
     public static boolean isExpression(String attribute) {
         return attribute.startsWith("${");
+    }
+
+    public static String extractContextualUri(HttpServletRequest request) {
+        return request.getRequestURI().substring(request.getContextPath().length());
+    }
+
+    public static String extractModuleDirFromFqn(String moduleRootDir, Class<WarpModule> moduleClass) {
+        return moduleRootDir.substring(0, moduleRootDir.length() - (WarpFilter.CLASS_EXT.length() + moduleClass.getSimpleName().length()));
     }
 
     private enum TokenizerState { READING_TEXT, READING_EXPRESSION }

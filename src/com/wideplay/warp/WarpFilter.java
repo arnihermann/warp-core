@@ -4,6 +4,7 @@ import com.wideplay.warp.internal.Builders;
 import com.wideplay.warp.module.WarpModuleAssembly;
 import com.wideplay.warp.module.ioc.IocContextManager;
 import com.wideplay.warp.rendering.TemplatingFilter;
+import com.wideplay.warp.util.TextTools;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -22,6 +23,9 @@ import java.io.IOException;
 public class WarpFilter implements Filter {
     private TemplatingFilter templatingFilter;
     private WarpModuleAssembly assembly;
+    private DwrWarpAdapter dwrWarpAdapter;
+
+    private ServletContext servletContext;
 
     private static final String WARP_MODULE = "warp.module";
     private static final String WARP_PACKAGE = "warp.package";
@@ -33,23 +37,38 @@ public class WarpFilter implements Filter {
     
     public void destroy() {
         assembly.fireShutdownEvents();
+        dwrWarpAdapter.shutdown(servletContext);
+
         assembly = null;
         templatingFilter = null;
+        dwrWarpAdapter = null;
+        servletContext = null;
     }
 
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException {
 
+        //prep request for dispatch
+        final HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
+        final String contextualUri = TextTools.extractContextualUri(httpServletRequest);
+
         //set injection context for servlet
-        IocContextManager.setContext((HttpServletRequest)servletRequest, (HttpServletResponse)servletResponse);
+        IocContextManager.setContext(httpServletRequest, (HttpServletResponse)servletResponse);
+        try {
 
-        //dispatch to warp filter
-        if (!templatingFilter.doFilter((HttpServletRequest)servletRequest, (HttpServletResponse)servletResponse))
-            //continue down the chain
-            filterChain.doFilter(servletRequest, servletResponse);
+            //is a dwr dispatch (intercept for ajax requests)
+            if (dwrWarpAdapter.isDwrServiceable(contextualUri)) {
+                dwrWarpAdapter.service(contextualUri, httpServletRequest, servletResponse);
 
-        //clear injection context for servlet
-        IocContextManager.clearContext();
+            } else if (!templatingFilter.doFilter(httpServletRequest, (HttpServletResponse)servletResponse))                //dispatch to warp filter
+
+                //continue down the chain
+                filterChain.doFilter(servletRequest, servletResponse);
+
+        } finally {
+            //clear injection context for servlet chain
+            IocContextManager.clearContext();
+        }
     }
 
 
@@ -71,7 +90,7 @@ public class WarpFilter implements Filter {
             moduleRootDir = moduleClass.getResource(String.format("%s.class", moduleClass.getSimpleName())).toString();
 
             //strip ModuleName.class from module root dir url to get the directory name
-            moduleRootDir = extractModuleDir(moduleRootDir, moduleClass);
+            moduleRootDir = TextTools.extractModuleDirFromFqn(moduleRootDir, moduleClass);
 
             log.info(String.format("Using module package: %s ; server module root dir: %s", modulePackage, moduleRootDir));
 
@@ -88,6 +107,10 @@ public class WarpFilter implements Filter {
             //build internal services
             templatingFilter = new TemplatingFilter(assembly, filterConfig.getServletContext());
 
+            //start dwr services
+            dwrWarpAdapter = new DwrWarpAdapter();
+            dwrWarpAdapter.start(filterConfig.getServletContext(), assembly.getInjector());
+
             //initialize user services
             assembly.fireStartupEvents();
 
@@ -95,10 +118,9 @@ public class WarpFilter implements Filter {
             log.fatal(e);
             throw new ServletException("error during WarpFilter init", e);
         }
-    }
 
-    private String extractModuleDir(String moduleRootDir, Class<WarpModule> moduleClass) {
-        return moduleRootDir.substring(0, moduleRootDir.length() - (CLASS_EXT.length() + moduleClass.getSimpleName().length()));
+        //store servlet context config
+        this.servletContext = filterConfig.getServletContext();
     }
 
     @SuppressWarnings("unchecked")
@@ -106,7 +128,7 @@ public class WarpFilter implements Filter {
         try {
             return (Class<WarpModule>) Class.forName(warpModuleName);
         } catch (Exception e) {
-            log.fatal(e);
+            log.fatal("Warp startup failed, could not locate the warp module class", e);
             throw new ServletException("error could not locate the warp module class: " + warpModuleName, e);
         }
     }

@@ -1,9 +1,10 @@
 package com.wideplay.warp.example;
 
-import com.google.inject.AbstractModule;
+import com.wideplay.warp.StartupListener;
 import com.wideplay.warp.Warp;
 import com.wideplay.warp.WarpModule;
-import com.wideplay.warp.StartupListener;
+import org.directwebremoting.guice.AbstractDwrModule;
+import org.directwebremoting.guice.ParamName;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,7 +13,7 @@ import com.wideplay.warp.StartupListener;
  * @author Dhanji R. Prasanna
  * @since 1.0
  */
-public class ExampleModule extends AbstractModule implements WarpModule, StartupListener {
+public class ExampleModule extends AbstractDwrModule implements WarpModule, StartupListener {
 
     public void configure(Warp warp) {
         //install me as a module (convenience)
@@ -25,8 +26,14 @@ public class ExampleModule extends AbstractModule implements WarpModule, Startup
 
 
     protected void configure() {
-        //bind custom impls here as you would in guice
+        //bind custom impls here as you would in guice or dwr-guice
         //....
+
+        bindRemoted(AjaxDemo.class).to(AjaxDemo.class);
+
+        bindParameter(ParamName.DEBUG).to(true);
+
+//        bindDwrScopes();
     }
 
 
