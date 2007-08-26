@@ -2,8 +2,8 @@ package com.wideplay.warp.internal.pages;
 
 import com.wideplay.warp.annotations.Template;
 import com.wideplay.warp.annotations.URIMapping;
-import com.wideplay.warp.internal.componentry.ComponentBuilders;
 import com.wideplay.warp.internal.UriMatchTreeBuilder;
+import com.wideplay.warp.internal.componentry.ComponentBuilders;
 import com.wideplay.warp.module.ComponentRegistry;
 import com.wideplay.warp.module.WarpConfigurationException;
 import com.wideplay.warp.rendering.ComponentHandler;
@@ -61,7 +61,7 @@ class PageHandlerBuilder {
         try {
             document = DocumentHelper.parseText(documentText);
         } catch (DocumentException e) {
-            throw new WarpConfigurationException("could not parse xhtml template for: " + template, e);
+            throw new WarpConfigurationException("could not parse xhtml template for: " + template + " because of " + e.getMessage(), e);
         }
 
         //check for the explicit presence of a URI mapping or use the conventional name

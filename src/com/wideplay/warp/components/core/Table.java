@@ -79,19 +79,19 @@ public class Table implements Renderable, AttributesInjectable {
             Map<String, String> propertiesAndLabels = null;
             Iterator iter = ((Iterable) itemsObject).iterator();
 
-            boolean isFirst = true;
+            int rowCtr = 0;
             while(iter.hasNext()) {
                 Object item = iter.next();
 
-                if (isFirst) {
+                if (0 == rowCtr) {
                     //get the resource bundle associated with this model object (if any)
                     propertiesAndLabels = classCache.getPropertyLabelMap(item);
                     writeHeader(writer, propertiesAndLabels);
-                    isFirst = false;
                     writer.element("tbody");
                 }
 
-                writeRow(item, writer, propertiesAndLabels, injector, reflection);
+                writeRow(item, writer, propertiesAndLabels, injector, reflection, rowCtr % 2 == 0);
+                rowCtr++;
             }
 
             writer.end("tbody");
@@ -109,7 +109,7 @@ public class Table implements Renderable, AttributesInjectable {
                     writer.element("tbody");
                 }
 
-                writeRow(item, writer, propertiesAndLabels, injector, reflection);
+                writeRow(item, writer, propertiesAndLabels, injector, reflection, i % 2 == 0);
             }
             writer.end("tbody");
         }
@@ -138,9 +138,10 @@ public class Table implements Renderable, AttributesInjectable {
         writer.end("thead");
     }
 
-    private void writeRow(Object item, HtmlWriter writer, Map<String, String> propertiesAndLabels, Injector injector, PageClassReflection reflection) {
+    private void writeRow(Object item, HtmlWriter writer, Map<String, String> propertiesAndLabels, Injector injector, PageClassReflection reflection, boolean isEvenRow) {
+        //writes odd row class if necessary but both MUST be set or NEITHER must be set
         if (null != rowClass)
-            writer.element("tr", "class", rowClass);
+            writer.element("tr", "class", isEvenRow ? rowClass : oddRowClass);
         else
             writer.element("tr");
 
