@@ -2,7 +2,7 @@
         xmlns="http://www.w3.org/1999/xhtml"
         xml:lang="en" lang="en">
 
-  <head>
+  <head w:component="meta">
     <title>Warp :: Viewport demo</title>
 
     <style type="text/css">
@@ -29,11 +29,14 @@
     </p>
 
 
-    <h3>Page embedded in viewport via ajax:</h3>
+    <h3>Page embedded in async viewport:</h3>
     <p>
-        <div w:component="viewport" w:embed="${ajaxCounter}" w:ajax="true">
+
+        <div w:id="myport" w:component="viewport" w:embed="${counter}" w:async="${true}">
             The content of the counter demo should show up here.
         </div>
+
+        <a w:component="link" w:viewports="myport">Asynchronous update</a>
     </p>
 
     <h3>Custom Component direct use (custom attribs bound to embedded counter page):</h3>

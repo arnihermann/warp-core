@@ -63,6 +63,9 @@ class WarpModuleAssemblyBuilder {
         ComponentRegistry componentRegistry = ComponentBuilders.newComponentRegistry();
         internalServicesModule.setComponentRegistry(componentRegistry);
 
+        //set servlet context on Bean expressions (doesnt work on < servlet 2.5 so forget it!)
+//        BeanUtils.setGlobalBeanContextVariable("contextPath", context.getContextPath());
+
         //build page reflections and assemble them into the module
         Map<String, PageHandler> pages = new LinkedHashMap<String, PageHandler>();
         Map<String, Object> pagesByTemplate = new HashMap<String, Object>();
@@ -124,6 +127,7 @@ class WarpModuleAssemblyBuilder {
         //setup custom special-case provider for the assembly itself
         WarpModuleAssemblyProvider moduleAssemblyProvider = new WarpModuleAssemblyProvider();
         internalServicesModule.setWarpModuleAssemblyProvider(moduleAssemblyProvider);
+        internalServicesModule.setServletContext(context);
 
         //configure various guice modules
         Module warpGuiceModule = IocContextManager.newDefaultGuiceModule(pageBindings);
@@ -168,11 +172,15 @@ class WarpModuleAssemblyBuilder {
         private WarpModuleAssemblyProvider warpModuleAssemblyProvider;
         private WarpConfigurationProvider warpConfigurationProvider;
         private ComponentRegistry componentRegistry;
+        private ServletContext servletContext;
 
         protected void configure() {
             bind(WarpModuleAssembly.class).toProvider(warpModuleAssemblyProvider);
             bind(ComponentRegistry.class).toInstance(componentRegistry);
             bind(WarpConfiguration.class).toProvider(warpConfigurationProvider);
+
+            //bind page services
+            install(PageBuilders.newPageServicesModule());
         }
 
         public void setWarpModuleAssemblyProvider(WarpModuleAssemblyProvider warpModuleAssemblyProvider) {
@@ -185,6 +193,10 @@ class WarpModuleAssemblyBuilder {
 
         public void setWarpConfigurationProvider(WarpConfigurationProvider warpConfigurationProvider) {
             this.warpConfigurationProvider = warpConfigurationProvider;
+        }
+
+        public void setServletContext(ServletContext servletContext) {
+            this.servletContext = servletContext;
         }
     }
 }

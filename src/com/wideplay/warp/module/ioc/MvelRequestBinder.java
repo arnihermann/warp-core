@@ -1,13 +1,13 @@
 package com.wideplay.warp.module.ioc;
 
+import com.google.inject.Inject;
+import com.google.inject.servlet.RequestParameters;
 import com.wideplay.warp.rendering.RequestBinder;
 import com.wideplay.warp.util.beans.BeanUtils;
-import com.google.inject.servlet.RequestParameters;
-import com.google.inject.Inject;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
-import java.util.Collection;
 
 /**
  * Created by IntelliJ IDEA.
@@ -43,9 +43,26 @@ class MvelRequestBinder implements RequestBinder {
                 continue;
             }
 
-            //or else bind normally via ognl
+            //or else bind normally via mvel
             for (String value : parameters.get(paramName))
                 bindAsProperty(paramName, value, bean);
+        }
+    }
+
+    public void bindBeanFromMap(Object bean, @RequestParameters Map<String, String> parameters) {
+        //iterate the parameter set and bind the values to the provided bean
+        for (String paramName : parameters.keySet()) {
+
+            if (reservedParameterNames.contains(paramName))
+                continue;
+
+            if (null != paramName && paramName.startsWith(COLLECTION_BIND_DELIMITER)) {
+                bindFromCollection(paramName, bean, parameters.get(paramName));
+                continue;
+            }
+
+            //or else bind normally via mvel
+            bindAsProperty(paramName, parameters.get(paramName), bean);
         }
     }
 

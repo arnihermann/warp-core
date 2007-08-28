@@ -36,4 +36,5 @@ public class InternalConversation {
     public void forgetAll() {
         store.clear();
     }
+
 }

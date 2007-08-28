@@ -1,5 +1,6 @@
 package com.wideplay.warp.internal.pages;
 
+import com.google.inject.Module;
 import com.wideplay.warp.module.ComponentRegistry;
 import com.wideplay.warp.rendering.PageHandler;
 
@@ -15,6 +16,10 @@ import java.util.Map;
 public class PageBuilders {
 
     private PageBuilders() {
+    }
+
+    public static Module newPageServicesModule() {
+        return new PageServicesGuiceModule();
     }
 
     public static void buildAndStorePageHandler(ServletContext context, ComponentRegistry registry, Class<?> pageClass, String packageName,

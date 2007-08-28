@@ -76,4 +76,8 @@ public class HyperLink implements Renderable, AttributesInjectable {
     public void setAttributeNameValuePairs(Map<String, Object> attribs) {
         this.attribs = attribs;
     }
+
+    public Map<String, Object> getAttributeNameValuePairs() {
+        return attribs;
+    }
 }

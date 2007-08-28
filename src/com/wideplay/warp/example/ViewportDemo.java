@@ -1,6 +1,7 @@
 package com.wideplay.warp.example;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.wideplay.warp.annotations.OnEvent;
 import com.wideplay.warp.annotations.OnEvents;
 import com.wideplay.warp.annotations.Page;
@@ -13,15 +14,20 @@ import com.wideplay.warp.annotations.event.PreRender;
  * @author Dhanji R. Prasanna
  * @since 1.0
  */
+@Singleton
 public class ViewportDemo {
-    @Inject @Page @OnEvents Counter counter;
-    @Inject Counter ajaxCounter;
+    @OnEvents Counter counter;
+
+    @Inject
+    public ViewportDemo(@Page Counter counter) {
+        this.counter = counter;
+        counter.increment();
+        counter.increment();
+        counter.increment();
+    }
 
     @OnEvent @PreRender
     void onBegin() {
-        counter.increment();
-        counter.increment();
-        counter.increment();
         System.out.println(ViewportDemo.class.getName() + ".onBegin()!");
     }
 
@@ -29,7 +35,8 @@ public class ViewportDemo {
         return counter;
     }
 
-    public Counter getAjaxCounter() {
-        return ajaxCounter;
+
+    public void setCounter(int counter) {
+        this.counter.setCounter(counter);
     }
 }

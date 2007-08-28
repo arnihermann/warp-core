@@ -1,8 +1,9 @@
 package com.wideplay.warp.internal.pages;
 
-import com.wideplay.warp.rendering.HtmlWriter;
-import com.wideplay.warp.rendering.ScriptEvents;
-import com.wideplay.warp.rendering.ScriptLibrary;
+import com.wideplay.warp.components.core.CoreScriptLibraries;
+import static com.wideplay.warp.internal.pages.JsSupportUtils.*;
+import com.wideplay.warp.module.ioc.RemoteEventProxy;
+import com.wideplay.warp.rendering.*;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -14,8 +15,7 @@ import java.util.Set;
  * @author Dhanji R. Prasanna
  * @since 1.0
  */
-class JsFrameHtmlWriter implements HtmlWriter {
-    private final StringBuilder writer = new StringBuilder();
+class JsFrameHtmlWriter extends AbstractHtmlWriter {
     private final StringBuilder onFrameLoadWriter = new StringBuilder();
     private final Set<String> linkedScripts = new LinkedHashSet<String>();
 
@@ -36,68 +36,36 @@ class JsFrameHtmlWriter implements HtmlWriter {
         onFrameLoadWriter.append("\"; __warpForm.submit(); return false;}; ");
     }
 
+
+    public void registerAsyncEvent(String id, ScriptEvents click, String encodedEvent, int topicId, String[] viewports) {
+
+        //setup dwr engine and interface
+        registerScriptLibrary(CoreScriptLibraries.DWR_REMOTE_EVENT_PROXY);
+        registerScriptLibrary(CoreScriptLibraries.DWR_ENGINE);
+        registerScriptLibrary(CoreScriptLibraries.DWR_UTIL);
+
+        //write event trigger function
+        onFrameLoadWriter.append(String.format(getScriptTemplate(DWR_EVENT_DISPATCH_FUNC),
+                id,
+                viewports[0], RemoteEventProxy.WARP_TARGET_PAGE_URI,
+
+                RequestBinder.EVENT_PARAMETER_NAME, encodedEvent,
+                RequestBinder.EVENT_TOPIC_PARAMETER_NAME, topicId,
+
+                viewports[0]));
+    }
+
     //write raw text to the body load js func
     public void writeToOnLoad(String text) {
         onFrameLoadWriter.append(text);
     }
 
-    public String newId(Object object) {
-        return String.format("%s_%s", object.getClass().getSimpleName(), object.hashCode());
-    }
-
-    //convenience varargs method
-    public void element(String name, Object...nameValuePairs) {
-        elementWithAttrs(name, nameValuePairs);
-    }
-
-    //use this method to output as many sets of attribs as u need
-    public void elementWithAttrs(String name, Object[]... nameValuePairs) {
-        writer.append('<');
-        writer.append(name);
-        for (Object[] nameValuePairArray : nameValuePairs)
-            attributes(nameValuePairArray);
-        writer.append('>');
-    }
-
-    public void writeRaw(String text) {
-        writer.append(text);
-    }
-
-    private void attributes(Object[] nameValuePairs) {
-        if (null == nameValuePairs)
-            return;
-
-        for (int i = 0; i < nameValuePairs.length; i += 2) {
-            writer.append(' ');
-            writer.append((String) nameValuePairs[i]);
-            writer.append("=\"");
-            writer.append(nameValuePairs[i + 1].toString());
-            writer.append("\" ");
-        }
-    }
-
-    public void end(String name) {
-        writer.append("</");
-        writer.append(name);
-        writer.append('>');
-    }
-
     public String getBuffer() {
         //insert the onFrameLoadWriter content in the placeholder
-        return writer
+        return getWriter()
                 .toString()
-                .replaceFirst(HtmlWriter.LINKED_SCRIPTS_PLACEHOLDER, JsSupportUtils.wrapLinkedScripts(linkedScripts))
-                .replaceFirst(HtmlWriter.ON_FRAME_LOAD_PLACEHOLDER, JsSupportUtils.wrapOnFrameLoadFn(onFrameLoadWriter));
+                .replaceFirst(HtmlWriter.LINKED_SCRIPTS_PLACEHOLDER, wrapLinkedScripts(linkedScripts, getRequest().getContextPath()))
+                .replaceFirst(HtmlWriter.ON_FRAME_LOAD_PLACEHOLDER, wrapOnFrameLoadFn(onFrameLoadWriter));
     }
 
-    public void selfClosedElement(String name, Object... nameValuePairs) {
-        selfClosedElementWithAttrs(name, nameValuePairs);
-    }
-
-    public void selfClosedElementWithAttrs(String name, Object[] nameValuePairs) {
-        writer.append('<');
-        writer.append(name);
-        attributes(nameValuePairs);
-        writer.append("/>");
-    }
 }

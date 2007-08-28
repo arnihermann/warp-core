@@ -31,7 +31,7 @@ public class Button implements Renderable, AttributesInjectable {
         if (null != event)
             encodedEvent = event;
 
-        String buttonId = writer.newId(this);
+        String buttonId = writer.makeIdFor(this);
         writer.elementWithAttrs("input",
                 new Object[] {
                         "type", "button",
@@ -69,5 +69,9 @@ public class Button implements Renderable, AttributesInjectable {
 
     public void setAttributeNameValuePairs(Map<String, Object> attribs) {
         this.attribs = attribs;
+    }
+
+    public Map<String, Object> getAttributeNameValuePairs() {
+        return attribs;
     }
 }

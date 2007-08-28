@@ -1,5 +1,7 @@
 package com.wideplay.warp.rendering;
 
+import com.wideplay.warp.components.AttributesInjectable;
+
 /**
  * Created by IntelliJ IDEA.
  * User: dprasanna
@@ -18,13 +20,26 @@ public interface HtmlWriter {
     String FRAME_GLOBAL_FORM_NAME = "__warpForm";
     String ON_FRAME_LOAD_FUNCTION = "fnOnFrameLoad()";
 
+    /**
+     * This method tells HtmlWriter that a particular property is to be watched as an incoming request
+     * parameter. This is typically used when "gathering" properties on a page or viewport to post back
+     * via javascript for example.
+     *
+     * The default implementation does nothing (since pages use the &lt;form&gt; tag for normal posts anyway)
+     *
+     * @param id Id of the element/tag with the bound property/request parameter
+     */
+    void registerInputBinding(String id);
+
     void registerScriptLibrary(ScriptLibrary library);
 
     void registerEvent(String elementName, ScriptEvents event, String annotation, int topicId);//write raw text to the body load js func
 
     void writeToOnLoad(String text);
 
-    String newId(Object object);//convenience varargs method
+    String makeIdFor(AttributesInjectable object);
+
+    //convenience varargs method
 
     void element(String name, Object...nameValuePairs);
 
@@ -38,4 +53,8 @@ public interface HtmlWriter {
     void selfClosedElementWithAttrs(String name, Object[] nameValuePairs);
 
     String getBuffer();
+
+    void registerAsyncEvent(String id, ScriptEvents click, String encodedEvent, int topicId, String[] viewports);
+
+    String newId(Object object);
 }

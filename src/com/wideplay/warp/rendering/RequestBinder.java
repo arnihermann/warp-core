@@ -18,5 +18,7 @@ public interface RequestBinder {
 
     void bindBean(Object bean, @RequestParameters Map<String, String[]> parameters);
 
+    void bindBeanFromMap(Object bean, @RequestParameters Map<String, String> parameters);
+
     String createCollectionBindingExpression(String items, String bind);
 }

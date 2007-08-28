@@ -11,4 +11,6 @@ import java.util.Map;
  */
 public interface AttributesInjectable {
     void setAttributeNameValuePairs(Map<String, Object> attribs);
+
+    Map<String, Object> getAttributeNameValuePairs();
 }

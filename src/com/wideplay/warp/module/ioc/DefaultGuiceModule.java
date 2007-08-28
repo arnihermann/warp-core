@@ -5,6 +5,7 @@ import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
 import com.google.inject.servlet.RequestScoped;
 import com.google.inject.servlet.SessionScoped;
+import com.wideplay.warp.annotations.Context;
 import com.wideplay.warp.annotations.Page;
 import com.wideplay.warp.internal.Builders;
 import com.wideplay.warp.module.StateManager;
@@ -38,8 +39,8 @@ class DefaultGuiceModule extends AbstractModule {
         bindScope(RequestScoped.class, WarpScopes.REQUEST);
 
         //bind request & response providers
-        bind(HttpServletRequest.class).toProvider(RequestProvider.class);
-        bind(HttpServletResponse.class).toProvider(ResponseProvider.class);
+        bind(HttpServletRequest.class).annotatedWith(Context.class).toProvider(RequestProvider.class);
+        bind(HttpServletResponse.class).annotatedWith(Context.class).toProvider(ResponseProvider.class);
 
         //bind state manager and its deps
         bind(Cube.class).annotatedWith(SessionWide.class).to(HashCube.class).in(SessionScoped.class);
@@ -58,6 +59,9 @@ class DefaultGuiceModule extends AbstractModule {
         //bind pages to our InjectPageProvider providers (ones that only inject managed props)
         for (Class<?> clazz : pagesAndProviders.keySet())
             bind(clazz).annotatedWith(Page.class).toProvider(pagesAndProviders.get(clazz));
+
+        //bind dwr module
+        install(new DwrGuiceModule());
     }
 
     //invoked by parent to store class proxy classes

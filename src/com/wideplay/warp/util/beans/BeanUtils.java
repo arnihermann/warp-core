@@ -50,6 +50,17 @@ public class BeanUtils {
         }
     }
 
+    /**
+     *
+     * This method should never be called after setup as it will make the BeanUtils class unsafe to concurrency
+     *
+     * @param str A name
+     * @param obj A value for the name
+     */
+    private static void setGlobalBeanContextVariable(String str, Object obj) {
+//        contextVars.put(str, obj);
+    }
+
     public static void setFromPropertyExpression(String expr, Object bean, Object value) {
         //lets use mvel to store an expression
         MVEL.setProperty(bean, expr, value);

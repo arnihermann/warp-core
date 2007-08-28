@@ -29,6 +29,7 @@ public class RawText implements Renderable, AttributesInjectable {
     public static final String WARP_RAW_TEXT_PROP_TOKENS = "warpRawTextTokens";
     public static final String WARP_RAW_TEXT_PROP_TAG = "warpRawTextTag";
     public static final String WARP_RAW_TEXT_PROP_ATTRS = "warpRawTextAttributes";
+    public static final String WARP_RAW_TEXT_ATTR_MAP = "warpRawTextPropertyMap";   //same as WARP_RAW_TEXT_PROP_ATTRS but stored as PropertyDescriptors
 
     public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector, PageClassReflection reflection, Object page) {
         Object[] attributes = null;
@@ -84,5 +85,9 @@ public class RawText implements Renderable, AttributesInjectable {
 
     public void setAttributeNameValuePairs(Map<String, Object> attributeNameValuePairs) {
         this.attributeNameValuePairs = attributeNameValuePairs;
+    }
+
+    public Map<String, Object> getAttributeNameValuePairs() {
+        return attributeNameValuePairs;
     }
 }

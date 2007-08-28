@@ -66,6 +66,7 @@ import java.util.Map;
 public class Link implements Renderable, AttributesInjectable {
     private String event;
     private Object topic;
+    private String viewports;
     private final InternalConversation conversation;
     private Map<String, Object> attribs;
 
@@ -80,7 +81,7 @@ public class Link implements Renderable, AttributesInjectable {
             encodedEvent = event;
 
         //write the anchor with a generated id
-        String id = writer.newId(this);
+        String id = writer.makeIdFor(this);
 
         //manage event topics via the internal conversation (tracker of user's behavior across requests)
         int topicId = 0;
@@ -96,7 +97,10 @@ public class Link implements Renderable, AttributesInjectable {
         writer.elementWithAttrs("a", new Object[] { "id", id, "href", "#"}, ComponentSupport.getTagAttributesExcept(attribs, "id", "href", "onclick"));
 
         //register event publication
-        writer.registerEvent(id, ScriptEvents.CLICK, encodedEvent, topicId);
+        if (null != viewports)
+            writer.registerAsyncEvent(id, ScriptEvents.CLICK, encodedEvent, topicId, TextTools.commaSeparatorRegexSplit(viewports));
+        else
+            writer.registerEvent(id, ScriptEvents.CLICK, encodedEvent, topicId);
 
         ComponentSupport.renderMultiple(writer, nestedComponents, injector, reflection, page);
         writer.end("a");
@@ -115,8 +119,15 @@ public class Link implements Renderable, AttributesInjectable {
         this.topic = topic;
     }
 
+    public void setViewports(String viewports) {
+        this.viewports = viewports;
+    }
 
     public void setAttributeNameValuePairs(Map<String, Object> attribs) {
         this.attribs = attribs;
+    }
+
+    public Map<String, Object> getAttributeNameValuePairs() {
+        return attribs;
     }
 }

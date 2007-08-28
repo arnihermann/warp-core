@@ -161,6 +161,7 @@ class ComponentHandlerBuilder {
 
     //builds arbitrary custom attributes that are meant to be injected into user-defined non-Renderable @Component objects
     private Map<String, Object> buildCustomAttributes(Element element) {
+        Map<String, Object> attribsContainer = new LinkedHashMap<String, Object>();
         Map<String, Object> attribs = new LinkedHashMap<String, Object>();
 
         //walk attributes and stash them (so long as they're not warp components)
@@ -176,13 +177,18 @@ class ComponentHandlerBuilder {
             }
         }
 
-        return attribs;
+        //the viewport component expects attribs as a map of propertydescriptors inside the arbitrary attribute map
+        attribsContainer.put(RawText.WARP_RAW_TEXT_ATTR_MAP, attribs);
+
+        return attribsContainer;
     }
 
 
     //builds arbitrary attributes (random props that are stuck on to a component--really only for RawText components)
     private Map<String, Object> buildArbitraryAttributes(Node node) {
         Map<String, Object> attribs = new LinkedHashMap<String, Object>();
+
+        Map<String, PropertyDescriptor> attribAsProperties = new LinkedHashMap<String, PropertyDescriptor>();
 
          //text components have a special property we assign called warpRawText
         attribs.put(RawText.WARP_RAW_TEXT_PROP_TOKENS, TextTools.tokenize(buildRawText(node)));
@@ -205,9 +211,11 @@ class ComponentHandlerBuilder {
                 //store attributes in a flat list
                 elementAttributes.add(attribute.getName());
                 elementAttributes.add(attribute.getValue());
+                attribAsProperties.put(attribute.getName(), buildPropertyDescriptor(attribute));
             }
 
             attribs.put(RawText.WARP_RAW_TEXT_PROP_ATTRS, elementAttributes.toArray());
+            attribs.put(RawText.WARP_RAW_TEXT_ATTR_MAP, attribAsProperties);
         }
 
         return attribs;

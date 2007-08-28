@@ -47,7 +47,7 @@ public class Table implements Renderable, AttributesInjectable {
     }
 
     public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector, PageClassReflection reflection, Object page) {
-        String id = writer.newId(this);
+        String id = writer.makeIdFor(this);
         writer.elementWithAttrs("table", new Object[] { "id", id }, ComponentSupport.getTagAttributesExcept(attribs, "id"));
 
         //obtain the bound object
@@ -194,5 +194,9 @@ public class Table implements Renderable, AttributesInjectable {
 
     public void setAttributeNameValuePairs(Map<String, Object> attribs) {
         this.attribs = attribs;
+    }
+
+    public Map<String, Object> getAttributeNameValuePairs() {
+        return attribs;
     }
 }

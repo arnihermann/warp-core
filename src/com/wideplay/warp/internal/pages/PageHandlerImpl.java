@@ -1,13 +1,13 @@
 package com.wideplay.warp.internal.pages;
 
 import com.google.inject.Injector;
+import com.google.inject.Key;
 import com.wideplay.warp.annotations.event.PostRender;
 import com.wideplay.warp.annotations.event.PreRender;
+import com.wideplay.warp.internal.conversation.ConversationSupport;
 import com.wideplay.warp.module.StateManager;
 import com.wideplay.warp.module.WarpModuleAssembly;
 import com.wideplay.warp.rendering.*;
-import com.wideplay.warp.internal.conversation.InternalConversation;
-import com.wideplay.warp.util.TextTools;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,7 +43,7 @@ class PageHandlerImpl implements PageHandler {
         final String topicParam = request.getParameter(RequestBinder.EVENT_TOPIC_PARAMETER_NAME);
 
         //read topic out of conversation if available
-        Object topic = retrieveEventTopicAndClear(injector, topicParam);
+        Object topic = ConversationSupport.retrieveEventTopicAndClear(injector, topicParam);
 
         //place persistent fields back into the page
         StateManager stateManager = injector.getInstance(StateManager.class);
@@ -82,7 +82,7 @@ class PageHandlerImpl implements PageHandler {
 
     private void renderPage(Injector injector, Object page, HttpServletResponse response) {
         //write response to a new HtmlWriter using the component handler tree
-        HtmlWriter htmlWriter = new JsFrameHtmlWriter();
+        HtmlWriter htmlWriter = injector.getInstance(Key.get(HtmlWriter.class, JsFrame.class));
         rootComponentHandler.handleRender(htmlWriter, injector, reflection, page);
 
         //write buffered output to the response stream
@@ -94,20 +94,7 @@ class PageHandlerImpl implements PageHandler {
         }
     }
 
-    private Object retrieveEventTopicAndClear(Injector injector, String topicParam) {
-        Object topic = null;
-
-        final InternalConversation conversation = injector.getInstance(InternalConversation.class);
-        if (null != topicParam) {
-            if (!TextTools.isEmptyString(topicParam))
-                topic = conversation.recall(Integer.parseInt(topicParam));
-        }
-
-        //clear out internal monologue!!!
-        conversation.forgetAll();
-
-        return topic;
-    }
+    
 
     @SuppressWarnings("unchecked")
     private void bindRequestParameters(HttpServletRequest request, Injector injector, Object page) {

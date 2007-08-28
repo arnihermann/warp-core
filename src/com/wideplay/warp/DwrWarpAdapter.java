@@ -2,6 +2,7 @@ package com.wideplay.warp;
 
 import com.google.inject.Injector;
 import org.directwebremoting.guice.DwrGuiceServlet;
+import org.directwebremoting.guice.DwrScopes;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -41,6 +42,7 @@ class DwrWarpAdapter {
 
     public void shutdown(final ServletContext servletContext) {
         //shutdown servlet first
+        DwrScopes.APPLICATION.closeAll();
         dwrServlet.destroy();
     }
 }

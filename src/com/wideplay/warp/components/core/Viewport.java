@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.wideplay.warp.annotations.Component;
 import com.wideplay.warp.annotations.Page;
+import com.wideplay.warp.components.AttributesInjectable;
 import com.wideplay.warp.module.WarpModuleAssembly;
 import com.wideplay.warp.module.componentry.PropertyDescriptor;
 import com.wideplay.warp.module.componentry.Renderable;
@@ -13,8 +14,8 @@ import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.rendering.PageHandler;
-import com.wideplay.warp.components.AttributesInjectable;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -48,10 +49,12 @@ import java.util.Map;
  */
 @Component
 public class Viewport implements Renderable, AttributesInjectable {
+    private String id;
     private Object embed; //embedded page
     private String embedClass; //optionally embed by page class
-    private boolean ajax = false;
-    private Map<String, PropertyDescriptor> attribs;
+    private boolean async = false;
+
+    private Map<String, Object> attribs;    //embedded attributes
 
     public static final String EMBED_CLASS_PROPERTY = "embedClass";
 
@@ -73,42 +76,73 @@ public class Viewport implements Renderable, AttributesInjectable {
         PageHandler embeddedPageHandler = assembly.getPage(uri);
 
         //strip the frame (or whatever is wrapping) component
-        List<? extends ComponentHandler> embeddedContent = embeddedPageHandler.getRootComponentHandler().getNestedComponents();
+        List<? extends ComponentHandler> embeddedContent = ComponentSupport.obtainFrameNestedContent(embeddedPageHandler.getRootComponentHandler().getNestedComponents());
 
         //inject the embedded page (configure it) prior to render--with properties from the current page (as necessary)
         if (null != attribs)
-            IocContextManager.injectProperties(attribs.values(), embedded, page);
+            IocContextManager.injectProperties(extractAttributePropertyList(), embedded, page);
 
-        if (!ajax)
+        //if asynchronous, we should proxy the html writer to trap and watch input bindings separately from the rest of the page
+        if (async) {
+            renderAsyncViewport(writer, embeddedContent, injector, reflection, embedded, uri);
+        } else
             //render the embedded content as my children, rather than my own children (which are discarded), using the embedded object as page
             ComponentSupport.renderMultiple(writer, embeddedContent, injector, reflection, embedded);
-        else {
-            //use an html writer adapter to intercept the event support for the page and turn it into ajax support
-            renderAjaxContent(writer, embeddedPageHandler, embeddedContent, uri);
+    }
+
+
+
+    private void renderAsyncViewport(HtmlWriter writer, List<? extends ComponentHandler> embeddedContent, Injector injector, PageClassReflection reflection, Object embedded, String uri) {
+        //grab the id from the property map
+        String id = makeId(writer);
+
+        //grab the tag name and write it as is
+        String tagName = attribs.get(RawText.WARP_RAW_TEXT_PROP_TAG).toString();
+        writer.element(tagName, "id", id);
+
+        //use a static proxy pattern to intercept calls to register input bindings
+        AsyncViewportHtmlWriter asyncWriter = new AsyncViewportHtmlWriter(writer);
+
+        //render viewport contents
+        ComponentSupport.renderMultiple(asyncWriter, embeddedContent, injector, reflection, embedded);
+
+        //get "watched" bindings and write them into a viewport property (using js)
+        writer.writeToOnLoad("document.getElementById(\"");
+        writer.writeToOnLoad(id);
+        writer.writeToOnLoad("\").bindings=new Array(\"");
+        for (int i = 0; i < asyncWriter.getBindings().size(); i++) {
+            String binding = asyncWriter.getBindings().get(i);
+            writer.writeToOnLoad(binding);
+
+            //write commans except for last one
+            if (i < asyncWriter.getBindings().size() - 1)
+                writer.writeToOnLoad("\", ");
         }
-    }
+        writer.writeToOnLoad("\");");
 
-    private void renderAjaxContent(HtmlWriter writer, PageHandler embeddedPageHandler, List<? extends ComponentHandler> embeddedContent, String uri) {
-        String viewportId = writer.newId(this);
-        writer.element("div", "id", viewportId);
-
-        writer.registerScriptLibrary(CoreScriptLibraries.YUI_UTILITIES);
-        writer.registerScriptLibrary(CoreScriptLibraries.EXT_YUI_ADAPTER);
-        writer.registerScriptLibrary(CoreScriptLibraries.EXT_ALL);
-
-        writer.writeToOnLoad(" Ext.get(\"");
-        writer.writeToOnLoad(viewportId);
-        writer.writeToOnLoad("\").load({ url: \"");
+        //write target URI for asynchronous callback
+        writer.writeToOnLoad("document.getElementById(\"");
+        writer.writeToOnLoad(id);
+        writer.writeToOnLoad("\").targetUri=\"");
         writer.writeToOnLoad(uri);
-        writer.writeToOnLoad("\", ");
-        writer.writeToOnLoad("scripts:true, params:\"\", text:\"Loading...\" }); ");
+        writer.writeToOnLoad("\";");
 
-        writer.end("div");
+        writer.end(tagName);
     }
 
-    public void setAjax(boolean ajax) {
-        this.ajax = ajax;
+    private String makeId(HtmlWriter writer) {
+        if (null == this.id)
+            return writer.newId(this);
+
+        return this.id;
     }
+
+
+    @SuppressWarnings("unchecked")
+    private Collection<PropertyDescriptor> extractAttributePropertyList() {
+        return ((Map<String, PropertyDescriptor>) attribs.get(RawText.WARP_RAW_TEXT_ATTR_MAP)).values();
+    }
+
 
     public void setEmbed(Object embed) {
         this.embed = embed;
@@ -118,8 +152,20 @@ public class Viewport implements Renderable, AttributesInjectable {
         this.embedClass = embedClass;
     }
 
-    @SuppressWarnings("unchecked") //Horrible unchecked cast being forced
-    public void setAttributeNameValuePairs(Map attribs) {
+    public void setAttributeNameValuePairs(Map<String, Object> attribs) {
         this.attribs = attribs;
+    }
+
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setAsync(boolean async) {
+        this.async = async;
+    }
+
+    public Map<String, Object> getAttributeNameValuePairs() {
+        return attribs;
     }
 }

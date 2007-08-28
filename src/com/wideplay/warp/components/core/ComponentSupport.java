@@ -18,7 +18,7 @@ import java.util.Map;
  *
  * @author Dhanji R. Prasanna
  */
-class ComponentSupport {
+public class ComponentSupport {
 
 
     private ComponentSupport() {
@@ -79,5 +79,13 @@ class ComponentSupport {
         }
 
         return false;
+    }
+
+    public static List<? extends ComponentHandler> obtainFrameNestedContent(List<? extends ComponentHandler> nestedComponents) {
+        for (ComponentHandler componentHandler : nestedComponents)
+            if (Frame.class.isAssignableFrom(componentHandler.getComponentClassReflection().getComponentClass()))
+                return componentHandler.getNestedComponents();
+
+        return null;    //not found!
     }
 }

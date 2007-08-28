@@ -11,7 +11,7 @@ import com.google.inject.Module;
  * @since 1.0
  */
 public interface Warp {
-    void install(Module guiceModule);
+    void install(Module...guiceModule);
 
     void addStartupListener(Class<? extends StartupListener> startupListener);
     void addStartupListener(Key<? extends StartupListener> startupListener);

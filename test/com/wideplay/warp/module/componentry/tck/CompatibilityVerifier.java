@@ -2,8 +2,9 @@ package com.wideplay.warp.module.componentry.tck;
 
 import com.google.inject.Injector;
 import com.wideplay.warp.annotations.Component;
-import com.wideplay.warp.module.componentry.Renderable;
+import com.wideplay.warp.module.componentry.ComponentClassReflection;
 import com.wideplay.warp.module.componentry.PropertyDescriptor;
+import com.wideplay.warp.module.componentry.Renderable;
 import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
@@ -95,6 +96,11 @@ public class CompatibilityVerifier {
                 public Map<String, PropertyDescriptor> getPropertyValueExpressions() {
                     return null;  //To change body of implemented methods use File | Settings | File Templates.
                 }
+
+
+                public ComponentClassReflection getComponentClassReflection() {
+                    return null;  //To change body of implemented methods use File | Settings | File Templates.
+                }
             });
 
         return handlers;
@@ -140,7 +146,7 @@ public class CompatibilityVerifier {
 //                //To change body of implemented methods use File | Settings | File Templates.
 //            }
 //
-//            public String newId(Object object)//convenience varargs method
+//            public String makeIdFor(Object object)//convenience varargs method
 //            {
 //                return null;  //To change body of implemented methods use File | Settings | File Templates.
 //            }

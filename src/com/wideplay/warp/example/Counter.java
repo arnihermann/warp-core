@@ -1,5 +1,6 @@
 package com.wideplay.warp.example;
 
+import com.google.inject.Singleton;
 import com.wideplay.warp.annotations.Managed;
 import com.wideplay.warp.annotations.OnEvent;
 
@@ -10,13 +11,18 @@ import com.wideplay.warp.annotations.OnEvent;
  * @author Dhanji R. Prasanna
  * @since 1.0
  */
+@Singleton
 public class Counter {
     @Managed private int counter;
 
     public int getCounter() {
         return counter;
     }
-    
+
+    public void setCounter(int counter) {
+        this.counter = counter;
+    }
+
     @OnEvent
     public void increment() {
         counter++;

@@ -7,6 +7,7 @@ import com.wideplay.warp.StartupListener;
 import com.wideplay.warp.Warp;
 import com.wideplay.warp.module.WarpConfiguration;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,8 +30,8 @@ class WarpConfigurerImpl implements Warp, WarpConfiguration {
         Collections.addAll(guiceModules, modules);
     }
 
-    public void install(Module guiceModule) {
-        guiceModules.add(guiceModule);
+    public void install(Module...modules) {
+        guiceModules.addAll(Arrays.asList(modules));
     }
 
 

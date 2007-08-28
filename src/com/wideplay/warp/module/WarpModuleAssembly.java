@@ -49,6 +49,12 @@ public class WarpModuleAssembly {
             pagesByClassName.put(pageClass.getName(), pageClass);
     }
 
+    /**
+     * This method searches ALL registered pages (including components)
+     *  
+     * @param uri An explicit URI
+     * @return Returns the matching page handler for the given URI or null
+     */
     public PageHandler getPage(String uri) {
         return pages.get(uri);    
     }

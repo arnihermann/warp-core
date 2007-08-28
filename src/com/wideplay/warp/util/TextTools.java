@@ -109,6 +109,11 @@ public class TextTools {
         return moduleRootDir.substring(0, moduleRootDir.length() - (WarpFilter.CLASS_EXT.length() + moduleClass.getSimpleName().length()));
     }
 
+    public static String[] commaSeparatorRegexSplit(String viewports) {
+        return new String[] { viewports };
+        //TODO return viewports.split(",[ ]*") 
+    }
+
     private enum TokenizerState { READING_TEXT, READING_EXPRESSION }
 
 

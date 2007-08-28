@@ -29,7 +29,10 @@ public class TextArea implements Renderable, AttributesInjectable {
     public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector, PageClassReflection reflection, Object page) {
         Object[] attributes = ComponentSupport.getTagAttributesExcept(attribs, "name");
 
-        writer.elementWithAttrs("textarea", new Object[] { "name", bind }, attributes);
+        String id = writer.makeIdFor(this);
+
+        writer.registerInputBinding(id);
+        writer.elementWithAttrs("textarea", new Object[] { "id", id, "name", bind }, attributes);
         writer.writeRaw(BeanUtils.getFromPropertyExpression(bind, page).toString());
         writer.end("textarea");
     }
@@ -40,5 +43,9 @@ public class TextArea implements Renderable, AttributesInjectable {
 
     public void setBind(String bind) {
         this.bind = bind;
+    }
+
+    public Map<String, Object> getAttributeNameValuePairs() {
+        return attribs;
     }
 }

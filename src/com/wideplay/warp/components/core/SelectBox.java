@@ -41,11 +41,15 @@ public class SelectBox implements Renderable, AttributesInjectable {
 
     public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector, PageClassReflection reflection, Object page) {
         Object boundItem = null;
+        String id = writer.makeIdFor(this);
+        
         if (null != bind) {
             //write special collection binding parameter name
             String bindingExpression = requestBinder.createCollectionBindingExpression(items, bind);
 
-            writer.elementWithAttrs("select", new Object[] { "name", bindingExpression }, getTagAttributesExcept(injectableAttributes, "name"));    //bind as expression
+            writer.registerInputBinding(id);
+
+            writer.elementWithAttrs("select", new Object[] { "id", id, "name", bindingExpression }, getTagAttributesExcept(injectableAttributes, "name"));    //bind as expression
             boundItem = BeanUtils.getFromPropertyExpression(bind, page);
         }
         else
@@ -120,5 +124,9 @@ public class SelectBox implements Renderable, AttributesInjectable {
 
     public void setAttributeNameValuePairs(Map<String, Object> attribs) {
         this.injectableAttributes = attribs;
+    }
+
+    public Map<String, Object> getAttributeNameValuePairs() {
+        return injectableAttributes;
     }
 }

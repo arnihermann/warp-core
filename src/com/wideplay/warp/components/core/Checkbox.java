@@ -9,8 +9,6 @@ import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.rendering.ScriptEvents;
 import com.wideplay.warp.util.TextTools;
 import com.wideplay.warp.util.beans.BeanUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import java.util.List;
 
@@ -31,16 +29,8 @@ public class Checkbox implements Renderable {
     private String label = TextTools.EMPTY_STRING;
     private String bind;
 
-    private final Log log = LogFactory.getLog(Checkbox.class);
-
     public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector, PageClassReflection reflection, Object page) {
 
-        String encodedEvent = TextTools.EMPTY_STRING;
-
-        if (null != event)
-            encodedEvent = event;
-
-//        log.debug("binding to:" + bind);
 
         boolean booleanValue=false;
 
@@ -57,6 +47,7 @@ public class Checkbox implements Renderable {
         }
 
         String id = writer.newId(this);
+        writer.registerInputBinding(id);
 
         writer.selfClosedElement("input",
                 "type","hidden",
@@ -88,7 +79,9 @@ public class Checkbox implements Renderable {
         writer.writeRaw(label);
         writer.end("label");
 
-        writer.registerEvent(id, ScriptEvents.CHANGE, encodedEvent, 0);
+        if (null != event)
+            writer.registerEvent(id, ScriptEvents.CHANGE, event, 0);
+
 
         ComponentSupport.renderMultiple(writer, nestedComponents, injector, reflection, page);
         writer.end("input");

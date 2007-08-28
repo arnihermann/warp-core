@@ -44,7 +44,7 @@ class ComponentHandlerImpl implements ComponentHandler {
         //fire lifecycle method pre-render?
         //...
 
-        //bind the page model (ognl expressions) to the components attributes
+        //bind the page model (mvel expressions) to the component's attributes
         IocContextManager.injectProperties(propertyValueExpressions.values(), renderable, page);
 
         //pass through arbitrary non-warp attributes for the component to do with as it likes
@@ -62,5 +62,9 @@ class ComponentHandlerImpl implements ComponentHandler {
 
     public List<? extends ComponentHandler> getNestedComponents() {
         return nestedComponents;
+    }
+
+    public ComponentClassReflection getComponentClassReflection() {
+        return reflection;
     }
 }
