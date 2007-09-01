@@ -58,7 +58,7 @@ public class EventDispatcher {
                 if (!delegate.isAnyHandlingSupported())
                     continue;
 
-                for (Method method : delegate.getAllEventHandlers()) {
+                for (Method method : delegate.getAnyEventHandlers()) {
                     if (log.isTraceEnabled())
                         log.trace("Firing 'any' event handler in delegate: " + method.getName());
                     //read the delegate out of the page object and try to invoke its method

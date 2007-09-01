@@ -20,7 +20,7 @@ import java.util.Set;
 */
 class EventHandlerDelegateImpl implements EventHandlerDelegate {
     private final FieldDescriptor delegateFieldDescriptor;
-    private final List<Method> allEventHandlers;
+    private final List<Method> anyEventHandlers;
     private final Map<String, Set<Method>> disambiguationEventHandlers;
     private final Set<Class<? extends Annotation>> resolutionAnnotations;
     private final Set<String> resolutionAnnotationsStrings;
@@ -30,19 +30,24 @@ class EventHandlerDelegateImpl implements EventHandlerDelegate {
                                 Set<Class<? extends Annotation>> resolutionAnnotations) {
 
         this.delegateFieldDescriptor = delegateFieldDescriptor;
-        this.allEventHandlers = allEventHandlers;
+        this.anyEventHandlers = allEventHandlers;
         this.disambiguationEventHandlers = disambiguationEventHandlers;
         this.resolutionAnnotations = resolutionAnnotations;
 
         //convert resolution annotations to strings
         resolutionAnnotationsStrings = new LinkedHashSet<String>();
-        for (Class<? extends Annotation> resolutionAnnotation : resolutionAnnotations)
-            resolutionAnnotationsStrings.add(ReflectUtils.extractAnnotationSimpleName(resolutionAnnotation));
+
+        if (!resolutionAnnotations.isEmpty())
+            for (Class<? extends Annotation> resolutionAnnotation : resolutionAnnotations)
+                resolutionAnnotationsStrings.add(ReflectUtils.extractAnnotationSimpleName(resolutionAnnotation));
+        else
+            for (String resolutionAnnotation : disambiguationEventHandlers.keySet())
+                resolutionAnnotationsStrings.add(resolutionAnnotation);
     }
 
 
-    public List<Method> getAllEventHandlers() {
-        return allEventHandlers;
+    public List<Method> getAnyEventHandlers() {
+        return anyEventHandlers;
     }
 
     public Map<String, Set<Method>> getDisambiguationEventHandlers() {
@@ -59,7 +64,7 @@ class EventHandlerDelegateImpl implements EventHandlerDelegate {
     }
 
     public boolean isAnyHandlingSupported() {
-        return resolutionAnnotations.isEmpty();
+        return !anyEventHandlers.isEmpty();
     }
 
     public static EventHandlerDelegateImpl newDelegate(FieldDescriptor delegateFieldDescriptor, List<Method> allEventHandlers,

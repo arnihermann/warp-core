@@ -15,7 +15,7 @@ import java.util.Set;
  * @since 1.0
  */
 public interface EventHandlerDelegate {
-    List<Method> getAllEventHandlers();
+    List<Method> getAnyEventHandlers();
 
     Map<String, Set<Method>> getDisambiguationEventHandlers();
 
