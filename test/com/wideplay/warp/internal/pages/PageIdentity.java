@@ -7,7 +7,7 @@ package com.wideplay.warp.internal.pages;
  * This interface is only ever implemented by proxies and so has
  * VERY unusual method names to reduce the possibility of collisions.
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 public interface PageIdentity {

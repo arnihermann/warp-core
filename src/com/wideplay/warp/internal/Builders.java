@@ -15,7 +15,7 @@ import java.util.Set;
  * Created with IntelliJ IDEA.
  * On: Mar 24, 2007 10:23:51 PM
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  */
 public class Builders {
 

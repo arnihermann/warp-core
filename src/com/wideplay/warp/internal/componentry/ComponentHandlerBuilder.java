@@ -23,7 +23,7 @@ import java.util.*;
  *
  * Builds ComponentHandlers from a root Dom4j document.
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 class ComponentHandlerBuilder {

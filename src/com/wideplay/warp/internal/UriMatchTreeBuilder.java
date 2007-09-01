@@ -2,10 +2,8 @@ package com.wideplay.warp.internal;
 
 import com.wideplay.warp.rendering.PageHandler;
 
-import java.util.Map;
-import java.util.List;
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.

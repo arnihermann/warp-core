@@ -1,7 +1,6 @@
 package com.wideplay.warp.example;
 
 import com.google.inject.Inject;
-import com.google.inject.cglib.proxy.Proxy;
 import com.wideplay.warp.annotations.OnEvent;
 import com.wideplay.warp.annotations.OnEvents;
 import com.wideplay.warp.annotations.Page;
@@ -13,7 +12,7 @@ import org.apache.commons.logging.LogFactory;
  * Created with IntelliJ IDEA.
  * On: 17/03/2007
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 public class PageInjectDemo {

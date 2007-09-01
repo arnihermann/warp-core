@@ -9,7 +9,7 @@ import java.util.Set;
  * Created with IntelliJ IDEA.
  * On: 19/02/2007
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 public class FieldDescriptor {

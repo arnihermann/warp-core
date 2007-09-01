@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  *
  * Marker that denotes type as a component class.
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 @Retention(RetentionPolicy.RUNTIME)

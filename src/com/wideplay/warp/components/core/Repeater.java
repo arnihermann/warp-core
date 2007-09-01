@@ -14,7 +14,7 @@ import java.util.List;
  *
  * Projects enclosed components across a collection of items (akin to map function in lisp).
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 @Component

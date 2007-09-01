@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
  * Utility tokenizes text into expressions and raw text, and provides other
  * text conversion utilities.
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 public class TextTools {

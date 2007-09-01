@@ -22,7 +22,7 @@ import java.util.Map;
  *
  * THIS KIT IS BROKEN AND NEEDS REWORK
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 public class CompatibilityVerifier {

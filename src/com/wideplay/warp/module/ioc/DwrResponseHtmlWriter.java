@@ -8,7 +8,7 @@ import com.wideplay.warp.rendering.ScriptLibrary;
  * Created with IntelliJ IDEA.
  * On: 27/08/2007
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 class DwrResponseHtmlWriter extends AbstractHtmlWriter {

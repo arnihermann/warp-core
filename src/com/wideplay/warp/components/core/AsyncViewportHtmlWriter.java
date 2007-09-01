@@ -15,7 +15,7 @@ import java.util.List;
  * A special proxy pattern that intercepts calls by input components so it
  * can build a list of input bindings to "watch"
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 class AsyncViewportHtmlWriter implements HtmlWriter {

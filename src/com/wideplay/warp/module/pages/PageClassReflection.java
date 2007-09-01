@@ -1,6 +1,5 @@
 package com.wideplay.warp.module.pages;
 
-import com.google.inject.Injector;
 import com.wideplay.warp.util.reflect.FieldDescriptor;
 
 import java.util.Set;
@@ -9,7 +8,7 @@ import java.util.Set;
  * Created with IntelliJ IDEA.
  * On: 25/03/2007
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 public interface PageClassReflection {

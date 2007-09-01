@@ -21,7 +21,7 @@ import java.util.Map;
  *
  * TODO factor out commonality with PageHandlerImpl
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 class DwrRemoteEventProxyImpl implements RemoteEventProxy {

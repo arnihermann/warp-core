@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
  * This annotation is used to signal to guice that the object being provided is a
  * warp page and should be provided by warp (without subsequent pages set).
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 @Retention(RetentionPolicy.RUNTIME)

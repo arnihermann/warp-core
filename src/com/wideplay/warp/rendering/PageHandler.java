@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
  * Created with IntelliJ IDEA.
  * On: Mar 24, 2007 10:10:11 PM
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  */
 public interface PageHandler {
 

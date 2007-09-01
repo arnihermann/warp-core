@@ -15,7 +15,7 @@ import java.util.Set;
  * Created with IntelliJ IDEA.
 * On: 25/03/2007
 *
-* @author Dhanji R. Prasanna
+* @author Dhanji R. Prasanna (dhanji at gmail com)
 * @since 1.0
 */
 class EventHandlerDelegateImpl implements EventHandlerDelegate {

@@ -20,7 +20,7 @@ import java.util.Map;
  *
  * Generates a select box from a collection of values.
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 @Component

@@ -11,7 +11,7 @@ import com.wideplay.warp.module.pages.event.Forward;
  *
  * NOT a page object
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 public class EventDelegate {

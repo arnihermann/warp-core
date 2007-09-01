@@ -9,7 +9,7 @@ package com.wideplay.warp;
  *
  * Your class is obtained via guice, so any injections will be honored.
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 public interface StartupListener {

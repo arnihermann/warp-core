@@ -12,7 +12,7 @@ import com.wideplay.warp.module.WarpModuleAssembly;
  *
  * Singleton provider obtains the current module assembly.
  *
- * @author dprasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 class WarpModuleAssemblyProvider implements Provider<WarpModuleAssembly> {

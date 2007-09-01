@@ -15,7 +15,7 @@ import java.util.Map;
  * Created with IntelliJ IDEA.
  * On: Mar 24, 2007 10:38:12 PM
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  */
 public class PageBuilders {
 

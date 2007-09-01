@@ -21,7 +21,7 @@ import java.util.Set;
  *
  * TODO fix generics
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 class PageClassReflectionImpl implements PageClassReflection {

@@ -14,7 +14,7 @@ import java.util.Map;
  *
  * A simple utility that is meant to factor out boilerplate for rendering child components.
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  */
 public class ComponentSupport {
 

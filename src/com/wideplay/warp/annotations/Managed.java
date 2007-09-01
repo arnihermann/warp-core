@@ -19,7 +19,7 @@ import java.lang.annotation.Target;
  * Setting autoCreate=true will tell Warp to attempt to inject an instance into the field
  * if it contains null at the beginning of the request. 
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 @Retention(RetentionPolicy.RUNTIME)

@@ -16,7 +16,7 @@ import java.util.*;
  *
  * This is a simple impl that caches reflection (introspection) results so they can be speeded up.
  *
- * @author dprasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 class ClassReflectionCacheImpl implements ClassReflectionCache {

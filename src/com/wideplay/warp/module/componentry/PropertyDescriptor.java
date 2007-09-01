@@ -4,7 +4,7 @@ package com.wideplay.warp.module.componentry;
  * Created with IntelliJ IDEA.
  * On: 17/03/2007
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 public final class PropertyDescriptor {

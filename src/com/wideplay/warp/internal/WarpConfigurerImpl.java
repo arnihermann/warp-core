@@ -16,7 +16,7 @@ import java.util.List;
  * Created with IntelliJ IDEA.
  * On: Mar 24, 2007 10:50:28 PM
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  */
 class WarpConfigurerImpl implements Warp, WarpConfiguration {
     private final List<Module> guiceModules = new LinkedList<Module>();

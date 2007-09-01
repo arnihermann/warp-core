@@ -8,7 +8,7 @@ import org.directwebremoting.guice.AbstractDwrModule;
  * Created with IntelliJ IDEA.
  * On: 27/08/2007
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 class DwrGuiceModule extends AbstractDwrModule {

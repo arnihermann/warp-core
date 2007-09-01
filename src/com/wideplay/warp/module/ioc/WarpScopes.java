@@ -28,7 +28,7 @@ import javax.servlet.http.HttpSession;
  * Created with IntelliJ IDEA.
  * On: 23/03/2007
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 class WarpScopes {

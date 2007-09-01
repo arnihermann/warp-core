@@ -21,7 +21,7 @@ import java.util.List;
  * A static utility that factors out boilerplate for injecting objects (in cases where guice is insufficient--hopefully guice1.1
  * and ctor interception will obviate the need for this).
  *
- * @author dprasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 class ObjectInjector {

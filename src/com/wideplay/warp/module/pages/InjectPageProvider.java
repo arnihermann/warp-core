@@ -3,7 +3,6 @@ package com.wideplay.warp.module.pages;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Provider;
-import com.google.inject.cglib.proxy.Proxy;
 import com.google.inject.cglib.proxy.Enhancer;
 import com.google.inject.cglib.proxy.LazyLoader;
 import com.wideplay.warp.module.StateManager;
@@ -25,7 +24,7 @@ import org.apache.commons.logging.LogFactory;
  * This class must do the injection itself (mirroring guice capabilities) because guice is viral and there
  * is no way to selectively not-inject certain properties.
  *
- * @author dprasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 public class InjectPageProvider<T> implements Provider<T> {

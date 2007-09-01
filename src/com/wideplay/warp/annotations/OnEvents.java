@@ -24,7 +24,7 @@ import java.lang.annotation.*;
  * Event handlers present in a page class are dispatched before delegates' event handlers
  * regardless of annotations.
  *
- * @author dprasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 

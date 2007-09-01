@@ -14,7 +14,7 @@ import java.util.List;
  * A simple panel component that can hide or show its contents based on conditions.
  * It is completely transparent to the rendered page (whether contents are shown or not).
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 @Component

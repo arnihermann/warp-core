@@ -10,7 +10,7 @@ import java.util.Map;
  * Created with IntelliJ IDEA.
  * On: Mar 24, 2007 7:20:44 PM
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  */
 public interface ComponentHandler {
     void handleRender(RenderingContext context);

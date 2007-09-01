@@ -11,7 +11,7 @@ import java.net.URLStreamHandlerFactory;
  * This is a classloader that invokes a specified bean or set of beans
  * in an isolated context.
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 class UrlInverseClassLoader extends URLClassLoader {

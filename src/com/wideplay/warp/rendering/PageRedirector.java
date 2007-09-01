@@ -16,7 +16,7 @@ import java.io.IOException;
  *
  * A utility class that encapsulates static functionality for either redirecting or forwarding to a returned page.
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 class PageRedirector {

@@ -17,7 +17,7 @@ import java.util.List;
  * This is a factory that builds and invokes beans/bean deps in isolated
  * classloaders.
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 public class ClassFactory {

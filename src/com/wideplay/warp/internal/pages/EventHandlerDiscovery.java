@@ -1,8 +1,8 @@
 package com.wideplay.warp.internal.pages;
 
 import com.wideplay.warp.annotations.OnEvent;
-import com.wideplay.warp.util.reflect.ReflectUtils;
 import com.wideplay.warp.module.WarpConfigurationException;
+import com.wideplay.warp.util.reflect.ReflectUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -14,7 +14,7 @@ import java.util.*;
  * Created with IntelliJ IDEA.
  * On: 22/03/2007
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 class EventHandlerDiscovery {

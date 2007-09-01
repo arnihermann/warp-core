@@ -10,7 +10,7 @@ import java.util.List;
  * Created with IntelliJ IDEA.
  * On: 26/03/2007
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 public class RepeaterDemo {

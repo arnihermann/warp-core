@@ -16,7 +16,7 @@ import java.util.Map;
  * requests to a page. For example, event "subjects" or other temporary metadata. This is different
  * from a "user" conversation which may be scoped differently (i.e. wider than session).
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 @SessionScoped

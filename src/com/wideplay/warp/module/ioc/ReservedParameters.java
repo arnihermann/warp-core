@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  *
  * Annotation indicates request parameters that are reserved by warp (and should not be bound).
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 @Retention(RetentionPolicy.RUNTIME)

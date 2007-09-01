@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
  * Note that the javascript-generated URLs still behave correctly (due to overriding of servlet path
  * and stripping of path info on the way in).
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 class DwrRequestWrapper extends HttpServletRequestWrapper {

@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
  * to be invoked AFTER the page has been rendered by the TemplatingFilter (not guaranteed to be
  * at the client browser).
  *
- * @author dprasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 @Retention(RetentionPolicy.RUNTIME)

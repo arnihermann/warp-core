@@ -6,7 +6,7 @@ package com.wideplay.warp.util;
  *
  * A simple wrapper around a string denoting it as an token.
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 public class Token {

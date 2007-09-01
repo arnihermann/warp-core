@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
  * to be invoked BEFORE the page has been rendered by the TemplatingFilter (but after state
  * is synchronized with the user's view of the page).
  *
- * @author dprasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 @Retention(RetentionPolicy.RUNTIME)

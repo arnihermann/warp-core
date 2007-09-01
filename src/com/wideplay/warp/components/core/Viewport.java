@@ -44,7 +44,7 @@ import java.util.Map;
  * Thus, viewport is a slick, transparent way to convert any page into an ajax page-fragment. You can easily
  * see how such fragments, with a bit of behavior abstraction, can be turned into reusable "ajax widgets."
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 @Component

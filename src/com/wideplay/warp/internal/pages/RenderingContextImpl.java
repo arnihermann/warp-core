@@ -15,7 +15,7 @@ import java.util.Map;
  *
  * A simple tuple to carry the rendering context to component instances.
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 class RenderingContextImpl implements RenderingContext {

@@ -16,7 +16,7 @@ import java.util.Map;
  *
  * User components should be registered here at module load time.
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 class DefaultComponentRegistryImpl implements ComponentRegistry {

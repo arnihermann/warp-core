@@ -25,7 +25,7 @@ import java.util.Map;
  *
  *  w:property and w:title are mutually exclusive
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 @Component

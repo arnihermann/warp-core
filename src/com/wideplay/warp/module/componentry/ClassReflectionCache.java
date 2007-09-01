@@ -10,7 +10,7 @@ import java.util.Map;
  *
  * An interface that caches reflection (introspection) of frequently reflected classes.
  *
- * @author dprasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 public interface ClassReflectionCache {

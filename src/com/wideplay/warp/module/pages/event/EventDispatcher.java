@@ -22,7 +22,7 @@ import java.util.Set;
  *  - First events are dispatched to the page object's event handlers
  *  - Next any event delegates that are eligible
  *
- * @author dprasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 public class EventDispatcher {

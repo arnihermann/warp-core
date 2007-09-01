@@ -18,7 +18,7 @@ import java.util.Map;
  *
  * A special case component that renders hanging bits of text in the template.
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 @Component

@@ -19,7 +19,7 @@ import java.net.URLDecoder;
  *
  * An HTML templating filter for warp (generates dispatch type) 
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 public class TemplatingFilter {

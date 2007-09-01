@@ -13,7 +13,7 @@ import java.util.Map;
  * Created with IntelliJ IDEA.
  * On: 27/08/2007
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 public abstract class AbstractHtmlWriter implements HtmlWriter {

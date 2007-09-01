@@ -9,7 +9,7 @@ import java.util.List;
  * Created with IntelliJ IDEA.
  * On: Mar 25, 2007 12:06:10 PM
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  */
 public class TextToolsTest {
     @DataProvider(name = "tokens")

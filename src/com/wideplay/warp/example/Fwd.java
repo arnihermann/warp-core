@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  *
  * A custom annotation
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 @Retention(RetentionPolicy.RUNTIME)

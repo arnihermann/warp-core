@@ -10,7 +10,7 @@ import java.util.Map;
  *
  * TODO why is this class final (it is package local anyway)?
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 final class RequestParametersProvider implements Provider<Map<String, String[]>> {

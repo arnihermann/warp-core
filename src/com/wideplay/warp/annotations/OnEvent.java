@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
  * An event handler method MUST declare @OnEvent regardless of whether
  * or not it has other custom annotations for event disambiguation.
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 @Retention(RetentionPolicy.RUNTIME)

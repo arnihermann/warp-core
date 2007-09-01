@@ -6,7 +6,7 @@ import java.util.Date;
  * Created with IntelliJ IDEA.
 * On: 30/05/2007
 *
-* @author Dhanji R. Prasanna
+* @author Dhanji R. Prasanna (dhanji at gmail com)
 * @since 1.0
 */
 public class MyDVD {

@@ -17,7 +17,7 @@ import java.lang.reflect.Field;
  *
  * This should never be a singleton, only a session-scoped object or less (whatever scopes @Managed allows).
  * 
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 class StateManagerImpl implements StateManager {

@@ -17,7 +17,7 @@ import java.util.List;
  * A sub-component of Table. To be used to override or add to the default behavior
  *  of a table component's column-rendering.
  *
- * @author dprasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 @Component

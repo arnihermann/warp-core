@@ -10,7 +10,7 @@ import java.util.Map;
  * A HashMap-backed impl of a Cube. This cube is fast as I can make it, uses a tuple as a 2-pair key.
  *
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 public class HashCube<K1, K2, V> implements Cube<K1, K2, V> {

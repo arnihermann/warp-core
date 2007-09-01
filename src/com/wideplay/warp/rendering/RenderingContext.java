@@ -9,7 +9,7 @@ import java.util.Map;
  * Created with IntelliJ IDEA.
  * On: 30/08/2007
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 public interface RenderingContext {

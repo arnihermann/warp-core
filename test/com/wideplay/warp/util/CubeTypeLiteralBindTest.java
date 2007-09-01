@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * <p/>
  * TODO: Describe me!
  *
- * @author dprasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 public class CubeTypeLiteralBindTest {

@@ -8,7 +8,7 @@ import java.util.Enumeration;
  * Created with IntelliJ IDEA.
  * On: 25/08/2007
  *
- * @author Dhanji R. Prasanna
+ * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
 class DwrServletConfigAdapter implements ServletConfig {
