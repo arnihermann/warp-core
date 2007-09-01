@@ -6,9 +6,8 @@ import com.wideplay.warp.module.componentry.ComponentClassReflection;
 import com.wideplay.warp.module.componentry.PropertyDescriptor;
 import com.wideplay.warp.module.componentry.Renderable;
 import com.wideplay.warp.module.ioc.IocContextManager;
-import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
-import com.wideplay.warp.rendering.HtmlWriter;
+import com.wideplay.warp.rendering.RenderingContext;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,22 +36,24 @@ class ComponentHandlerImpl implements ComponentHandler {
     }
 
 
-    public void handleRender(HtmlWriter writer, Injector injector, PageClassReflection pageReflection, Object page) {
+    public void handleRender(RenderingContext context) {
         //obtain the renderable object from guice (makes sure it is properly injected)
+        Injector injector = context.getInjector();
         Renderable renderable = injector.getInstance(reflection.getComponentClass());
 
         //fire lifecycle method pre-render?
         //...
 
         //bind the page model (mvel expressions) to the component's attributes
-        IocContextManager.injectProperties(propertyValueExpressions.values(), renderable, page);
+        Object page = context.getPage();
+        IocContextManager.injectProperties(propertyValueExpressions.values(), renderable, context.getContextVars());
 
         //pass through arbitrary non-warp attributes for the component to do with as it likes
         if (renderable instanceof AttributesInjectable)
             ((AttributesInjectable)renderable).setAttributeNameValuePairs(arbitraryAttributes);
 
         //render renderable template with the renderable object as its model
-        renderable.render(writer, nestedComponents, injector, pageReflection, page);
+        renderable.render(context, nestedComponents);
     }
 
 

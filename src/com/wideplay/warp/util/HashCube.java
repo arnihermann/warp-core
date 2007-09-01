@@ -14,7 +14,16 @@ import java.util.Map;
  * @since 1.0
  */
 public class HashCube<K1, K2, V> implements Cube<K1, K2, V> {
-    private final Map<KeyTuple, V> keyMap = new HashMap<KeyTuple, V>();
+    private final Map<KeyTuple, V> keyMap;
+
+
+    public HashCube() {
+        this(new HashMap<KeyTuple, V>());
+    }
+
+    protected HashCube(Map<KeyTuple, V> keyMap) {
+        this.keyMap = new HashMap<KeyTuple, V>();
+    }
 
     private class KeyTuple {
         private final K1 key1;

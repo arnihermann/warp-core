@@ -21,9 +21,11 @@ import java.util.List;
 class AsyncViewportHtmlWriter implements HtmlWriter {
     private final HtmlWriter delegate;
     private final List<String> bindings = new ArrayList<String>();
+    private final String viewportId;
 
-    public AsyncViewportHtmlWriter(HtmlWriter delegate) {
+    public AsyncViewportHtmlWriter(String id, HtmlWriter delegate) {
         this.delegate = delegate;
+        this.viewportId = id;
     }
 
 
@@ -58,7 +60,7 @@ class AsyncViewportHtmlWriter implements HtmlWriter {
     }
 
     public String makeIdFor(AttributesInjectable object) {
-        return delegate.makeIdFor(object);
+        return String.format("%s_%s", viewportId, delegate.makeIdFor(object));
     }
 
     public void registerEvent(String elementName, ScriptEvents event, String annotation, int topicId) {

@@ -21,8 +21,8 @@
 
     <p>
         A repetition over property expression "$ {movieName}"
-        <span w:component="repeater" w:items="${beans}">
-            <p>${movieName}</p>
+        <span w:component="repeater" w:items="${beans}" w:var="movie">
+            <p>${movie.movieName}</p>
         </span>
     </p>
   

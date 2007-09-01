@@ -1,14 +1,13 @@
 package com.wideplay.warp.components.core;
 
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.wideplay.warp.components.AttributesInjectable;
 import com.wideplay.warp.module.WarpConfiguration;
 import com.wideplay.warp.module.componentry.Renderable;
-import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.rendering.PageRenderException;
+import com.wideplay.warp.rendering.RenderingContext;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -43,8 +42,8 @@ public class HyperLink implements Renderable, AttributesInjectable {
         this.configuration = configuration;
     }
 
-    public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector,
-                       PageClassReflection reflection, Object page) {
+    public void render(RenderingContext context, List<? extends ComponentHandler> nestedComponents) {
+        HtmlWriter writer = context.getWriter();
         String href;
         if (null == topic)
             href = target;
@@ -59,7 +58,7 @@ public class HyperLink implements Renderable, AttributesInjectable {
             }
 
         writer.elementWithAttrs("a", new Object[] { "href", href }, ComponentSupport.getTagAttributesExcept(attribs, "href"));
-        ComponentSupport.renderMultiple(writer, nestedComponents, injector, reflection, page);
+        ComponentSupport.renderMultiple(context, nestedComponents);
 
         writer.end("a");
     }

@@ -1,11 +1,9 @@
 package com.wideplay.warp.components.core;
 
-import com.google.inject.Injector;
 import com.wideplay.warp.annotations.Component;
 import com.wideplay.warp.module.componentry.Renderable;
-import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
-import com.wideplay.warp.rendering.HtmlWriter;
+import com.wideplay.warp.rendering.RenderingContext;
 
 import java.util.List;
 
@@ -23,10 +21,10 @@ import java.util.List;
 public class Panel implements Renderable {
     boolean visible = true;
 
-    public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector, PageClassReflection reflection, Object page) {
+    public void render(RenderingContext context, List<? extends ComponentHandler> nestedComponents) {
         if (visible) {
             //no tag is drawn around a panel (unless for dragging support?)
-            ComponentSupport.renderMultiple(writer, nestedComponents, injector, reflection, page);
+            ComponentSupport.renderMultiple(context, nestedComponents);
         }
     }
 

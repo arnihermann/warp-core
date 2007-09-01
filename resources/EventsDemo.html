@@ -28,8 +28,8 @@
         Selected: ${message}
     </p>
 
-    <span w:component="repeater" w:items="${beans}">
-        <a w:component="link" w:topic="${this}">${this}</a>  <!-- current bean is topic -->
+    <span w:component="repeater" w:items="${beans}" w:var="bean">
+        <a w:component="link" w:topic="${bean}">${bean}</a>  <!-- current bean is topic -->
     </span>
   </body>
 </html>

@@ -1,11 +1,9 @@
 package com.wideplay.warp.components.core;
 
-import com.wideplay.warp.module.componentry.Renderable;
-import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.annotations.Component;
-import com.wideplay.warp.rendering.HtmlWriter;
+import com.wideplay.warp.module.componentry.Renderable;
 import com.wideplay.warp.rendering.ComponentHandler;
-import com.google.inject.Injector;
+import com.wideplay.warp.rendering.RenderingContext;
 
 import java.util.List;
 
@@ -29,8 +27,8 @@ public class Column implements Renderable {
     static final String PROPERTY = "property";
     static final String TITLE = "title";
 
-    public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector, PageClassReflection reflection, Object page) {
-        ComponentSupport.renderMultiple(writer, nestedComponents, injector, reflection, page);
+    public void render(RenderingContext context, List<? extends ComponentHandler> nestedComponents) {
+        ComponentSupport.renderMultiple(context, nestedComponents);
     }
 
     public void setProperty(String property) {

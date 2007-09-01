@@ -1,11 +1,10 @@
 package com.wideplay.warp.components.core;
 
-import com.google.inject.Injector;
 import com.wideplay.warp.annotations.Component;
 import com.wideplay.warp.module.componentry.Renderable;
-import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
+import com.wideplay.warp.rendering.RenderingContext;
 import com.wideplay.warp.rendering.ScriptEvents;
 import com.wideplay.warp.util.TextTools;
 import com.wideplay.warp.util.beans.BeanUtils;
@@ -29,20 +28,17 @@ public class Checkbox implements Renderable {
     private String label = TextTools.EMPTY_STRING;
     private String bind;
 
-    public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector, PageClassReflection reflection, Object page) {
-
+    public void render(RenderingContext context, List<? extends ComponentHandler> nestedComponents) {
+        HtmlWriter writer = context.getWriter();
 
         boolean booleanValue=false;
 
         if (null != bind) {
-            Object objValue = BeanUtils.getFromPropertyExpression(bind, page);
+            Object objValue = BeanUtils.getFromPropertyExpression(bind, context.getContextVars());
 
             if(null != objValue) {
-//                log.debug("bind objValue instanceof " + objValue.getClass().getName() + " objValue=" + objValue);
                 if (objValue instanceof Boolean)
                     booleanValue = (Boolean)objValue;
-            } else {
-//                log.debug("bind value is null");
             }
         }
 
@@ -83,7 +79,7 @@ public class Checkbox implements Renderable {
             writer.registerEvent(id, ScriptEvents.CHANGE, event, 0);
 
 
-        ComponentSupport.renderMultiple(writer, nestedComponents, injector, reflection, page);
+        ComponentSupport.renderMultiple(context, nestedComponents);
         writer.end("input");
     }
 

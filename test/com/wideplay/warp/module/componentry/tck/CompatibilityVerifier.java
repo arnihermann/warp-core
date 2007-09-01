@@ -5,9 +5,8 @@ import com.wideplay.warp.annotations.Component;
 import com.wideplay.warp.module.componentry.ComponentClassReflection;
 import com.wideplay.warp.module.componentry.PropertyDescriptor;
 import com.wideplay.warp.module.componentry.Renderable;
-import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
-import com.wideplay.warp.rendering.HtmlWriter;
+import com.wideplay.warp.rendering.RenderingContext;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -56,7 +55,7 @@ public class CompatibilityVerifier {
         Renderable renderable = (Renderable)component;
 
         try {
-            renderable.render(null, newTestingComponentHandlers(), newThrowingTestingGuiceInjector(complaints), null, new Object());
+            renderable.render(null, newTestingComponentHandlers());
         } catch(GuiceInjectionRequestedError err) {
             complaints.add("Component requests resources from guice injector. This indicates tight coupling to the deployment environment");
         } catch(NullPointerException npe) {
@@ -85,7 +84,7 @@ public class CompatibilityVerifier {
         //add fuzz test arbitrary numbers of handlers (10 times)
         for (int testNum = 0; testNum < 10; testNum++, componentHandlerCounter++)
             handlers.add(new ComponentHandler() {
-                public void handleRender(HtmlWriter writer, Injector injector, PageClassReflection pageReflection, Object page) {
+                public void handleRender(RenderingContext context) {
                     componentHandlerCounter--;  //count that children were rendered
                 }
 

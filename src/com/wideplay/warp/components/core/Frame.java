@@ -1,11 +1,10 @@
 package com.wideplay.warp.components.core;
 
-import com.google.inject.Injector;
 import com.wideplay.warp.annotations.Component;
 import com.wideplay.warp.module.componentry.Renderable;
-import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
+import com.wideplay.warp.rendering.RenderingContext;
 import com.wideplay.warp.rendering.RequestBinder;
 
 import java.util.List;
@@ -24,8 +23,8 @@ public class Frame implements Renderable {
     private String css;
     private Map<String, String> metaInfo;
 
-    public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector,
-                       PageClassReflection reflection, Object page) {
+    public void render(RenderingContext context, List<? extends ComponentHandler> nestedComponents) {
+        HtmlWriter writer = context.getWriter();
         /*writer.element("html");
         writer.element("head");
         
@@ -57,7 +56,7 @@ public class Frame implements Renderable {
         writer.selfClosedElementWithAttrs("input", new Object[] { "type", "hidden", "name", RequestBinder.EVENT_TOPIC_PARAMETER_NAME });
 
         //dispatch to children
-        ComponentSupport.renderMultiple(writer, nestedComponents, injector, reflection, page);
+        ComponentSupport.renderMultiple(context, nestedComponents);
 
         writer.end("form");
         writer.end("body");

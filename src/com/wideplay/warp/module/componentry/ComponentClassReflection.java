@@ -1,7 +1,7 @@
 package com.wideplay.warp.module.componentry;
 
-import com.wideplay.warp.util.beans.BeanUtils;
 import com.wideplay.warp.components.AttributesInjectable;
+import com.wideplay.warp.util.beans.BeanUtils;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -37,7 +37,7 @@ public class ComponentClassReflection {
     }
 
     public void setPropertyValue(Object bean, String name, Object value) {
-        BeanUtils.setFromPropertyExpression(name, bean, value);
+        BeanUtils.setProperty(name, bean, value);
     }
 
     public Class<? extends Renderable> getComponentClass() {

@@ -1,15 +1,14 @@
 package com.wideplay.warp.components.core;
 
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.wideplay.warp.annotations.Component;
 import com.wideplay.warp.components.AttributesInjectable;
 import com.wideplay.warp.module.componentry.ClassReflectionCache;
 import com.wideplay.warp.module.componentry.PropertyDescriptor;
 import com.wideplay.warp.module.componentry.Renderable;
-import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
+import com.wideplay.warp.rendering.RenderingContext;
 import com.wideplay.warp.util.beans.BeanUtils;
 
 import java.util.Iterator;
@@ -32,6 +31,7 @@ import java.util.Map;
 @Component
 public class Table implements Renderable, AttributesInjectable {
     private Object items;
+    private String var;
     private String rowClass;
     private String oddRowClass;
 
@@ -46,7 +46,8 @@ public class Table implements Renderable, AttributesInjectable {
         this.classCache = classCache;
     }
 
-    public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector, PageClassReflection reflection, Object page) {
+    public void render(RenderingContext context, List<? extends ComponentHandler> nestedComponents) {
+        HtmlWriter writer = context.getWriter();
         String id = writer.makeIdFor(this);
         writer.elementWithAttrs("table", new Object[] { "id", id }, ComponentSupport.getTagAttributesExcept(attribs, "id"));
 
@@ -90,7 +91,7 @@ public class Table implements Renderable, AttributesInjectable {
                     writer.element("tbody");
                 }
 
-                writeRow(item, writer, propertiesAndLabels, injector, reflection, rowCtr % 2 == 0);
+                writeRow(item, writer, propertiesAndLabels, context, rowCtr % 2 == 0);
                 rowCtr++;
             }
 
@@ -109,7 +110,7 @@ public class Table implements Renderable, AttributesInjectable {
                     writer.element("tbody");
                 }
 
-                writeRow(item, writer, propertiesAndLabels, injector, reflection, i % 2 == 0);
+                writeRow(item, writer, propertiesAndLabels, context, i % 2 == 0);
             }
             writer.end("tbody");
         }
@@ -138,12 +139,15 @@ public class Table implements Renderable, AttributesInjectable {
         writer.end("thead");
     }
 
-    private void writeRow(Object item, HtmlWriter writer, Map<String, String> propertiesAndLabels, Injector injector, PageClassReflection reflection, boolean isEvenRow) {
+    private void writeRow(Object item, HtmlWriter writer, Map<String, String> propertiesAndLabels, RenderingContext context, boolean isEvenRow) {
         //writes odd row class if necessary but both MUST be set or NEITHER must be set
         if (null != rowClass)
             writer.element("tr", "class", isEvenRow ? rowClass : oddRowClass);
         else
             writer.element("tr");
+
+        //place the item in the context
+        context.getContextVars().put(var, item);
 
         for (String property : propertiesAndLabels.keySet()) {
             writer.element("td");
@@ -152,11 +156,11 @@ public class Table implements Renderable, AttributesInjectable {
             ComponentHandler child = columns.get(property);
             if (null != child) {
                 //render using column component override (children)
-                child.handleRender(writer, injector, reflection, item);
+                child.handleRender(context);
 
             } else {    //write normally
-                //stringize the property value only if it is not null (prevent NPE)
-                Object value = BeanUtils.getFromPropertyExpression(property, item);
+                //stringize the property value only if it is not null (prevent NPE), also format the string into an expr
+                Object value = BeanUtils.getFromPropertyExpression(String.format("%s.%s", var, property), context.getContextVars());
                 if (null != value)
                     writer.writeRaw(value.toString());
                 else
@@ -170,10 +174,12 @@ public class Table implements Renderable, AttributesInjectable {
         for (ComponentHandler customCol : customColumns.values()) {
             //render using column component override (children)
             writer.element("td");
-            customCol.handleRender(writer, injector, reflection, item);
+            customCol.handleRender(context);
             writer.end("td");
         }
 
+        //clear the item from context
+        context.getContextVars().remove(var);
 
         writer.end("tr");
     }
@@ -198,5 +204,9 @@ public class Table implements Renderable, AttributesInjectable {
 
     public Map<String, Object> getAttributeNameValuePairs() {
         return attribs;
+    }
+
+    public void setVar(String var) {
+        this.var = var;
     }
 }

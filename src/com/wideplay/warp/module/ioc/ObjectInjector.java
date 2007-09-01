@@ -36,7 +36,7 @@ class ObjectInjector {
                 value = propertyDescriptor.getValue();
 
             //set the property on the component object
-            BeanUtils.setFromPropertyExpression(propertyDescriptor.getName(), target, value);
+            BeanUtils.setProperty(propertyDescriptor.getName(), target, value);
         }
     }
 

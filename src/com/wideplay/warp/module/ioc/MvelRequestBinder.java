@@ -93,7 +93,7 @@ class MvelRequestBinder implements RequestBinder {
         Object selected = selectClosureOverArray(col, hashSelected);
 
         //if everything's ok, 3rd element is target property path
-        BeanUtils.setFromPropertyExpression(collectionBindExpression[2], bean, selected);
+        BeanUtils.setProperty(collectionBindExpression[2], bean, selected);
     }
 
     private void bindFromJUCollection(String[] collectionBindExpression, Object bean, final Integer hashSelected, String paramName) {
@@ -118,7 +118,7 @@ class MvelRequestBinder implements RequestBinder {
         Object selected = selectClosureOverCollection(col, hashSelected);
 
         //if everything's ok, 3rd element is target property path
-        BeanUtils.setFromPropertyExpression(collectionBindExpression[2], bean, selected);
+        BeanUtils.setProperty(collectionBindExpression[2], bean, selected);
     }
 
     private Object selectClosureOverCollection(Collection<?> col, Integer hashSelected) {
@@ -150,6 +150,6 @@ class MvelRequestBinder implements RequestBinder {
     }
 
     private void bindAsProperty(String paramName, String value, Object bean) {
-        BeanUtils.setFromPropertyExpression(paramName, bean, value);
+        BeanUtils.setProperty(paramName, bean, value);
     }
 }

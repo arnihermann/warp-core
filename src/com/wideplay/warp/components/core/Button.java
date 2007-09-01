@@ -1,12 +1,11 @@
 package com.wideplay.warp.components.core;
 
-import com.google.inject.Injector;
 import com.wideplay.warp.annotations.Component;
 import com.wideplay.warp.components.AttributesInjectable;
 import com.wideplay.warp.module.componentry.Renderable;
-import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
+import com.wideplay.warp.rendering.RenderingContext;
 import com.wideplay.warp.rendering.ScriptEvents;
 import com.wideplay.warp.util.TextTools;
 
@@ -26,7 +25,9 @@ public class Button implements Renderable, AttributesInjectable {
     private String label = "";
     private Map<String, Object> attribs;
 
-    public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector, PageClassReflection reflection, Object page) {
+    public void render(RenderingContext context, List<? extends ComponentHandler> nestedComponents) {
+        HtmlWriter writer = context.getWriter();
+
         String encodedEvent = TextTools.EMPTY_STRING;
         if (null != event)
             encodedEvent = event;
@@ -44,7 +45,7 @@ public class Button implements Renderable, AttributesInjectable {
 
         writer.registerEvent(buttonId, ScriptEvents.CLICK, encodedEvent, 0);
         
-        ComponentSupport.renderMultiple(writer, nestedComponents, injector, reflection, page);
+        ComponentSupport.renderMultiple(context, nestedComponents);
         writer.end("input");
     }
 

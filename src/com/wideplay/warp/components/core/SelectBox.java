@@ -1,14 +1,13 @@
 package com.wideplay.warp.components.core;
 
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.wideplay.warp.annotations.Component;
 import com.wideplay.warp.components.AttributesInjectable;
 import static com.wideplay.warp.components.core.ComponentSupport.getTagAttributesExcept;
 import com.wideplay.warp.module.componentry.Renderable;
-import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
+import com.wideplay.warp.rendering.RenderingContext;
 import com.wideplay.warp.rendering.RequestBinder;
 import com.wideplay.warp.util.beans.BeanUtils;
 
@@ -39,7 +38,9 @@ public class SelectBox implements Renderable, AttributesInjectable {
         this.requestBinder = requestBinder;
     }
 
-    public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector, PageClassReflection reflection, Object page) {
+    public void render(RenderingContext context, List<? extends ComponentHandler> nestedComponents) {
+        HtmlWriter writer = context.getWriter();
+
         Object boundItem = null;
         String id = writer.makeIdFor(this);
         
@@ -50,28 +51,28 @@ public class SelectBox implements Renderable, AttributesInjectable {
             writer.registerInputBinding(id);
 
             writer.elementWithAttrs("select", new Object[] { "id", id, "name", bindingExpression }, getTagAttributesExcept(injectableAttributes, "name"));    //bind as expression
-            boundItem = BeanUtils.getFromPropertyExpression(bind, page);
+            boundItem = BeanUtils.getFromPropertyExpression(bind, context.getContextVars());
         }
         else
             writer.element("select", getTagAttributesExcept(injectableAttributes));
 
         //obtain the bound object
-        Object itemsObject = BeanUtils.getFromPropertyExpression(items, page);
+        Object itemsObject = BeanUtils.getFromPropertyExpression(items, context.getContextVars());
 
         //see if it is an iterable
         if (itemsObject instanceof Iterable)
             for (Object item : (Iterable) itemsObject)
-                writeOption(item, writer, boundItem);
+                writeOption(item, writer, boundItem, context);
             
         else
             //must be an array
             for (Object item : (Object[])itemsObject)
-                writeOption(item,  writer, boundItem);
+                writeOption(item,  writer, boundItem, context);
 
         writer.end("select");
     }
 
-    private void writeOption(Object item, HtmlWriter writer, Object boundItem) {
+    private void writeOption(Object item, HtmlWriter writer, Object boundItem, RenderingContext context) {
         //the index is basically the hashcode as a string (following Josh Bloch's recommendation and according to the Java collections framework)
         String indexValue = Integer.toString(item.hashCode());
 

@@ -1,12 +1,11 @@
 package com.wideplay.warp.components.core;
 
-import com.google.inject.Injector;
 import com.wideplay.warp.annotations.Component;
 import com.wideplay.warp.components.AttributesInjectable;
 import com.wideplay.warp.module.componentry.Renderable;
-import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
+import com.wideplay.warp.rendering.RenderingContext;
 import com.wideplay.warp.util.beans.BeanUtils;
 
 import java.util.List;
@@ -24,9 +23,11 @@ public class TextField implements Renderable, AttributesInjectable {
     private String bind;
     private Map<String, Object> injectableAttributes;
 
-    public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector, PageClassReflection reflection, Object page) {
+    public void render(RenderingContext context, List<? extends ComponentHandler> nestedComponents) {
+        HtmlWriter writer = context.getWriter();
+
         //read the bound value
-        Object text = BeanUtils.getFromPropertyExpression(bind, page);
+        Object text = BeanUtils.getFromPropertyExpression(bind, context.getContextVars());
 
         String id = writer.makeIdFor(this);
         writer.registerInputBinding(id);

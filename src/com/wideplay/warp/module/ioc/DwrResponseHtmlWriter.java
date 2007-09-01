@@ -11,7 +11,7 @@ import com.wideplay.warp.rendering.ScriptLibrary;
  * @author Dhanji R. Prasanna
  * @since 1.0
  */
-public class DwrResponseHtmlWriter extends AbstractHtmlWriter {
+class DwrResponseHtmlWriter extends AbstractHtmlWriter {
 
     public String getBuffer() {
         return getWriter().toString();
@@ -31,6 +31,6 @@ public class DwrResponseHtmlWriter extends AbstractHtmlWriter {
     }
 
     public void writeToOnLoad(String text) {
-        //can't do this in responding viewports
+        //TODO write to a buffer and return as a string for the js to "eval"
     }
 }

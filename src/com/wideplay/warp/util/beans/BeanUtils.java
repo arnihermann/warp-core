@@ -47,6 +47,8 @@ public class BeanUtils {
             return MVEL.executeExpression(compiled, bean);
         } catch(PropertyAccessException e) {
             throw new NotReadablePropertyException(String.format("Could not read property from expression %s (missing a getter?)", e));
+        } catch(NullPointerException npe) {
+            throw new NotReadablePropertyException(String.format("Evaluation of property expression [%s] resulted in a NullPointerException", expr), npe);            
         }
     }
 
@@ -61,8 +63,12 @@ public class BeanUtils {
 //        contextVars.put(str, obj);
     }
 
-    public static void setFromPropertyExpression(String expr, Object bean, Object value) {
+    public static void setProperty(String expr, Object bean, Object value) {
         //lets use mvel to store an expression
         MVEL.setProperty(bean, expr, value);
+    }
+
+    public static Object getProperty(String property, Object contextObject) {
+        return MVEL.getProperty(property, contextObject);
     }
 }

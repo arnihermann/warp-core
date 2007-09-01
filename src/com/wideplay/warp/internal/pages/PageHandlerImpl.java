@@ -83,7 +83,7 @@ class PageHandlerImpl implements PageHandler {
     private void renderPage(Injector injector, Object page, HttpServletResponse response) {
         //write response to a new HtmlWriter using the component handler tree
         HtmlWriter htmlWriter = injector.getInstance(Key.get(HtmlWriter.class, JsFrame.class));
-        rootComponentHandler.handleRender(htmlWriter, injector, reflection, page);
+        rootComponentHandler.handleRender(new RenderingContextImpl(htmlWriter, injector, reflection, page));
 
         //write buffered output to the response stream
         try {

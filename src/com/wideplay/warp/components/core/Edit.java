@@ -1,14 +1,13 @@
 package com.wideplay.warp.components.core;
 
-import com.wideplay.warp.annotations.Component;
-import com.wideplay.warp.module.componentry.Renderable;
-import com.wideplay.warp.module.componentry.ClassReflectionCache;
-import com.wideplay.warp.module.pages.PageClassReflection;
-import com.wideplay.warp.rendering.HtmlWriter;
-import com.wideplay.warp.rendering.ComponentHandler;
-import com.wideplay.warp.util.beans.BeanUtils;
-import com.google.inject.Injector;
 import com.google.inject.Inject;
+import com.wideplay.warp.annotations.Component;
+import com.wideplay.warp.module.componentry.ClassReflectionCache;
+import com.wideplay.warp.module.componentry.Renderable;
+import com.wideplay.warp.rendering.ComponentHandler;
+import com.wideplay.warp.rendering.HtmlWriter;
+import com.wideplay.warp.rendering.RenderingContext;
+import com.wideplay.warp.util.beans.BeanUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -34,9 +33,11 @@ public class Edit implements Renderable {
         this.cache = cache;
     }
 
-    public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector, PageClassReflection reflection, Object page) {
+    public void render(RenderingContext context, List<? extends ComponentHandler> nestedComponents) {
+        HtmlWriter writer = context.getWriter();
+
         //read bean (to edit) out of page
-        Object theBean = BeanUtils.getFromPropertyExpression(object, page);
+        Object theBean = BeanUtils.getFromPropertyExpression(object, context.getContextVars());
 
         //if the bean value is null, then do nothing
         if (null == theBean)

@@ -1,19 +1,19 @@
 package com.wideplay.warp.components.core;
 
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.wideplay.warp.annotations.Component;
 import com.wideplay.warp.annotations.Page;
 import com.wideplay.warp.components.AttributesInjectable;
+import com.wideplay.warp.internal.pages.PageBuilders;
 import com.wideplay.warp.module.WarpModuleAssembly;
 import com.wideplay.warp.module.componentry.PropertyDescriptor;
 import com.wideplay.warp.module.componentry.Renderable;
 import com.wideplay.warp.module.ioc.IocContextManager;
-import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.rendering.PageHandler;
+import com.wideplay.warp.rendering.RenderingContext;
 
 import java.util.Collection;
 import java.util.List;
@@ -65,11 +65,13 @@ public class Viewport implements Renderable, AttributesInjectable {
         this.assembly = assembly;
     }
 
-    public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector, PageClassReflection reflection, Object page) {
+    public void render(RenderingContext context, List<? extends ComponentHandler> nestedComponents) {
+        HtmlWriter writer = context.getWriter();
+
         //obtain the embedded page object (either directly injected or get via page class from guice)
         Object embedded = embed;
         if (null != embedClass)
-            embedded = injector.getInstance(Key.get(assembly.getPageClassByName(embedClass), Page.class));
+            embedded = context.getInjector().getInstance(Key.get(assembly.getPageClassByName(embedClass), Page.class));
 
         //get its component object tree (i.e. the PageHandler which renders it)
         String uri = assembly.resolvePageURI(embedded);
@@ -80,19 +82,20 @@ public class Viewport implements Renderable, AttributesInjectable {
 
         //inject the embedded page (configure it) prior to render--with properties from the current page (as necessary)
         if (null != attribs)
-            IocContextManager.injectProperties(extractAttributePropertyList(), embedded, page);
+            IocContextManager.injectProperties(extractAttributePropertyList(), embedded, context.getContextVars());
 
         //if asynchronous, we should proxy the html writer to trap and watch input bindings separately from the rest of the page
         if (async) {
-            renderAsyncViewport(writer, embeddedContent, injector, reflection, embedded, uri);
+            renderAsyncViewport(writer, embeddedContent, context, embedded, uri);
         } else
             //render the embedded content as my children, rather than my own children (which are discarded), using the embedded object as page
-            ComponentSupport.renderMultiple(writer, embeddedContent, injector, reflection, embedded);
+            ComponentSupport.renderMultiple(PageBuilders.newRenderingContext(writer, context.getInjector(), context.getReflection(), embedded),
+                    embeddedContent);
     }
 
 
 
-    private void renderAsyncViewport(HtmlWriter writer, List<? extends ComponentHandler> embeddedContent, Injector injector, PageClassReflection reflection, Object embedded, String uri) {
+    private void renderAsyncViewport(HtmlWriter writer, List<? extends ComponentHandler> embeddedContent, RenderingContext context, Object embedded, String uri) {
         //grab the id from the property map
         String id = makeId(writer);
 
@@ -101,10 +104,13 @@ public class Viewport implements Renderable, AttributesInjectable {
         writer.element(tagName, "id", id);
 
         //use a static proxy pattern to intercept calls to register input bindings
-        AsyncViewportHtmlWriter asyncWriter = new AsyncViewportHtmlWriter(writer);
+        AsyncViewportHtmlWriter asyncWriter = new AsyncViewportHtmlWriter(id, writer);
+
+        //wrap this in a new context
+        RenderingContext proxyContext = PageBuilders.newRenderingContext(asyncWriter, context.getInjector(), context.getReflection(), embedded);
 
         //render viewport contents
-        ComponentSupport.renderMultiple(asyncWriter, embeddedContent, injector, reflection, embedded);
+        ComponentSupport.renderMultiple(proxyContext, embeddedContent);
 
         //get "watched" bindings and write them into a viewport property (using js)
         writer.writeToOnLoad("document.getElementById(\"");

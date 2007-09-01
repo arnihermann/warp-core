@@ -103,20 +103,28 @@ class WarpModuleAssemblyBuilder {
     private void buildPageAndComponentHandlers(List<Class<?>> allClasses, ComponentRegistry componentRegistry, String packageName,
                                                Map<String, PageHandler> pages, Set<Class<?>> componentClasses,
                                                Map<String, Object> pagesByTemplate) {
-        for (Class<?> pageClass : allClasses) {
+
+        Collection<Class<?>> pageClasses = new ArrayList<Class<?>>();
+
+        for (Class<?> clazz : allClasses) {
             //only build handlers for page classes (skips enums, etc.)
-            if (isNonClass(pageClass))
+            if (isNonClass(clazz))
                 continue;
 
-            //also build as page if necessary
-            if (shouldBuildAsPage(pageClass))
-                PageBuilders.buildAndStorePageHandler(context, componentRegistry, pageClass, packageName, pages, pagesByTemplate);
+            //also build as page if necessary (schedule for build)
+            if (shouldBuildAsPage(clazz))
+                pageClasses.add(clazz);
 
             //should be built as a custom component?
-            if (shouldBuildAsComponent(pageClass)) {
-                ComponentBuilders.buildAndRegisterComponent(context, componentRegistry, pageClass, packageName, pages);
-                componentClasses.add(pageClass);
+            if (shouldBuildAsComponent(clazz)) {
+                ComponentBuilders.buildAndRegisterComponent(context, componentRegistry, clazz, packageName, pages);
+                componentClasses.add(clazz);
             }
+        }
+
+        //make sure to build page classes only AFTER all component classes have been built
+        for (Class<?> pageClass : pageClasses) {
+            PageBuilders.buildAndStorePageHandler(context, componentRegistry, pageClass, packageName, pages, pagesByTemplate);
         }
     }
 

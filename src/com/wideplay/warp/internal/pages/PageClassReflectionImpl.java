@@ -63,7 +63,7 @@ class PageClassReflectionImpl implements PageClassReflection {
 
 
     public void setPropertyValue(Object bean, String name, Object value) {
-        BeanUtils.setFromPropertyExpression(name, bean, value);
+        BeanUtils.setProperty(name, bean, value);
     }
 
     public Class<?> getPageClass() {

@@ -1,8 +1,12 @@
 package com.wideplay.warp.internal.pages;
 
+import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.wideplay.warp.module.ComponentRegistry;
+import com.wideplay.warp.module.pages.PageClassReflection;
+import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.rendering.PageHandler;
+import com.wideplay.warp.rendering.RenderingContext;
 
 import javax.servlet.ServletContext;
 import java.util.Map;
@@ -28,5 +32,9 @@ public class PageBuilders {
 
         //load resources
         //..
+    }
+
+    public static RenderingContext newRenderingContext(HtmlWriter writer, Injector injector, PageClassReflection reflection, Object contextObject) {
+        return new RenderingContextImpl(writer, injector, reflection, contextObject);
     }
 }

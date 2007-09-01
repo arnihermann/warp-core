@@ -10,8 +10,10 @@ document.getElementById("%s").onclick=function(){
         var binding = tmpViewport.bindings[bindingIndex];
         tmpParamMap[document.getElementById(binding).name] = dwr.util.getValue(binding);
     }
-
+    
     RemoteEventProxy.dispatchEvent(tmpParamMap,
             function(reply) { dwr.util.setValue("%s", reply, { escapeHtml:false }); }
         );
+
+    return false;
 };

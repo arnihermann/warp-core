@@ -1,9 +1,7 @@
 package com.wideplay.warp.rendering;
 
-import com.google.inject.Injector;
 import com.wideplay.warp.module.componentry.ComponentClassReflection;
 import com.wideplay.warp.module.componentry.PropertyDescriptor;
-import com.wideplay.warp.module.pages.PageClassReflection;
 
 import java.util.List;
 import java.util.Map;
@@ -15,7 +13,7 @@ import java.util.Map;
  * @author Dhanji R. Prasanna
  */
 public interface ComponentHandler {
-    void handleRender(HtmlWriter writer, Injector injector, PageClassReflection pageReflection, Object page);
+    void handleRender(RenderingContext context);
 
     List<? extends ComponentHandler> getNestedComponents();
 

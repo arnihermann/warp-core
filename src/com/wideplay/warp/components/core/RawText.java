@@ -1,12 +1,11 @@
 package com.wideplay.warp.components.core;
 
-import com.google.inject.Injector;
 import com.wideplay.warp.annotations.Component;
 import com.wideplay.warp.components.AttributesInjectable;
 import com.wideplay.warp.module.componentry.Renderable;
-import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
+import com.wideplay.warp.rendering.RenderingContext;
 import com.wideplay.warp.util.Token;
 import com.wideplay.warp.util.beans.BeanUtils;
 
@@ -31,7 +30,9 @@ public class RawText implements Renderable, AttributesInjectable {
     public static final String WARP_RAW_TEXT_PROP_ATTRS = "warpRawTextAttributes";
     public static final String WARP_RAW_TEXT_ATTR_MAP = "warpRawTextPropertyMap";   //same as WARP_RAW_TEXT_PROP_ATTRS but stored as PropertyDescriptors
 
-    public void render(HtmlWriter writer, List<? extends ComponentHandler> nestedComponents, Injector injector, PageClassReflection reflection, Object page) {
+    public void render(RenderingContext context, List<? extends ComponentHandler> nestedComponents) {
+        HtmlWriter writer = context.getWriter();
+
         Object[] attributes = null;
         String warpRawTextTag = null;
         List<Token> tokens = null;
@@ -53,31 +54,30 @@ public class RawText implements Renderable, AttributesInjectable {
             writer.element(warpRawTextTag, attributes);
 
         //iterate and write tokens to output, parsing exprs as necessary
-        renderTokens(tokens, page, writer);
+        renderTokens(tokens, context);
 
         //render children now (not sure exactly how the order works?!) --seems to work ok
-        ComponentSupport.renderMultiple(writer, nestedComponents, injector, reflection,
-                page);
+        ComponentSupport.renderMultiple(context, nestedComponents);
 
         //close it up
         if (null != warpRawTextTag)
             writer.end(warpRawTextTag);
     }
 
-    private void renderTokens(List<Token> tokens, Object page, HtmlWriter writer) {
+    private void renderTokens(List<Token> tokens, RenderingContext context) {
         if (null != tokens) {
             for (Token token : tokens) {
                 if (token.isExpression()) {
-                    Object value = BeanUtils.getFromPropertyExpression(token.getToken(), page);
+                    Object value = BeanUtils.getFromPropertyExpression(token.getToken(), context.getContextVars());
 
                     //stringize the property only if it is not null
                     String outValue = null;
                     if (null != value)
                         outValue= value.toString();
 
-                    writer.writeRaw(outValue);
+                    context.getWriter().writeRaw(outValue);
                 } else
-                    writer.writeRaw(token.getToken());
+                    context.getWriter().writeRaw(token.getToken());
             }
         }
     }

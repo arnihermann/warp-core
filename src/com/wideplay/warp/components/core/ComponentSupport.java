@@ -1,9 +1,7 @@
 package com.wideplay.warp.components.core;
 
-import com.google.inject.Injector;
-import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
-import com.wideplay.warp.rendering.HtmlWriter;
+import com.wideplay.warp.rendering.RenderingContext;
 import com.wideplay.warp.util.beans.BeanUtils;
 
 import java.util.ArrayList;
@@ -27,10 +25,10 @@ public class ComponentSupport {
     /**
      * A utility method that helps dispatch rendering to a list of ComponentHandlers
      */
-    public static void renderMultiple(HtmlWriter writer, List<? extends ComponentHandler> componentHandlers,
-                                      Injector injector, PageClassReflection pageReflection, Object page) {
+    public static void renderMultiple(RenderingContext context, List<? extends ComponentHandler> componentHandlers
+    ) {
         for (ComponentHandler handler : componentHandlers)
-            handler.handleRender(writer, injector, pageReflection, page);
+            handler.handleRender(context);
     }
 
     static String discoverCssAttribute(Object[] attrs) {

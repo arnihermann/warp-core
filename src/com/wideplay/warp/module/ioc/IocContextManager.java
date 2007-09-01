@@ -98,7 +98,7 @@ public class IocContextManager {
 
         return module;
     }
-
+    
     public static IocContextManager newServletIocContext() {
         return new IocContextManager();
     }
