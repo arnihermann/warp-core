@@ -1,10 +1,13 @@
 package com.wideplay.warp.module;
 
 import com.google.inject.Injector;
+import com.google.inject.Guice;
+import com.google.inject.Module;
 import com.wideplay.warp.internal.UriMatchTreeBuilder;
 import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.PageHandler;
+import com.wideplay.warp.example.ExampleModule;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -15,6 +18,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Collections;
+import java.util.Arrays;
 
 /**
  * Created by IntelliJ IDEA.
@@ -46,6 +51,8 @@ public class URIMatcherTest {
     @Test
     public final void testsomething() throws UnsupportedEncodingException {
         System.out.println(URLEncoder.encode("%20", "UTF-8"));
+
+        Guice.createInjector(Collections.unmodifiableList(Arrays.asList(new Module[] { new ExampleModule() } )));
     }
 
     @BeforeClass

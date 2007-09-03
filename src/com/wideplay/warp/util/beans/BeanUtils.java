@@ -46,7 +46,7 @@ public class BeanUtils {
         try {
             return MVEL.executeExpression(compiled, bean);
         } catch(PropertyAccessException e) {
-            throw new NotReadablePropertyException(String.format("Could not read property from expression %s (missing a getter?)", e));
+            throw new NotReadablePropertyException(String.format("Could not read property from expression %s (missing a getter?)", expr), e);
         } catch(NullPointerException npe) {
             throw new NotReadablePropertyException(String.format("Evaluation of property expression [%s] resulted in a NullPointerException", expr), npe);            
         }
