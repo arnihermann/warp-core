@@ -8,6 +8,8 @@ import java.io.Serializable;
 import static java.util.Collections.synchronizedMap;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,7 +23,7 @@ public class BeanUtils {
     public static final Object[] EMPTY_ARRAY = new Object[] { };
 
     //lets do some caching of expressions to see if we cant go a bit faster
-    private static final Map<String, Serializable> compiledExpressions = synchronizedMap(new WeakHashMap<String, Serializable>());
+    private static final ConcurrentMap<String, Serializable> compiledExpressions = new ConcurrentHashMap<String, Serializable>();
 
     public static Object getFromPropertyExpression(String expr, Object bean) {
         Serializable compiled = compiledExpressions.get(expr);
