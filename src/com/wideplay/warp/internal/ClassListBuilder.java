@@ -6,6 +6,8 @@ import org.apache.commons.logging.LogFactory;
 
 import java.io.File;
 import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,7 +25,7 @@ class ClassListBuilder {
         List<Class<?>> classes = new LinkedList<Class<?>>();
 
         //recursively iterate package tree and load classes
-        List<String> classNames = ClassNameUtils.listRecursive(new File(url.getFile()), ClassNameUtils.CLASS_FILE_FILTER);
+        List<String> classNames = ClassNameUtils.listRecursive(new File(toUri(url)), ClassNameUtils.CLASS_FILE_FILTER);
 
         //ensure class is loaded
         for (String className : classNames)
@@ -35,5 +37,13 @@ class ClassListBuilder {
             }
 
         return classes;
+    }
+
+    private URI toUri(URL url) {
+        try {
+            return url.toURI();
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException("Invalid class file to page parse: " + url);
+        }
     }
 }
