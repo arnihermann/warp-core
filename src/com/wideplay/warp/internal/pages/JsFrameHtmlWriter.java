@@ -3,6 +3,7 @@ package com.wideplay.warp.internal.pages;
 import com.wideplay.warp.components.core.CoreScriptLibraries;
 import static com.wideplay.warp.internal.pages.JsSupportUtils.*;
 import com.wideplay.warp.rendering.*;
+import com.wideplay.warp.util.TextTools;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -62,10 +63,20 @@ class JsFrameHtmlWriter extends AbstractHtmlWriter {
 
     public String getBuffer() {
         //insert the onFrameLoadWriter content in the placeholder
-        return getWriter()
+        final String contextPath = getRequest().getContextPath();
+        final String html = getWriter()
                 .toString()
-                .replaceFirst(HtmlWriter.LINKED_SCRIPTS_PLACEHOLDER, wrapLinkedScripts(linkedScripts, getRequest().getContextPath()))
+                .replaceFirst(HtmlWriter.LINKED_SCRIPTS_PLACEHOLDER, wrapLinkedScripts(linkedScripts, contextPath))
                 .replaceFirst(HtmlWriter.ON_FRAME_LOAD_PLACEHOLDER, wrapOnFrameLoadFn(onFrameLoadWriter));
+
+        //only contextualize if there is a valid servlet context path!!
+        return TextTools.isEmptyString(contextPath) ? html : contextualize(contextPath, html);
+    }
+
+    //TODO this may be an expensive operation, maybe add an option to restrict it to the header?
+    private static String contextualize(String contextPath, String html) {
+        return html .replaceAll("href=\"/", String.format("href=\"/%s/", contextPath))
+                    .replaceAll("src=\"/", String.format("src=\"/%s/", contextPath));
     }
 
 }
