@@ -75,8 +75,8 @@ class JsFrameHtmlWriter extends AbstractHtmlWriter {
 
     //TODO this may be an expensive operation, maybe add an option to restrict it to the header?
     private static String contextualize(String contextPath, String html) {
-        return html .replaceAll("href=\"/", String.format("href=\"/%s/", contextPath))
-                    .replaceAll("src=\"/", String.format("src=\"/%s/", contextPath));
+        return html .replaceAll("href=\"/", String.format("href=\"%s/", contextPath))
+                    .replaceAll("src=\"/", String.format("src=\"%s/", contextPath));
     }
 
 }

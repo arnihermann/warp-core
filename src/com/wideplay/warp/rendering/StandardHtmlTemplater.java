@@ -1,5 +1,6 @@
 package com.wideplay.warp.rendering;
 
+import com.google.inject.Inject;
 import com.wideplay.warp.module.UriMatcher;
 import com.wideplay.warp.module.WarpConfiguration;
 import com.wideplay.warp.module.WarpModuleAssembly;
@@ -26,6 +27,7 @@ class StandardHtmlTemplater implements Templater {
 
     private final Log log = LogFactory.getLog(StandardHtmlTemplater.class);
 
+    @Inject
     public StandardHtmlTemplater(WarpModuleAssembly assembly) {
         this.assembly = assembly;
     }

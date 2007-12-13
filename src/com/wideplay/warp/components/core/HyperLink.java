@@ -1,6 +1,9 @@
 package com.wideplay.warp.components.core;
 
 import com.google.inject.Inject;
+import com.google.inject.Key;
+import com.google.inject.Provider;
+import com.wideplay.warp.annotations.Context;
 import com.wideplay.warp.components.AttributesInjectable;
 import com.wideplay.warp.module.WarpConfiguration;
 import com.wideplay.warp.module.componentry.Renderable;
@@ -52,11 +55,6 @@ public class HyperLink implements Renderable, AttributesInjectable {
             href = topic;
         else
             try {
-                final String contextPath = context.getInjector().getInstance(HttpServletRequest.class)
-                        .getContextPath();
-                if (target.startsWith("/") && !target.startsWith(contextPath))
-                    target = "/" + contextPath + target;
-
                 href = String.format("%s/%s", target, URLEncoder.encode(topic, configuration.getUrlEncoding()));
             } catch (UnsupportedEncodingException e) {
                 throw new PageRenderException("Could not encode topic into URI, the encoding scheme was not supported: "

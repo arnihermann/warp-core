@@ -26,7 +26,7 @@ import java.util.Map;
 @Component
 public class SelectBox implements Renderable, AttributesInjectable {
     private String bind;
-    private String items;
+    private Object items;
     private String label;
 
     private Map<String, Object> injectableAttributes;
@@ -45,8 +45,9 @@ public class SelectBox implements Renderable, AttributesInjectable {
         String id = writer.makeIdFor(this);
         
         if (null != bind) {
-            //write special collection binding parameter name
-            String bindingExpression = requestBinder.createCollectionBindingExpression(items, bind);
+            //TODO instead of this hack, remember the bind source and target in the conversation, then bind accordingly.
+            //TODO fix!!!!!!
+            String bindingExpression = requestBinder.createCollectionBindingExpression(null, bind);
 
             writer.registerInputBinding(id);
 
@@ -57,8 +58,10 @@ public class SelectBox implements Renderable, AttributesInjectable {
         else
             writer.element("select", getTagAttributesExcept(Expressions.EMPTY_ARRAY, injectableAttributes));
 
+
+        
         //obtain the bound object (collection or array)
-        Object itemsObject = Expressions.evaluate(items, context.getContextVars());
+        Object itemsObject = items;
 
         //see if it is an iterable
         if (itemsObject instanceof Iterable)
@@ -107,11 +110,11 @@ public class SelectBox implements Renderable, AttributesInjectable {
         this.bind = bind;
     }
 
-    public String getItems() {
+    public Object getItems() {
         return items;
     }
 
-    public void setItems(String items) {
+    public void setItems(Object items) {
         this.items = items;
     }
 

@@ -33,7 +33,8 @@ public class ExampleModule extends AbstractDwrModule implements WarpModule, Star
         //bind custom impls here as you would in guice or dwr-guice
         //....
 
-        bindRemoted(AjaxDemo.class).to(AjaxDemo.class);
+        //ajaxdemo is dual purpose, service as a dwr service as well as a dummy backing for the warp page (Really not used by warp)
+        bindAnnotatedClasses(AjaxDemo.class);
 
         bindParameter(ParamName.DEBUG).to(true);
 

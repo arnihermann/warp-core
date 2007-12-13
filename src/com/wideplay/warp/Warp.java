@@ -18,6 +18,8 @@ public interface Warp {
 
     void setUrlEncoding(String scheme);
 
+    void disableDwr(boolean disable);
+
     void addShutdownListener(Class<? extends ShutdownListener> shutdownListener);
     void addShutdownListener(Key<? extends ShutdownListener> shutdownListener);
 

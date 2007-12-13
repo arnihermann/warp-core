@@ -19,6 +19,7 @@ class WarpConfigurerImpl implements Warp, WarpConfiguration {
     private final List<Module> guiceModules = new LinkedList<Module>();
     private final List<Key<? extends StartupListener>> startupListeners = new LinkedList<Key<? extends StartupListener>>();
     private final List<Key<? extends ShutdownListener>> shutdownListeners = new LinkedList<Key<? extends ShutdownListener>>();
+    private boolean disableDwr = false;
 
     //configurable options
     private String urlEncodingScheme = "UTF-8";
@@ -57,6 +58,13 @@ class WarpConfigurerImpl implements Warp, WarpConfiguration {
         return startupListeners;
     }
 
+    public void disableDwr(boolean disable) {
+        this.disableDwr = disable;
+    }
+
+    public boolean isDisableDwr() {
+        return disableDwr;
+    }
 
     public String getUrlEncoding() {
         return urlEncodingScheme;
