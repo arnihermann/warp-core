@@ -26,19 +26,24 @@ public class WarpModuleAssembly {
     private final Map<String, PageHandler> userFacingPages = new LinkedHashMap<String, PageHandler>();
 
     private final Injector injector;
-    private final UriMatcher uriMatcher = new UriMatcher();
+    private final UriMatcher uriMatcher;
 
     public WarpModuleAssembly(Map<String, PageHandler> pages, Injector injector, Map<Class<?>, String> pageURIs,
                               List<Key<? extends StartupListener>> startupListeners,
                               List<Key<? extends ShutdownListener>> shutdownListeners,
 
                               Map<String, Object> pagesByTemplate) {
+
+        //TODO try and convert all of these to injections
         this.pages = pages;
         this.injector = injector;
         this.pageURIs = pageURIs;
         this.startupListeners = startupListeners;
         this.shutdownListeners = shutdownListeners;
         this.pagesByTemplate = pagesByTemplate;
+
+        //lookup certain services
+        this.uriMatcher = injector.getInstance(UriMatcher.class);
 
         //create a "masking" map for retrieving user-facing pages (some pages, e.g. component templates are not mapped to URIs)
         userFacingPages.putAll(pages);
@@ -122,7 +127,7 @@ public class WarpModuleAssembly {
             injector.getInstance(key).onStartup();
     }
 
-    public UriMatcher.MatchTuple getPageUriMatch(String requestURI) {
+    public PathDelimitingUriMatcher.MatchTuple getPageUriMatch(String requestURI) {
         return uriMatcher.extractMatch(requestURI, pagesByTemplate);
     }
 

@@ -79,7 +79,7 @@ public class URIMatcherTest {
         //first test if uri is in the literal uri map
         //...
 
-        UriMatcher.MatchTuple extract = new UriMatcher().extractMatch(uri, uris);
+        PathDelimitingUriMatcher.MatchTuple extract = new PathDelimitingUriMatcher().extractMatch(uri, uris);
 
         if (null != expected)
             assert expected.equals(extract.uriExtract) : "Did not match expected : " + expected;

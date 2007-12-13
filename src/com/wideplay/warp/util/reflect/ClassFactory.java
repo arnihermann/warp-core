@@ -184,11 +184,4 @@ public class ClassFactory {
         return new ClassFactory(urls, URLClassLoader.newInstance(urls, parent));
     }
 
-    public static ClassFactory newUrlInverseClassFactory(URL...urls) {
-        return new ClassFactory(urls, new UrlInverseClassLoader(urls));
-    }
-
-    public static ClassFactory newChildUrlInverseClassFactory(ClassLoader parent, URL...urls) {
-        return new ClassFactory(urls, new UrlInverseClassLoader(urls, parent));
-    }
 }

@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
  * <p/>
  * 
  * An event resolution annotation provided by warp for event handler methods that wish
- * to be invoked AFTER the page has been rendered by the TemplatingFilter (not guaranteed to be
+ * to be invoked AFTER the page has been rendered by the Templater (not guaranteed to be
  * at the client browser).
  *
  * @author Dhanji R. Prasanna (dhanji at gmail com)

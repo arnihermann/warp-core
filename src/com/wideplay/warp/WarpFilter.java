@@ -3,7 +3,7 @@ package com.wideplay.warp;
 import com.wideplay.warp.internal.Builders;
 import com.wideplay.warp.module.WarpModuleAssembly;
 import com.wideplay.warp.module.ioc.IocContextManager;
-import com.wideplay.warp.rendering.TemplatingFilter;
+import com.wideplay.warp.rendering.Templater;
 import com.wideplay.warp.util.TextTools;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -21,7 +21,7 @@ import java.io.IOException;
  * @since 1.0
  */
 public class WarpFilter implements Filter {
-    private volatile TemplatingFilter templatingFilter;
+    private volatile Templater templater;
     private volatile WarpModuleAssembly assembly;
     private final DwrWarpAdapter dwrWarpAdapter = new DwrWarpAdapter();
 
@@ -40,7 +40,7 @@ public class WarpFilter implements Filter {
         dwrWarpAdapter.shutdown(servletContext);
 
         assembly = null;
-        templatingFilter = null;
+        templater = null;
         servletContext = null;
     }
 
@@ -59,7 +59,7 @@ public class WarpFilter implements Filter {
             if (dwrWarpAdapter.isDwrServiceable(contextualUri)) {
                 dwrWarpAdapter.service(contextualUri, httpServletRequest, servletResponse);
 
-            } else if (!templatingFilter.doFilter(httpServletRequest, (HttpServletResponse)servletResponse))                //dispatch to warp filter
+            } else if (!templater.process(httpServletRequest, (HttpServletResponse)servletResponse))                //dispatch to warp filter
 
                 //continue down the chain
                 filterChain.doFilter(servletRequest, servletResponse);
@@ -104,7 +104,7 @@ public class WarpFilter implements Filter {
             assembly = Builders.buildWarpModuleAssembly(moduleClass, filterConfig.getServletContext(), moduleRootDir, modulePackage);
 
             //build internal services
-            templatingFilter = new TemplatingFilter(assembly, filterConfig.getServletContext());
+            templater = assembly.getInjector().getInstance(Templater.class);
 
             //start dwr services
             dwrWarpAdapter.start(filterConfig.getServletContext(), assembly.getInjector());

@@ -82,15 +82,6 @@ public class IocContextManager {
         throw new NotScopeableException(message);
     }
 
-    static void throwNotScopeableException(String message, RuntimeException re) {
-        throw new NotScopeableException(message, re);
-    }
-
-    
-    public static <T> T constructorInject(Class<T> pageClass, Constructor<T> constructor, List<Key<?>> constructorArgs, Injector injector) {
-        return ObjectInjector.constructorInject(pageClass, constructor, constructorArgs, injector);
-    }
-
     public static Module newDefaultGuiceModule(List<PageClassReflection> pageBindings) {
         DefaultGuiceModule module = new DefaultGuiceModule();
         for (PageClassReflection reflection : pageBindings)

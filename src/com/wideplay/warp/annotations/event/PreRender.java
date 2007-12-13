@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
  *
  *
  * An event resolution annotation provided by warp for event handler methods that wish
- * to be invoked BEFORE the page has been rendered by the TemplatingFilter (but after state
+ * to be invoked BEFORE the page has been rendered by the Templater (but after state
  * is synchronized with the user's view of the page).
  *
  * @author Dhanji R. Prasanna (dhanji at gmail com)
