@@ -55,7 +55,7 @@ public class SelectBox implements Renderable, AttributesInjectable {
             boundItem = BeanUtils.getFromPropertyExpression(bind, context.getContextVars());
         }
         else
-            writer.element("select", getTagAttributesExcept(new Object[] {}, injectableAttributes));
+            writer.element("select", getTagAttributesExcept(BeanUtils.EMPTY_ARRAY, injectableAttributes));
 
         //obtain the bound object (collection or array)
         Object itemsObject = BeanUtils.getFromPropertyExpression(items, context.getContextVars());

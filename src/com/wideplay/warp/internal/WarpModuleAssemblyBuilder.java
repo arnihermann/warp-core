@@ -13,8 +13,6 @@ import com.wideplay.warp.module.componentry.Renderable;
 import com.wideplay.warp.module.ioc.IocContextManager;
 import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.PageHandler;
-import com.wideplay.warp.rendering.templating.Headers;
-import com.wideplay.warp.rendering.templating.HtmlElementFilter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -188,12 +186,6 @@ class WarpModuleAssemblyBuilder {
 
             //bind page services
             install(PageBuilders.newPageServicesModule());
-
-            //install filters
-            bind(HtmlElementFilterKeys.class)
-                    .toInstance(new HtmlElementFilterKeys(warpConfiguration.getHeaderFilters()));
-            bind(HtmlElementFilter.class).annotatedWith(Headers.class).to(HtmlElementHeaderFilterChain.class)
-                    .in(Singleton.class);
         }
 
         public void setWarpModuleAssemblyProvider(WarpModuleAssemblyProvider warpModuleAssemblyProvider) {

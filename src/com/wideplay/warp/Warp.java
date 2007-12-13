@@ -2,7 +2,6 @@ package com.wideplay.warp;
 
 import com.google.inject.Key;
 import com.google.inject.Module;
-import com.wideplay.warp.rendering.templating.HtmlElementFilter;
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,11 +21,4 @@ public interface Warp {
     void addShutdownListener(Class<? extends ShutdownListener> shutdownListener);
     void addShutdownListener(Key<? extends ShutdownListener> shutdownListener);
 
-
-    HeaderFiltersBuilder headers();
-
-    public static interface HeaderFiltersBuilder {
-        HeaderFiltersBuilder filter(Class<? extends HtmlElementFilter> filter);
-        HeaderFiltersBuilder filter(Key<? extends HtmlElementFilter> filter);
-    }
 }
