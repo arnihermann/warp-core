@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html   xmlns:w="http://www.wideplay.com/warp/schema/warp_core.xsd"
+        xmlns="http://www.w3.org/1999/xhtml"
+        xml:lang="en" lang="en">
+
+  <head w:component="meta">
+    <title>Warp :: RESTful demo</title>
+  </head>
+  
+  <body w:component="frame">
+
+    <p>
+        This page demonstrates the use of @URIMapping to provide dynamic RESTful URLs.
+        <br/>
+        <br/>
+        The movie name was: ${movie}
+    </p>
+
+    <p>
+        Demonstration of the HyperLink component (generates an HTTP GET to this page):
+        <br/>
+        <br/>
+        <a w:component="hyperlink" w:target="movie" w:topic="${movie + '...'}">${movie} + "..."</a>
+    </p>
+
+    <br/>
+  </body>
+</html>

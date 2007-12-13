@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html   xmlns:w="http://www.wideplay.com/warp/schema/core"
+        xmlns="http://www.w3.org/1999/xhtml"
+        xml:lang="en" lang="en">
+
+  <head w:component="meta">
+    <title>Warp :: Second page</title>
+  </head>
+
+  <body w:component="frame">
+    <p>
+        An Number provided from the previous page (during page injection): ${number}
+        <br/>
+        Static text:
+        <b>random nested message in bold</b>
+        <font color="red">random nested message in red</font>
+    </p>
+
+    <br/>
+
+    <a w:component="link" w:event="@NextPage">previous page >></a>
+  </body>
+</html>

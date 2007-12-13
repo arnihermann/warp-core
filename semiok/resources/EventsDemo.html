@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html   xmlns:w="http://www.wideplay.com/warp/schema/warp_core.xsd"
+        xmlns="http://www.w3.org/1999/xhtml"
+        xml:lang="en" lang="en">
+
+  <!-- specifying w:onload="off" tells warp not to automatically register js wrapper scripts on window load
+        it implies you will invoke the warp scripts manually (see <script> tag below for an example) -->
+  <head w:component="meta" w:onload="off">
+    <title>Warp :: Events demo</title>
+
+    <style type="text/css">
+        @import "assets/warp.css";
+    </style>
+
+    <script type="text/javascript">
+        window.onload=function() {
+            window.warpOnload();    /* demonstrates hook for invoking warp wrapper scripts manually (i.e. from your own js) */
+        };
+    </script>
+  </head>
+  
+  <body w:component="frame">
+
+    <p>
+        This page demonstrates the use of Event topics in Warp:
+        <br/>
+        Selected: ${message}
+    </p>
+
+    <span w:component="repeater" w:items="${beans}" w:var="bean">
+        <a w:component="link" w:topic="${bean}">${bean}</a>  <!-- current bean is topic -->
+    </span>
+  </body>
+</html>

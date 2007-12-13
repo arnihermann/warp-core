@@ -1,0 +1,58 @@
+<project name="warp-core">
+    <description>Warp, a next-generation, component-based, event-driven Web framework</description>
+
+    <property file="build.properties"/>
+
+    <path id="core.classpath">
+        <fileset dir="${lib}">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="clean" description="Cleans up the build artifacts and temporary directories">
+        <delete dir="${build}"/>
+    </target>
+
+    <target name="init">
+        <mkdir dir="${build}"/>
+        <mkdir dir="${dir.distribute}"/>
+    </target>
+
+    <target name="build" depends="init" description="Compiles warp core and demo sources into binary class files">
+        <javac sourcepath="" srcdir="${src}" destdir="${build}">
+            <include name="**/*.java"/>
+            <exclude name="com/wideplay/warp/example/**"/>
+
+            <classpath refid="core.classpath"/>
+        </javac>
+
+        <!-- copy non binary resources to output classpath -->
+        <copy todir="${build}">
+            <fileset dir="${src}">
+                <include name="**/*.xml"/>
+                <include name="**/*.properties"/>
+                <include name="**/*.js"/>
+
+                <exclude name="com/wideplay/warp/example/**"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="assemble.jar" depends="build" description="Assembles a library jar of Warp core classes (for use in WEB-INF/lib for example)">
+        <jar basedir="${build}" destfile="${dir.distribute}/${core.artifact}">
+            <exclude name="com/wideplay/warp/example/**"/>
+            <exclude name="dist/**"/>
+        </jar>
+    </target>
+
+    <target name="assemble.jar.deps" depends="build" description="Assembles an archive of Warp core classes (for use in WEB-INF/lib for example) along with all deps">
+        <zip basedir="${dir.distribute}" destfile="${dir.distribute}/${deps.artifact}">
+            <include name="${core.artifact}"/>
+            <fileset dir="${lib}">
+                <exclude name="javaee.jar"/>
+                <exclude name="testng*"/>
+                <exclude name="log4j*"/>
+            </fileset>
+        </zip>
+    </target>
+</project>
