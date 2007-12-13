@@ -4,7 +4,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.wideplay.warp.annotations.OnEvent;
 import com.wideplay.warp.annotations.OnEvents;
-import com.wideplay.warp.annotations.Page;
 import com.wideplay.warp.annotations.event.PreRender;
 
 /**
@@ -19,7 +18,7 @@ public class ViewportDemo {
     @OnEvents Counter counter;
 
     @Inject
-    public ViewportDemo(@Page Counter counter) {
+    public ViewportDemo(Counter counter) {
         this.counter = counter;
         counter.increment();
         counter.increment();

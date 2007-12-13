@@ -11,7 +11,11 @@ import com.wideplay.warp.rendering.ScriptLibrary;
  * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
+@Deprecated
 class DwrResponseHtmlWriter extends AbstractHtmlWriter {
+    public void registerInputBinding(String id) {
+        
+    }
 
     public String getBuffer() {
         return getWriter().toString();

@@ -1,7 +1,5 @@
 package com.wideplay.warp.util.reflect;
 
-import com.wideplay.warp.util.TextTools;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.*;

@@ -3,7 +3,6 @@ package com.wideplay.warp.example;
 import com.google.inject.Inject;
 import com.wideplay.warp.annotations.OnEvent;
 import com.wideplay.warp.annotations.OnEvents;
-import com.wideplay.warp.annotations.Page;
 import com.wideplay.warp.module.pages.event.Redirect;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,7 +29,7 @@ public class PageInjectDemo {
     /**
      *  inject 'Next' page without viral injection (except @Managed fields)
      */
-    @Inject @Page private Next next;
+    @Inject private Next next;
 
 
     

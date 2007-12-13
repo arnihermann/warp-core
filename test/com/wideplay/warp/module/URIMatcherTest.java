@@ -1,13 +1,13 @@
 package com.wideplay.warp.module;
 
-import com.google.inject.Injector;
 import com.google.inject.Guice;
+import com.google.inject.Injector;
 import com.google.inject.Module;
+import com.wideplay.warp.example.ExampleModule;
 import com.wideplay.warp.internal.UriMatchTreeBuilder;
 import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.PageHandler;
-import com.wideplay.warp.example.ExampleModule;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -16,10 +16,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Collections;
-import java.util.Arrays;
 
 /**
  * Created by IntelliJ IDEA.

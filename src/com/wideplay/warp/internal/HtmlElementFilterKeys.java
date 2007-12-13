@@ -1,7 +1,7 @@
 package com.wideplay.warp.internal;
 
-import com.wideplay.warp.rendering.templating.HtmlElementFilter;
 import com.google.inject.Key;
+import com.wideplay.warp.rendering.templating.HtmlElementFilter;
 
 import java.util.List;
 

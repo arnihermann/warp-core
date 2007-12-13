@@ -2,7 +2,6 @@ package com.wideplay.warp.example;
 
 import com.google.inject.Inject;
 import com.wideplay.warp.annotations.OnEvent;
-import com.wideplay.warp.annotations.Page;
 import com.wideplay.warp.module.pages.event.Forward;
 
 /**
@@ -15,7 +14,7 @@ import com.wideplay.warp.module.pages.event.Forward;
  * @since 1.0
  */
 public class EventDelegate {
-    @Inject @Page private Next next;
+    @Inject private Next next;
 
     @OnEvent @Fwd
     public Object forward() {

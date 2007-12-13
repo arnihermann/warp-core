@@ -9,7 +9,6 @@ import com.wideplay.warp.rendering.RenderingContext;
 import com.wideplay.warp.rendering.ScriptEvents;
 import com.wideplay.warp.util.TextTools;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -34,17 +33,15 @@ public class Button implements Renderable, AttributesInjectable {
             encodedEvent = event;
 
         String buttonId = writer.makeIdFor(this);
-        writer.element("input",
-                ComponentSupport.asArray(
-                        Arrays.<Object>asList(
+
+        writer.elementWithAttrs("input",
+
+                ComponentSupport.getTagAttributesExcept(new Object[] {
                         "type", "button",
                         "id", buttonId,
-                        "value", label),
-
-                ComponentSupport.getTagAttributesExcept(attribs, "type", "id", "value", "onclick")
-                )
+                        "value", label
+                }, attribs, "type", "id", "value", "onclick")
         );
-
         writer.registerEvent(buttonId, ScriptEvents.CLICK, encodedEvent, 0);
         
         ComponentSupport.renderMultiple(context, nestedComponents);

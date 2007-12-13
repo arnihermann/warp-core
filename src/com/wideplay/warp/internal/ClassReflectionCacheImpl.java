@@ -1,8 +1,8 @@
 package com.wideplay.warp.internal;
 
-import static com.wideplay.warp.util.reflect.ReflectUtils.getterExists;
 import com.wideplay.warp.module.componentry.ClassReflectionCache;
 import com.wideplay.warp.util.reflect.ReflectUtils;
+import static com.wideplay.warp.util.reflect.ReflectUtils.getterExists;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

@@ -36,6 +36,9 @@ class JsFrameHtmlWriter extends AbstractHtmlWriter {
         onFrameLoadWriter.append("\"; __warpForm.submit(); return false;}; ");
     }
 
+    public void registerInputBinding(String id) {
+//        throw new UnsupportedOperationException();
+    }
 
     public void registerAsyncEvent(String id, ScriptEvents click, String encodedEvent, int topicId, String[] viewports) {
 

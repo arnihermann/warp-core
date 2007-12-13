@@ -4,7 +4,10 @@ import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.RenderingContext;
 import com.wideplay.warp.util.beans.BeanUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -42,14 +45,15 @@ public class ComponentSupport {
     }
 
     //returns everything except the specified "excepts"
-    static Object[] getTagAttributesExcept(Map<String, Object> attribs, String...excepts) {
+    static Object[] getTagAttributesExcept(Object[] initialAttrs, Map<String, Object> attribs, String...excepts) {
         //iterative copy (improve?)
         Object[] attributes = (Object[]) attribs.get(RawText.WARP_RAW_TEXT_PROP_ATTRS);
 
         if (null == attributes)
             return BeanUtils.EMPTY_ARRAY;
 
-        List<String> targetAttributes = new ArrayList<String>(attributes.length);
+        List<Object> targetAttributes = new ArrayList<Object>(attributes.length);
+        Collections.addAll(targetAttributes, initialAttrs);
 
         for (int i = 0; i < attributes.length; i++) {
             String attribute = (String) attributes[i];
@@ -58,7 +62,7 @@ public class ComponentSupport {
                 i += 2;
             } else {
                 targetAttributes.add(attribute);
-                targetAttributes.add((String) attributes[i + 1]);
+                targetAttributes.add(attributes[i + 1]);
                 i++;
             }
         }
@@ -83,11 +87,5 @@ public class ComponentSupport {
                 return componentHandler.getNestedComponents();
 
         return null;    //not found!
-    }
-
-    public static <T> Collection<T> asArray(Collection<T> objects, T[] tagAttributesExcept) {
-        Collections.addAll(objects, tagAttributesExcept);
-
-        return objects;
     }
 }

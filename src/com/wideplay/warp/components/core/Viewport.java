@@ -3,7 +3,6 @@ package com.wideplay.warp.components.core;
 import com.google.inject.Inject;
 import com.google.inject.Key;
 import com.wideplay.warp.annotations.Component;
-import com.wideplay.warp.annotations.Page;
 import com.wideplay.warp.components.AttributesInjectable;
 import com.wideplay.warp.internal.pages.PageBuilders;
 import com.wideplay.warp.module.WarpModuleAssembly;
@@ -32,7 +31,7 @@ import java.util.Map;
  * as the current content of this viewport.
  *
  * The property expression which is placed in "embed", should be injected into the current containing
- * page via @Inject @Page (the normal way). If the ajax target page sends a redirect request, it is
+ * page via @Inject  (the normal way). If the ajax target page sends a redirect request, it is
  * propagated to the containing page as a normal redirect. Thus, forwarding is the only viable option
  * for redirecting WITHIN a viewport.
  *
@@ -71,7 +70,7 @@ public class Viewport implements Renderable, AttributesInjectable {
         //obtain the embedded page object (either directly injected or getValue via page class from guice)
         Object embedded = embed;
         if (null != embedClass)
-            embedded = context.getInjector().getInstance(Key.get(assembly.getPageClassByName(embedClass), Page.class));
+            embedded = context.getInjector().getInstance(Key.get(assembly.getPageClassByName(embedClass)));
 
         //getValue its component object tree (i.e. the PageHandler which renders it)
         String uri = assembly.resolvePageURI(embedded);

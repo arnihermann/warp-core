@@ -49,13 +49,7 @@ public class Table implements Renderable, AttributesInjectable {
     public void render(RenderingContext context, List<? extends ComponentHandler> nestedComponents) {
         HtmlWriter writer = context.getWriter();
         String id = writer.makeIdFor(this);
-
-
-        //TODO CLEANUP THIS MESS TO USE COLLECTIONS!
-        Collection<?> attributesToRender = ComponentSupport.asArray(Arrays.<Object>asList("id", id),
-                ComponentSupport.getTagAttributesExcept(attribs, "id"));
-        
-        writer.element("table", attributesToRender.toArray());
+        writer.elementWithAttrs("table", ComponentSupport.getTagAttributesExcept(new Object[] { "id", id }, attribs, "id"));
 
         //obtain the bound object
         Object itemsObject = items;//BeanUtils.getFromPropertyExpression(items, page);
@@ -110,7 +104,7 @@ public class Table implements Renderable, AttributesInjectable {
             Object item = iter.next();
 
             if (0 == rowCtr) {
-                //getValue the resource bundle associated with this model object (if any)
+                //value the resource bundle associated with this model object (if any)
                 propertiesAndLabels = classCache.getPropertyLabelMap(item);
                 writeHeader(writer, propertiesAndLabels);
                 writer.element("tbody");
@@ -202,7 +196,7 @@ public class Table implements Renderable, AttributesInjectable {
         for (String property : rawColumns) {
             writer.element("td");
             
-            //stringize the property getValue only if it is not null (prevent NPE), also format the string into an expr
+            //stringize the property value only if it is not null (prevent NPE), also format the string into an expr
             Object value = BeanUtils.getFromPropertyExpression(String.format("%s.%s", var, property), context.getContextVars());
             if (null != value)
                 writer.writeRaw(value.toString());
@@ -224,7 +218,7 @@ public class Table implements Renderable, AttributesInjectable {
                 child.handleRender(context);
 
             } else {    //write normally
-                //stringize the property getValue only if it is not null (prevent NPE), also format the string into an expr
+                //stringize the property value only if it is not null (prevent NPE), also format the string into an expr
                 Object value = BeanUtils.getFromPropertyExpression(String.format("%s.%s", var, property), context.getContextVars());
                 if (null != value)
                     writer.writeRaw(value.toString());

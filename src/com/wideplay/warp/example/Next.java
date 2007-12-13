@@ -2,7 +2,6 @@ package com.wideplay.warp.example;
 
 import com.google.inject.Inject;
 import com.wideplay.warp.annotations.OnEvent;
-import com.wideplay.warp.annotations.Page;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,7 +13,7 @@ import com.wideplay.warp.annotations.Page;
 public class Next {
     private int number;
     
-    @Inject @Page
+    @Inject 
     PageInjectDemo pageInjectDemo;
 
 

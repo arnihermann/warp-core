@@ -6,7 +6,6 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.servlet.RequestScoped;
 import com.google.inject.servlet.SessionScoped;
 import com.wideplay.warp.annotations.Context;
-import com.wideplay.warp.annotations.Page;
 import com.wideplay.warp.internal.Builders;
 import com.wideplay.warp.module.StateManager;
 import com.wideplay.warp.module.componentry.ClassReflectionCache;
@@ -55,10 +54,6 @@ class DefaultGuiceModule extends AbstractModule {
 
         //bind request binder that uses ognl to bind request parameters to a page
         bind(RequestBinder.class).to(MvelRequestBinder.class);
-
-        //bind pages to our InjectPageProvider providers (ones that only inject managed props)
-        for (Class<?> clazz : pagesAndProviders.keySet())
-            bind(clazz).annotatedWith(Page.class).toProvider(pagesAndProviders.get(clazz));
 
         //bind dwr module
         install(new DwrGuiceModule());

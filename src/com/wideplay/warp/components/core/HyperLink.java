@@ -9,9 +9,9 @@ import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.rendering.PageRenderException;
 import com.wideplay.warp.rendering.RenderingContext;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -52,15 +52,18 @@ public class HyperLink implements Renderable, AttributesInjectable {
             href = topic;
         else
             try {
+                final String contextPath = context.getInjector().getInstance(HttpServletRequest.class)
+                        .getContextPath();
+                if (target.startsWith("/") && !target.startsWith(contextPath))
+                    target = "/" + contextPath + target;
+
                 href = String.format("%s/%s", target, URLEncoder.encode(topic, configuration.getUrlEncoding()));
             } catch (UnsupportedEncodingException e) {
                 throw new PageRenderException("Could not encode topic into URI, the encoding scheme was not supported: "
                         + configuration.getUrlEncoding(), e);
             }
 
-        //TODO CLEANUP THIS MESS TO USE COLLECTIONS!        
-        writer.element("a", ComponentSupport.asArray(Arrays.<Object>asList("href", href), 
-                ComponentSupport.getTagAttributesExcept(attribs, "href")).toArray());
+        writer.elementWithAttrs("a", ComponentSupport.getTagAttributesExcept(new Object[] { "href", href }, attribs, "href"));
         ComponentSupport.renderMultiple(context, nestedComponents);
 
         writer.end("a");

@@ -5,8 +5,8 @@ import com.google.inject.Module;
 import com.wideplay.warp.ShutdownListener;
 import com.wideplay.warp.StartupListener;
 import com.wideplay.warp.Warp;
-import com.wideplay.warp.rendering.templating.HtmlElementFilter;
 import com.wideplay.warp.module.WarpConfiguration;
+import com.wideplay.warp.rendering.templating.HtmlElementFilter;
 
 import java.util.*;
 

@@ -1,7 +1,6 @@
 package com.wideplay.warp.example;
 
 import com.google.inject.Inject;
-import com.wideplay.warp.annotations.Page;
 import com.wideplay.warp.example.model.MyDVD;
 
 import java.util.List;
@@ -18,7 +17,7 @@ public class RepeaterDemo {
 
     //borrow dvd list from the table demo via page-injection
     @Inject
-    private void setup(@Page TableDemo tableDemoPage) {
+    private void setup(TableDemo tableDemoPage) {
         beans = tableDemoPage.getBeans();
     }
 

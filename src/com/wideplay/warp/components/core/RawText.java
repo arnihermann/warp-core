@@ -37,7 +37,7 @@ public class RawText implements Renderable, AttributesInjectable {
         String warpRawTextTag = null;
         List<Token> tokens = null;
         if (null != attributeNameValuePairs) {
-            attributes = ComponentSupport.getTagAttributesExcept(attributeNameValuePairs);
+            attributes = ComponentSupport.getTagAttributesExcept(new Object[] {}, attributeNameValuePairs);
             warpRawTextTag = (String) attributeNameValuePairs.get(WARP_RAW_TEXT_PROP_TAG);
             tokens = (List<Token>) attributeNameValuePairs.get(WARP_RAW_TEXT_PROP_TOKENS);
         }

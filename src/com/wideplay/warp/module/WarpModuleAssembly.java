@@ -5,7 +5,6 @@ import com.google.inject.Key;
 import com.wideplay.warp.ShutdownListener;
 import com.wideplay.warp.StartupListener;
 import com.wideplay.warp.rendering.PageHandler;
-import com.wideplay.warp.rendering.templating.HtmlElementFilter;
 
 import java.util.*;
 
