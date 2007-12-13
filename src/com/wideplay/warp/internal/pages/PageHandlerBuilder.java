@@ -2,7 +2,7 @@ package com.wideplay.warp.internal.pages;
 
 import com.wideplay.warp.annotations.Template;
 import com.wideplay.warp.annotations.URIMapping;
-import com.wideplay.warp.internal.UriMatchTreeBuilder;
+import com.wideplay.warp.internal.pages.UriMatchTreeBuilder;
 import com.wideplay.warp.internal.componentry.ComponentBuilders;
 import com.wideplay.warp.module.ComponentRegistry;
 import com.wideplay.warp.module.WarpConfigurationException;
