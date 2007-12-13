@@ -11,6 +11,7 @@ import com.wideplay.warp.rendering.RenderingContext;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -57,7 +58,9 @@ public class HyperLink implements Renderable, AttributesInjectable {
                         + configuration.getUrlEncoding(), e);
             }
 
-        writer.elementWithAttrs("a", new Object[] { "href", href }, ComponentSupport.getTagAttributesExcept(attribs, "href"));
+        //TODO CLEANUP THIS MESS TO USE COLLECTIONS!        
+        writer.element("a", ComponentSupport.asArray(Arrays.<Object>asList("href", href), 
+                ComponentSupport.getTagAttributesExcept(attribs, "href")).toArray());
         ComponentSupport.renderMultiple(context, nestedComponents);
 
         writer.end("a");

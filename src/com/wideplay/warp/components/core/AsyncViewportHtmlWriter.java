@@ -43,7 +43,7 @@ class AsyncViewportHtmlWriter implements HtmlWriter {
         delegate.element(name, nameValuePairs);
     }
 
-    public void elementWithAttrs(String name, Object[]... nameValuePairs) {
+    public void elementWithAttrs(String name, Object[] nameValuePairs) {
         delegate.elementWithAttrs(name, nameValuePairs);
     }
 

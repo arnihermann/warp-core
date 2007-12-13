@@ -1,5 +1,7 @@
 package com.wideplay.warp.util.reflect;
 
+import com.wideplay.warp.util.TextTools;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.*;
@@ -63,7 +65,8 @@ public class ReflectUtils {
         } catch (IllegalAccessException e) {
             throw new IllegalArgumentException("cannot invoke method due to access visibility", e);
         } catch (InvocationTargetException e) {
-            throw new IllegalArgumentException("cannot complete invoke method due to it throwing an exception: " + e.getMessage(), e);
+            throw new IllegalArgumentException("cannot invoke method" + bean.getClass().getSimpleName() + "." + m.getName()
+                    + "() due to it throwing an exception: " + e.getMessage(), e);
         }
     }
 
@@ -241,5 +244,24 @@ public class ReflectUtils {
         for (FieldDescriptor descriptor : fieldDescriptors)
             if (!descriptor.getField().isAccessible())
                 descriptor.getField().setAccessible(true);
+    }
+
+    //TODO replace with a proper introspector or library
+    public static boolean getterExists(String prop, Class<?> aClass) {
+        //capitalize first char
+        prop = prop.substring(0, 1).toUpperCase() + prop.substring(1);
+
+
+        //first look for a no-arg method named properly
+        final Method method;
+        try {
+            method = aClass.getMethod(String.format("get%s", prop));
+        } catch (NoSuchMethodException e) {
+            return false;
+        }
+
+
+        return null != method && void.class != method.getReturnType();
+
     }
 }

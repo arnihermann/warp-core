@@ -11,6 +11,7 @@ import com.wideplay.warp.rendering.RenderingContext;
 import com.wideplay.warp.rendering.RequestBinder;
 import com.wideplay.warp.util.beans.BeanUtils;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -50,13 +51,17 @@ public class SelectBox implements Renderable, AttributesInjectable {
 
             writer.registerInputBinding(id);
 
-            writer.elementWithAttrs("select", new Object[] { "id", id, "name", bindingExpression }, getTagAttributesExcept(injectableAttributes, "name"));    //bind as expression
+
+            //TODO CLEANUP THIS MESS TO USE COLLECTIONS!
+            writer.element("select",
+                    ComponentSupport.asArray(Arrays.<Object>asList("id", id, "name", bindingExpression),
+                            getTagAttributesExcept(injectableAttributes, "name")).toArray());    //bind as expression
             boundItem = BeanUtils.getFromPropertyExpression(bind, context.getContextVars());
         }
         else
             writer.element("select", getTagAttributesExcept(injectableAttributes));
 
-        //obtain the bound object
+        //obtain the bound object (collection or array)
         Object itemsObject = BeanUtils.getFromPropertyExpression(items, context.getContextVars());
 
         //see if it is an iterable
@@ -76,18 +81,18 @@ public class SelectBox implements Renderable, AttributesInjectable {
         //the index is basically the hashcode as a string (following Josh Bloch's recommendation and according to the Java collections framework)
         String indexValue = Integer.toString(item.hashCode());
 
-        //bind it as an expression (selecting the user's value from the item list by matching hashcode):
+        //bind it as an expression (selecting the user's getValue from the item list by matching hashcode):
         if (null != bind)
            indexValue = String.valueOf(item.hashCode());
 
-        //resolve label from either set value or use the item itself
+        //resolve label from either set getValue or use the item itself
         String labelValue = this.label;
         if (null != labelValue)
             labelValue = (String) BeanUtils.getFromPropertyExpression(this.label, item);
         else
             labelValue = item.toString();
 
-        //write tag out with index and value (matching selected if already bound)
+        //write tag out with index and getValue (matching selected if already bound)
         if (null != boundItem && item.equals(boundItem))
             writer.element("option", "value", indexValue, "selected", "true");
         else

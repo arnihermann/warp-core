@@ -1,5 +1,6 @@
 package com.wideplay.warp.internal;
 
+import static com.wideplay.warp.util.reflect.ReflectUtils.getterExists;
 import com.wideplay.warp.module.componentry.ClassReflectionCache;
 import com.wideplay.warp.util.reflect.ReflectUtils;
 import org.apache.commons.logging.Log;
@@ -7,6 +8,7 @@ import org.apache.commons.logging.LogFactory;
 
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by IntelliJ IDEA.
@@ -20,8 +22,8 @@ import java.util.*;
  * @since 1.0
  */
 class ClassReflectionCacheImpl implements ClassReflectionCache {
-    private final Map<Class<?>, Map<String, String>> classPropertyLabelMap = new HashMap<Class<?>, Map<String, String>>();
-    private final Map<Class<?>, Map<String, Class<?>>> classPropertyTypeMap = new LinkedHashMap<Class<?>, Map<String, Class<?>>>();
+    private final Map<Class<?>, Map<String, String>> classPropertyLabelMap = new ConcurrentHashMap<Class<?>, Map<String, String>>();
+    private final Map<Class<?>, Map<String, Class<?>>> classPropertyTypeMap = new ConcurrentHashMap<Class<?>, Map<String, Class<?>>>();
 
     private final Log log = LogFactory.getLog(ClassReflectionCacheImpl.class);
 
@@ -97,26 +99,23 @@ class ClassReflectionCacheImpl implements ClassReflectionCache {
         }
 
         //TODO replace with Bean introspector??
-        for (Method method : aClass.getMethods()) {
+        final Enumeration<String> keys = labels.getKeys();
+        while (keys.hasMoreElements()){
+            String prop = keys.nextElement();
+
 
             //check for getters and cache them as a property
-            String name = method.getName();
-            if (0 == method.getParameterTypes().length && name.length() > 3 && !void.class.equals(method.getReturnType())
-                    && name.startsWith("get")) {
+            if (getterExists(prop, aClass)) {
 
-                //skip reserved
-                if ("getClass".equals(name))
-                    continue;
-
-                String key = ReflectUtils.extractPropertyNameFromAccessor(method.getName());
-
+                //store the binding only if there is a valid getter
                 if (null != labels) {
                     //watch for column hides (empty property)
-                    String value = labels.getString(key);
+                    String value = labels.getString(prop);
                     if (null != value && !"".equals(value.trim()))
-                        propertyLabels.put(key, value);
+                        propertyLabels.put(prop, value);
                 } else
-                    propertyLabels.put(key, key);
+                    //if no binding at all, then use the property name as its label
+                    propertyLabels.put(prop, prop);
             }
         }
 

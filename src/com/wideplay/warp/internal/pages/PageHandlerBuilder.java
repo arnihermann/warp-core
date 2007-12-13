@@ -15,11 +15,15 @@ import org.apache.commons.logging.LogFactory;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
+import org.dom4j.io.XPP3Reader;
+import org.dom4j.io.SAXReader;
+import org.xmlpull.v1.XmlPullParserException;
 
 import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.Map;
 
 /**
@@ -59,8 +63,14 @@ class PageHandlerBuilder {
 
         Document document;
         try {
-            document = DocumentHelper.parseText(documentText);
+            XPP3Reader reader = new XPP3Reader();
+//            SAXReader reader = new SAXReader();
+            document = reader.read(new StringReader(documentText));
         } catch (DocumentException e) {
+            throw new WarpConfigurationException("could not parse xhtml template for: " + template + " because of " + e.getMessage(), e);
+        } catch (IOException e) {
+            throw new WarpConfigurationException("could not parse xhtml template for: " + template + " because of " + e.getMessage(), e);
+        } catch (XmlPullParserException e) {
             throw new WarpConfigurationException("could not parse xhtml template for: " + template + " because of " + e.getMessage(), e);
         }
 

@@ -43,7 +43,7 @@ public interface HtmlWriter {
 
     void element(String name, Object...nameValuePairs);
 
-    void elementWithAttrs(String name, Object[]... nameValuePairs);
+    void elementWithAttrs(String name, Object[] nameValuePairs);
 
     void writeRaw(String text);
 

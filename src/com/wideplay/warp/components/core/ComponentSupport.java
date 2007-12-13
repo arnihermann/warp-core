@@ -4,9 +4,7 @@ import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.RenderingContext;
 import com.wideplay.warp.util.beans.BeanUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -85,5 +83,11 @@ public class ComponentSupport {
                 return componentHandler.getNestedComponents();
 
         return null;    //not found!
+    }
+
+    public static <T> Collection<T> asArray(Collection<T> objects, T[] tagAttributesExcept) {
+        Collections.addAll(objects, tagAttributesExcept);
+
+        return objects;
     }
 }

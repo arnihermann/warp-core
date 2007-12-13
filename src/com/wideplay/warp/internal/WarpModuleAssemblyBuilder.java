@@ -1,9 +1,6 @@
 package com.wideplay.warp.internal;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Module;
+import com.google.inject.*;
 import com.wideplay.warp.WarpModule;
 import com.wideplay.warp.annotations.Component;
 import com.wideplay.warp.internal.componentry.ComponentBuilders;
@@ -16,6 +13,8 @@ import com.wideplay.warp.module.componentry.Renderable;
 import com.wideplay.warp.module.ioc.IocContextManager;
 import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.PageHandler;
+import com.wideplay.warp.rendering.templating.Headers;
+import com.wideplay.warp.rendering.templating.HtmlElementFilter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -143,7 +142,7 @@ class WarpModuleAssemblyBuilder {
         module.configure(warpConfigurer);
 
         //make the configuration available to guice injector
-        internalServicesModule.setWarpConfigurationProvider(new WarpConfigurationProvider(warpConfigurer));
+        internalServicesModule.setWarpConfiguration(warpConfigurer);
 
 
         //build an application-wide injector from configured modules
@@ -178,17 +177,23 @@ class WarpModuleAssemblyBuilder {
 
     private class InternalServicesModule extends AbstractModule {
         private WarpModuleAssemblyProvider warpModuleAssemblyProvider;
-        private WarpConfigurationProvider warpConfigurationProvider;
+        private WarpConfigurerImpl warpConfiguration;
         private ComponentRegistry componentRegistry;
         private ServletContext servletContext;
 
         protected void configure() {
             bind(WarpModuleAssembly.class).toProvider(warpModuleAssemblyProvider);
             bind(ComponentRegistry.class).toInstance(componentRegistry);
-            bind(WarpConfiguration.class).toProvider(warpConfigurationProvider);
+            bind(WarpConfiguration.class).toProvider(new WarpConfigurationProvider(warpConfiguration));
 
             //bind page services
             install(PageBuilders.newPageServicesModule());
+
+            //install filters
+            bind(HtmlElementFilterKeys.class)
+                    .toInstance(new HtmlElementFilterKeys(warpConfiguration.getHeaderFilters()));
+            bind(HtmlElementFilter.class).annotatedWith(Headers.class).to(HtmlElementHeaderFilterChain.class)
+                    .in(Singleton.class);
         }
 
         public void setWarpModuleAssemblyProvider(WarpModuleAssemblyProvider warpModuleAssemblyProvider) {
@@ -199,8 +204,8 @@ class WarpModuleAssemblyBuilder {
             this.componentRegistry = componentRegistry;
         }
 
-        public void setWarpConfigurationProvider(WarpConfigurationProvider warpConfigurationProvider) {
-            this.warpConfigurationProvider = warpConfigurationProvider;
+        public void setWarpConfiguration(WarpConfigurerImpl warpConfigurationProvider) {
+            this.warpConfiguration = warpConfigurationProvider;
         }
 
         public void setServletContext(ServletContext servletContext) {

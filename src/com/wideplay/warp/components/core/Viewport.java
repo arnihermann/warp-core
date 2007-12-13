@@ -68,12 +68,12 @@ public class Viewport implements Renderable, AttributesInjectable {
     public void render(RenderingContext context, List<? extends ComponentHandler> nestedComponents) {
         HtmlWriter writer = context.getWriter();
 
-        //obtain the embedded page object (either directly injected or get via page class from guice)
+        //obtain the embedded page object (either directly injected or getValue via page class from guice)
         Object embedded = embed;
         if (null != embedClass)
             embedded = context.getInjector().getInstance(Key.get(assembly.getPageClassByName(embedClass), Page.class));
 
-        //get its component object tree (i.e. the PageHandler which renders it)
+        //getValue its component object tree (i.e. the PageHandler which renders it)
         String uri = assembly.resolvePageURI(embedded);
         PageHandler embeddedPageHandler = assembly.getPage(uri);
 
@@ -112,7 +112,7 @@ public class Viewport implements Renderable, AttributesInjectable {
         //render viewport contents
         ComponentSupport.renderMultiple(proxyContext, embeddedContent);
 
-        //get "watched" bindings and write them into a viewport property (using js)
+        //getValue "watched" bindings and write them into a viewport property (using js)
         writer.writeToOnLoad("document.getElementById(\"");
         writer.writeToOnLoad(id);
         writer.writeToOnLoad("\").bindings=new Array(\"");

@@ -70,10 +70,10 @@ public class TemplatingFilter {
         response.setContentType("text/html");
 
 
-        //get event id and dispatch with the appropriate page object
+        //getValue event id and dispatch with the appropriate page object
         Object forward = handler.handleRequest(request, response, assembly.getInjector(), page, uriPart);
 
-        //do forward if necessary (really a client-side redirect)
+        //do forward if necessary (maybe a client-side redirect)
         if (null != forward)
             PageRedirector.forwardOrRedirect(forward, response, request, assembly);
 

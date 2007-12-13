@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
  * Created with IntelliJ IDEA.
  * On: 25/08/2007
  *
- * We need to do all kinds of hacks to get DWR to behave under the covers.
+ * We need to do all kinds of hacks to getValue DWR to behave under the covers.
  * Here we are substituting the servlet path with a dwr-friendly expectation and
  * rewriting pathinfo to ignore the /dwr prefix.
  *
@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
  * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
+@SuppressWarnings("deprecation")
 class DwrRequestWrapper extends HttpServletRequestWrapper {
     private final String contextualUri;
 

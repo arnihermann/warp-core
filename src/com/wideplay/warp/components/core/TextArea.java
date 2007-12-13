@@ -7,6 +7,7 @@ import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.rendering.RenderingContext;
 import com.wideplay.warp.util.beans.BeanUtils;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -26,14 +27,15 @@ public class TextArea implements Renderable, AttributesInjectable {
     private String bind;
 
     public void render(RenderingContext context, List<? extends ComponentHandler> nestedComponents) {
-        Object[] attributes = ComponentSupport.getTagAttributesExcept(attribs, "name");
-
         HtmlWriter writer = context.getWriter();
 
         String id = writer.makeIdFor(this);
 
         writer.registerInputBinding(id);
-        writer.elementWithAttrs("textarea", new Object[] { "id", id, "name", bind }, attributes);
+        //TODO please cleanup this horrid mess with proper collections!!
+        writer.element("textarea", ComponentSupport.asArray(Arrays.<Object>asList("id", id, "name", bind),
+                ComponentSupport.getTagAttributesExcept(attribs, "name")));
+        
         writer.writeRaw(BeanUtils.getFromPropertyExpression(bind, context.getContextVars()).toString());
         writer.end("textarea");
     }

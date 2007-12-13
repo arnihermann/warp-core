@@ -26,7 +26,7 @@ public class TextField implements Renderable, AttributesInjectable {
     public void render(RenderingContext context, List<? extends ComponentHandler> nestedComponents) {
         HtmlWriter writer = context.getWriter();
 
-        //read the bound value
+        //read the bound getValue
         Object text = BeanUtils.getFromPropertyExpression(bind, context.getContextVars());
 
         String id = writer.makeIdFor(this);

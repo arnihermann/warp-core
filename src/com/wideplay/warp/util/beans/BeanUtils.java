@@ -5,12 +5,8 @@ import org.mvel.MVEL;
 import org.mvel.PropertyAccessException;
 
 import java.io.Serializable;
-import static java.util.Collections.synchronizedMap;
-import java.util.Map;
-import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Callable;
 
 /**
  * Created with IntelliJ IDEA.
@@ -60,7 +56,7 @@ public class BeanUtils {
      * This method should never be called after setup as it will make the BeanUtils class unsafe to concurrency
      *
      * @param str A name
-     * @param obj A value for the name
+     * @param obj A getValue for the name
      */
     private static void setGlobalBeanContextVariable(String str, Object obj) {
 //        contextVars.put(str, obj);

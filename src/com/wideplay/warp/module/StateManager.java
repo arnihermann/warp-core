@@ -20,11 +20,11 @@ public interface StateManager {
      *
      * <ul>
      *  <li>First try to see if the property exists in the StateManager's cube (in current scope)</li>
-     *  <li>Otherwise load the current value of the property</li>
+     *  <li>Otherwise load the current getValue of the property</li>
      *  <li>If none, obtain a new instance (by type) from guice</li>
      * </ul>
      *
-     * Then either store the new value into the cube, or restore the cube's value (depending on the above)
+     * Then either store the new getValue into the cube, or restore the cube's getValue (depending on the above)
      *
      * @param reflection A reflection of the page to inject
      * @param page The object on whom to manage properties

@@ -5,12 +5,10 @@ import com.google.inject.Module;
 import com.wideplay.warp.ShutdownListener;
 import com.wideplay.warp.StartupListener;
 import com.wideplay.warp.Warp;
+import com.wideplay.warp.rendering.templating.HtmlElementFilter;
 import com.wideplay.warp.module.WarpConfiguration;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,10 +16,11 @@ import java.util.List;
  *
  * @author Dhanji R. Prasanna (dhanji at gmail com)
  */
-class WarpConfigurerImpl implements Warp, WarpConfiguration {
+class WarpConfigurerImpl implements Warp, WarpConfiguration, Warp.HeaderFiltersBuilder {
     private final List<Module> guiceModules = new LinkedList<Module>();
     private final List<Key<? extends StartupListener>> startupListeners = new LinkedList<Key<? extends StartupListener>>();
     private final List<Key<? extends ShutdownListener>> shutdownListeners = new LinkedList<Key<? extends ShutdownListener>>();
+    private final List<Key<? extends HtmlElementFilter>> headerFilters = new ArrayList<Key<? extends HtmlElementFilter>>();
 
     //configurable options
     private String urlEncodingScheme = "UTF-8";
@@ -71,5 +70,23 @@ class WarpConfigurerImpl implements Warp, WarpConfiguration {
 
     public List<Key<? extends ShutdownListener>> getShutdownListeners() {
         return shutdownListeners;
+    }
+
+    public HeaderFiltersBuilder headers() {
+        return this;
+    }
+
+    public List<Key<? extends HtmlElementFilter>> getHeaderFilters() {
+        return headerFilters;
+    }
+
+    public HeaderFiltersBuilder filter(Class<? extends HtmlElementFilter> filter) {
+        return filter(Key.get(filter));
+    }
+
+    public HeaderFiltersBuilder filter(Key<? extends HtmlElementFilter> filter) {
+        headerFilters.add(filter);
+
+        return this;
     }
 }

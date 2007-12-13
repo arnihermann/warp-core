@@ -1,5 +1,8 @@
 package com.wideplay.warp.module;
 
+import com.wideplay.warp.rendering.templating.HtmlElementFilter;
+import com.google.inject.Key;
+
 /**
  * Created by IntelliJ IDEA.
  * User: dhanji

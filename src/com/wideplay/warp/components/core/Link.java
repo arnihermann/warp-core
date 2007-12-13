@@ -11,6 +11,7 @@ import com.wideplay.warp.rendering.RenderingContext;
 import com.wideplay.warp.rendering.ScriptEvents;
 import com.wideplay.warp.util.TextTools;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -86,7 +87,7 @@ public class Link implements Renderable, AttributesInjectable {
         //manage event topics via the internal conversation (tracker of user's behavior across requests)
         int topicId = 0;
         if (null != topic) {
-            //get topic value from page
+            //getValue topic getValue from page
             final Object topicValue = topic; //BeanUtils.getFromPropertyExpression(topic, page);
             topicId = topicValue.hashCode();
 
@@ -94,7 +95,12 @@ public class Link implements Renderable, AttributesInjectable {
             conversation.remember(topicValue);
         }
 
-        writer.elementWithAttrs("a", new Object[] { "id", id, "href", "#"}, ComponentSupport.getTagAttributesExcept(attribs, "id", "href", "onclick"));
+        
+        //TODO CLEANUP THIS MESS TO USE COLLECTIONS!        
+        writer.element("a", ComponentSupport.asArray(
+                Arrays.<Object>asList("id", id, "href", "#"), ComponentSupport.getTagAttributesExcept(attribs, "id", "href", "onclick"))
+                .toArray()
+        );
 
         //register event publication
         if (null != viewports)

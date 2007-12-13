@@ -21,11 +21,11 @@ import java.io.IOException;
  * @since 1.0
  */
 public class WarpFilter implements Filter {
-    private TemplatingFilter templatingFilter;
-    private WarpModuleAssembly assembly;
-    private DwrWarpAdapter dwrWarpAdapter;
+    private volatile TemplatingFilter templatingFilter;
+    private volatile WarpModuleAssembly assembly;
+    private final DwrWarpAdapter dwrWarpAdapter = new DwrWarpAdapter();
 
-    private ServletContext servletContext;
+    private volatile ServletContext servletContext;
 
     private static final String WARP_MODULE = "warp.module";
     private static final String WARP_PACKAGE = "warp.package";
@@ -41,7 +41,6 @@ public class WarpFilter implements Filter {
 
         assembly = null;
         templatingFilter = null;
-        dwrWarpAdapter = null;
         servletContext = null;
     }
 
@@ -89,7 +88,7 @@ public class WarpFilter implements Filter {
                 modulePackage = moduleClass.getPackage().getName();
             moduleRootDir = moduleClass.getResource(String.format("%s.class", moduleClass.getSimpleName())).toString();
 
-            //strip ModuleName.class from module root dir url to get the directory name
+            //strip ModuleName.class from module root dir url to getValue the directory name
             moduleRootDir = TextTools.extractModuleDirFromFqn(moduleRootDir, moduleClass);
 
             log.info(String.format("Using module package: %s ; server module root dir: %s", modulePackage, moduleRootDir));
@@ -108,7 +107,6 @@ public class WarpFilter implements Filter {
             templatingFilter = new TemplatingFilter(assembly, filterConfig.getServletContext());
 
             //start dwr services
-            dwrWarpAdapter = new DwrWarpAdapter();
             dwrWarpAdapter.start(filterConfig.getServletContext(), assembly.getInjector());
 
             //initialize user services

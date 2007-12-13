@@ -19,7 +19,7 @@
     </target>
 
     <target name="build" depends="init" description="Compiles warp core and demo sources into binary class files">
-        <javac sourcepath="" srcdir="${src}" destdir="${build}">
+        <javac sourcepath="" srcdir="${src}" destdir="${build}" debug="on">
             <include name="**/*.java"/>
             <exclude name="com/wideplay/warp/example/**"/>
 

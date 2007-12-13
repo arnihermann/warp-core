@@ -21,30 +21,38 @@ import java.util.List;
 public class Repeater implements Renderable {
     private Object items;
     private String var;
+    private String pageVar;
 
     public void render(RenderingContext context, List<? extends ComponentHandler> nestedComponents) {
 
         //obtain the bound object
         Object itemsObject = items;
+        try {
+            if (null != pageVar)
+                context.getContextVars().put(pageVar, context.getPage());
 
-        //see if it is an iterable
-        if (itemsObject instanceof Iterable)
-            for (Object item : (Iterable) itemsObject) {
-                context.getContextVars().put(var, item);
-                ComponentSupport.renderMultiple(context, nestedComponents);
-            }
+            //see if it is an iterable
+            if (itemsObject instanceof Iterable)
+                for (Object item : (Iterable) itemsObject) {
+                    context.getContextVars().put(var, item);
+                    ComponentSupport.renderMultiple(context, nestedComponents);
+                }
 
-        else if (itemsObject instanceof Object[])
-            //must be an array
-            for (Object item : (Object[])itemsObject) {
-                context.getContextVars().put(var, item);
-                ComponentSupport.renderMultiple(context, nestedComponents);
-            }
-        else
-            throw new PageRenderException("Repeater can only repeat over instances of Iterables or arrays: " + items);
+            else if (itemsObject instanceof Object[])
+                //must be an array
+                for (Object item : (Object[])itemsObject) {
+                    context.getContextVars().put(var, item);
+                    ComponentSupport.renderMultiple(context, nestedComponents);
+                }
+            else
+                throw new PageRenderException("Repeater can only repeat over instances of Iterables or arrays: " + items);
+        } finally {
+            //clear the repeater context var
+            context.getContextVars().remove(var);
 
-        //clear the repeater context var
-        context.getContextVars().remove(var);
+            if (null != pageVar)
+                context.getContextVars().remove(pageVar);
+        }
     }
 
     public void setItems(Object items) {
@@ -53,5 +61,9 @@ public class Repeater implements Renderable {
 
     public void setVar(String var) {
         this.var = var;
+    }
+
+    public void setPageVar(String pageVar) {
+        this.pageVar = pageVar;
     }
 }

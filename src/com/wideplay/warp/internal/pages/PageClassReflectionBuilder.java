@@ -155,7 +155,7 @@ class PageClassReflectionBuilder {
                 setters.put(ReflectUtils.extractPropertyNameFromAccessor(method.getName()), method);
             }
 
-        //add any method starting with "get" and taking no parameter and not returning void
+        //add any method starting with "getValue" and taking no parameter and not returning void
         for (Method method : pageClass.getMethods())
             if (method.getName().startsWith("get") && method.getParameterTypes().length == 0 && !void.class.equals(method.getReturnType())) {
                 //skip special methods

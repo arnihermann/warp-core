@@ -11,10 +11,8 @@ import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.rendering.RenderingContext;
 import com.wideplay.warp.util.beans.BeanUtils;
 
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created with IntelliJ IDEA.
@@ -31,13 +29,15 @@ import java.util.Map;
 @Component
 public class Table implements Renderable, AttributesInjectable {
     private Object items;
-    private String var;
+    private String var = toString(); //by default some garbage non-null name
     private String rowClass;
     private String oddRowClass;
+    private String pageVar;
 
     private final ClassReflectionCache classCache;
-    private Map<String, ComponentHandler> columns;
-    private Map<String, ComponentHandler> customColumns;    //non-property columns
+    private volatile Collection<String> rawColumns;
+    private volatile Map<String, ComponentHandler> columns;
+    private volatile Map<String, ComponentHandler> customColumns;    //non-property columns
 
     private Map<String, Object> attribs;
 
@@ -49,15 +49,85 @@ public class Table implements Renderable, AttributesInjectable {
     public void render(RenderingContext context, List<? extends ComponentHandler> nestedComponents) {
         HtmlWriter writer = context.getWriter();
         String id = writer.makeIdFor(this);
-        writer.elementWithAttrs("table", new Object[] { "id", id }, ComponentSupport.getTagAttributesExcept(attribs, "id"));
+
+
+        //TODO CLEANUP THIS MESS TO USE COLLECTIONS!
+        Collection<?> attributesToRender = ComponentSupport.asArray(Arrays.<Object>asList("id", id),
+                ComponentSupport.getTagAttributesExcept(attribs, "id"));
+        
+        writer.element("table", attributesToRender.toArray());
 
         //obtain the bound object
         Object itemsObject = items;//BeanUtils.getFromPropertyExpression(items, page);
 
-        //build a cache of child columns (if we havent already) TODO validate these "columns" in the template at startup time
+        try {
+            if (null != pageVar)
+                context.getContextVars().put(pageVar, context.getPage());
+
+            //build a cache of child columns (if we havent already) TODO validate these "columns" in the template at startup time
+            prepareAndCacheColumns(nestedComponents);
+
+            //see if it is an iterable
+            if (itemsObject instanceof Iterable) {
+                renderIterable(context, writer, itemsObject);
+
+            } else {    //is an array
+                renderArray(context, writer, itemsObject);
+            }
+
+        } finally {
+            //clear context page variable if set
+            if (null != pageVar)
+                context.getContextVars().remove(pageVar);
+        }
+        writer.end("table");
+    }
+
+    private void renderArray(RenderingContext context, HtmlWriter writer, Object itemsObject) {
+        Map<String, String> propertiesAndLabels = null;
+        Object[] array = ((Object[]) itemsObject);
+
+        for (int i = 0 ; i < array.length; i++) {
+            Object item = array[i];
+
+            if (0 == i) {
+                propertiesAndLabels = classCache.getPropertyLabelMap(item);
+                writeHeader(writer, propertiesAndLabels);
+                writer.element("tbody");
+            }
+
+            writeRow(item, writer, propertiesAndLabels, context, i % 2 == 0);
+        }
+        writer.end("tbody");
+    }
+
+    private void renderIterable(RenderingContext context, HtmlWriter writer, Object itemsObject) {
+        Map<String, String> propertiesAndLabels = null;
+        Iterator iter = ((Iterable) itemsObject).iterator();
+
+        int rowCtr = 0;
+        while(iter.hasNext()) {
+            Object item = iter.next();
+
+            if (0 == rowCtr) {
+                //getValue the resource bundle associated with this model object (if any)
+                propertiesAndLabels = classCache.getPropertyLabelMap(item);
+                writeHeader(writer, propertiesAndLabels);
+                writer.element("tbody");
+            }
+
+            writeRow(item, writer, propertiesAndLabels, context, rowCtr % 2 == 0);
+            rowCtr++;
+        }
+
+        writer.end("tbody");
+    }
+
+    private void prepareAndCacheColumns(List<? extends ComponentHandler> nestedComponents) {
         if (null == columns) {
             this.columns = new LinkedHashMap<String, ComponentHandler>();
             this.customColumns = new LinkedHashMap<String, ComponentHandler>();
+
 
             //only populate the cache if there are child components
             if (null != nestedComponents)
@@ -73,57 +143,35 @@ public class Table implements Renderable, AttributesInjectable {
                         this.columns.put(propertyDescriptor.getValue(), columnHandler);
                     }
                 }
+
+
+
         }
-
-        //see if it is an iterable
-        if (itemsObject instanceof Iterable) {
-            Map<String, String> propertiesAndLabels = null;
-            Iterator iter = ((Iterable) itemsObject).iterator();
-
-            int rowCtr = 0;
-            while(iter.hasNext()) {
-                Object item = iter.next();
-
-                if (0 == rowCtr) {
-                    //get the resource bundle associated with this model object (if any)
-                    propertiesAndLabels = classCache.getPropertyLabelMap(item);
-                    writeHeader(writer, propertiesAndLabels);
-                    writer.element("tbody");
-                }
-
-                writeRow(item, writer, propertiesAndLabels, context, rowCtr % 2 == 0);
-                rowCtr++;
-            }
-
-            writer.end("tbody");
-
-        } else {    //is an array
-            Map<String, String> propertiesAndLabels = null;
-            Object[] array = ((Object[]) itemsObject);
-
-            for (int i = 0 ; i < array.length; i++) {
-                Object item = array[i];
-
-                if (0 == i) {
-                    propertiesAndLabels = classCache.getPropertyLabelMap(item);
-                    writeHeader(writer, propertiesAndLabels);
-                    writer.element("tbody");
-                }
-
-                writeRow(item, writer, propertiesAndLabels, context, i % 2 == 0);
-            }
-            writer.end("tbody");
-        }
-        writer.end("table");
     }
 
     private void writeHeader(HtmlWriter writer, Map<String, String> propertiesAndLabels) {
+        //populate the raw column cache if necessary
+        if (null == rawColumns) {
+            rawColumns = new CopyOnWriteArrayList<String>();
+            rawColumns.addAll(propertiesAndLabels.keySet());
+            rawColumns.removeAll(columns.keySet());
+        }
+
         //write out header
         writer.element("thead");
         writer.element("tr");
-        for (String label : propertiesAndLabels.values()) {
+
+        //render any raw property columns (i.e. those that have no column override)
+        for (String prop : rawColumns) {
             writer.element("th");
-            writer.writeRaw(label);
+            writer.writeRaw(propertiesAndLabels.get(prop));
+            writer.end("th");
+        }
+
+        //render any overridden columns
+        for (String prop : columns.keySet()) {
+            writer.element("th");
+            writer.writeRaw(propertiesAndLabels.get(prop));
             writer.end("th");
         }
 
@@ -149,7 +197,24 @@ public class Table implements Renderable, AttributesInjectable {
         //place the item in the context
         context.getContextVars().put(var, item);
 
-        for (String property : propertiesAndLabels.keySet()) {
+
+        //render any raw columns
+        for (String property : rawColumns) {
+            writer.element("td");
+            
+            //stringize the property getValue only if it is not null (prevent NPE), also format the string into an expr
+            Object value = BeanUtils.getFromPropertyExpression(String.format("%s.%s", var, property), context.getContextVars());
+            if (null != value)
+                writer.writeRaw(value.toString());
+            else
+                writer.writeRaw(null);
+
+            writer.end("td");
+        }
+
+
+        //render any property-overridden columns
+        for (String property : columns.keySet()) {
             writer.element("td");
 
             //see if this particular property should be rendered by an overriding column component
@@ -159,7 +224,7 @@ public class Table implements Renderable, AttributesInjectable {
                 child.handleRender(context);
 
             } else {    //write normally
-                //stringize the property value only if it is not null (prevent NPE), also format the string into an expr
+                //stringize the property getValue only if it is not null (prevent NPE), also format the string into an expr
                 Object value = BeanUtils.getFromPropertyExpression(String.format("%s.%s", var, property), context.getContextVars());
                 if (null != value)
                     writer.writeRaw(value.toString());
@@ -170,7 +235,9 @@ public class Table implements Renderable, AttributesInjectable {
             writer.end("td");
         }
 
-        //render non-property columns
+
+
+        //finally render non-property (i.e. custom columns)
         for (ComponentHandler customCol : customColumns.values()) {
             //render using column component override (children)
             writer.element("td");

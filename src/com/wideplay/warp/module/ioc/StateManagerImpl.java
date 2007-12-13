@@ -33,9 +33,9 @@ class StateManagerImpl implements StateManager {
      * Performs a sequence of state management operations at the *beginning* of a request on a given page:
      *
      *  - looks up all @Managed properties of the page instance and checks if they are available from a previous request
-     *  - if none, checks if the user/instance itself has created a value (perhaps in the ctor?)
-     *  - if not, try to obtain a bound value of the field from the guice injector
-     *  - If necessary, place the value into the page and back into the cube
+     *  - if none, checks if the user/instance itself has created a getValue (perhaps in the ctor?)
+     *  - if not, try to obtain a bound getValue of the field from the guice injector
+     *  - If necessary, place the getValue into the page and back into the cube
      *
      * @param reflection Reflection cache of the page class to inject @Managed properties of
      * @param page The page object instance
@@ -69,14 +69,14 @@ class StateManagerImpl implements StateManager {
                     //got it from injector, place it into the page object
                     ReflectUtils.writeField(field, page, value);
 
-                } else  //use the current page value
+                } else  //use the current page getValue
                     value = currentValue;
 
-                //store the new value (either created or obtained from page) in the cube
+                //store the new getValue (either created or obtained from page) in the cube
                 pagesAndProperties.put(pageClass, fieldName, value);
 
             } else {
-                //place cube's value into the page object
+                //place cube's getValue into the page object
                 ReflectUtils.writeField(field, page, value);
             }
         }
@@ -86,8 +86,8 @@ class StateManagerImpl implements StateManager {
      * This method does the complement of injectManaged(). It loads @Managed properties from the given page
      * object and stores them into the cube so injectManaged() can obtain them in subsequent requests.
      *
-     * If there is no value in the field (has been set to null), clears the corresponding slot in the cube, so
-     * a new value is obtained the next request (if @Managed is autoCreate=true has been set).
+     * If there is no getValue in the field (has been set to null), clears the corresponding slot in the cube, so
+     * a new getValue is obtained the next request (if @Managed is autoCreate=true has been set).
      *
      * @param reflection Reflection cache of the page class to read @Managed properties of
      * @param page The page object instance

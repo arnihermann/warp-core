@@ -39,7 +39,7 @@ public class Edit implements Renderable {
         //read bean (to edit) out of page
         Object theBean = BeanUtils.getFromPropertyExpression(object, context.getContextVars());
 
-        //if the bean value is null, then do nothing
+        //if the bean getValue is null, then do nothing
         if (null == theBean)
             return;
 
