@@ -4,7 +4,7 @@ import com.google.inject.Binding;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.wideplay.warp.module.componentry.PropertyDescriptor;
-import com.wideplay.warp.util.beans.BeanUtils;
+import com.wideplay.warp.module.ioc.el.Expressions;
 import com.wideplay.warp.util.reflect.ReflectUtils;
 
 import java.lang.reflect.Constructor;
@@ -31,12 +31,12 @@ class ObjectInjector {
             Object value;
 
             if (propertyDescriptor.isExpression())
-                value =  BeanUtils.getFromPropertyExpression(propertyDescriptor.getValue(), source);
+                value =  Expressions.evaluate(propertyDescriptor.getValue(), source);
             else
                 value = propertyDescriptor.getValue();
 
             //set the property on the component object
-            BeanUtils.setProperty(propertyDescriptor.getName(), target, value);
+            Expressions.write(propertyDescriptor.getName(), target, value);
         }
     }
 

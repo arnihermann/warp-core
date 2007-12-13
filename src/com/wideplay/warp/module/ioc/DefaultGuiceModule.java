@@ -55,8 +55,6 @@ class DefaultGuiceModule extends AbstractModule {
         //bind request binder that uses ognl to bind request parameters to a page
         bind(RequestBinder.class).to(MvelRequestBinder.class);
 
-        //bind dwr module
-        install(new DwrGuiceModule());
     }
 
     //invoked by parent to store class proxy classes

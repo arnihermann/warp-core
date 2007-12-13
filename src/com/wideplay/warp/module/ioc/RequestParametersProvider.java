@@ -8,12 +8,11 @@ import java.util.Map;
  * Created with IntelliJ IDEA.
  * On: 25/03/2007
  *
- * TODO why is this class final (it is package local anyway)?
  *
  * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
-final class RequestParametersProvider implements Provider<Map<String, String[]>> {
+class RequestParametersProvider implements Provider<Map<String, String[]>> {
 
     @SuppressWarnings("unchecked")
     public Map<String, String[]> get() {

@@ -60,9 +60,6 @@ class WarpModuleAssemblyBuilder {
         ComponentRegistry componentRegistry = ComponentBuilders.newComponentRegistry();
         internalServicesModule.setComponentRegistry(componentRegistry);
 
-        //set servlet context on Bean expressions (doesnt work on < servlet 2.5 so forget it!)
-//        BeanUtils.setGlobalBeanContextVariable("contextPath", context.getContextPath());
-
         //build page reflections and assemble them into the module
         Map<String, PageHandler> pages = new LinkedHashMap<String, PageHandler>();
         Map<String, Object> pagesByTemplate = new HashMap<String, Object>();

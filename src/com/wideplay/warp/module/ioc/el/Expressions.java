@@ -1,4 +1,4 @@
-package com.wideplay.warp.util.beans;
+package com.wideplay.warp.module.ioc.el;
 
 import com.wideplay.warp.util.TextTools;
 import org.mvel.MVEL;
@@ -15,14 +15,14 @@ import java.util.concurrent.ConcurrentMap;
  * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
-public class BeanUtils {
+public class Expressions {
 
     public static final Object[] EMPTY_ARRAY = new Object[] { };
 
     //lets do some caching of expressions to see if we cant go a bit faster
     private static final ConcurrentMap<String, Serializable> compiledExpressions = new ConcurrentHashMap<String, Serializable>();
 
-    public static Object getFromPropertyExpression(String expr, Object bean) {
+    public static Object evaluate(String expr, Object bean) {
         Serializable compiled = compiledExpressions.get(expr);
 
         //compile and store the expr (warms up the expression cache)
@@ -51,23 +51,13 @@ public class BeanUtils {
         }
     }
 
-    /**
-     *
-     * This method should never be called after setup as it will make the BeanUtils class unsafe to concurrency
-     *
-     * @param str A name
-     * @param obj A getValue for the name
-     */
-    private static void setGlobalBeanContextVariable(String str, Object obj) {
-//        contextVars.put(str, obj);
-    }
 
-    public static void setProperty(String expr, Object bean, Object value) {
+    public static void write(String expr, Object bean, Object value) {
         //lets use mvel to store an expression
         MVEL.setProperty(bean, expr, value);
     }
 
-    public static Object getProperty(String property, Object contextObject) {
+    public static Object read(String property, Object contextObject) {
         return MVEL.getProperty(property, contextObject);
     }
 }

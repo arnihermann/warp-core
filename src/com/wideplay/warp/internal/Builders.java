@@ -3,7 +3,6 @@ package com.wideplay.warp.internal;
 import com.wideplay.warp.WarpModule;
 import com.wideplay.warp.module.WarpModuleAssembly;
 import com.wideplay.warp.module.componentry.ClassReflectionCache;
-import com.wideplay.warp.module.ioc.RemoteEventProxy;
 import com.wideplay.warp.rendering.RequestBinder;
 import com.wideplay.warp.util.reflect.ReflectUtils;
 
@@ -31,7 +30,6 @@ public class Builders {
         Set<String> reserved = new HashSet<String>();
         reserved.add(RequestBinder.EVENT_PARAMETER_NAME);
         reserved.add(RequestBinder.EVENT_TOPIC_PARAMETER_NAME);
-        reserved.add(RemoteEventProxy.WARP_TARGET_PAGE_URI);
 
         return reserved;
     }

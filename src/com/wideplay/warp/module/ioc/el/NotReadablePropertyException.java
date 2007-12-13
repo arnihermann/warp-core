@@ -1,4 +1,4 @@
-package com.wideplay.warp.util.beans;
+package com.wideplay.warp.module.ioc.el;
 
 /**
  * Created with IntelliJ IDEA.

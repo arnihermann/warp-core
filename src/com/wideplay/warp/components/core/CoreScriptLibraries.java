@@ -13,7 +13,6 @@ public enum CoreScriptLibraries implements ScriptLibrary {
 
     DWR_ENGINE("/dwr/engine.js"),
     DWR_UTIL("/dwr/util.js"),
-    DWR_REMOTE_EVENT_PROXY("/dwr/interface/RemoteEventProxy.js"),
     ;
 
     private String libraryURL;

@@ -1,10 +1,11 @@
-package com.wideplay.warp.util.beans;
+package com.wideplay.warp.module.ioc.el;
 
 import org.mvel.MVEL;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
 import java.util.Map;
+
 
 /**
  * Created with IntelliJ IDEA.
@@ -67,14 +68,14 @@ public class BeanUtilsTest {
         context.put("issue", issue);
 //        context.remove("issue");
 
-        assert SUMMARY_1.equals(BeanUtils.getFromPropertyExpression(expr, wrapper)) : "Summary unequal";
+        assert SUMMARY_1.equals(Expressions.evaluate(expr, wrapper)) : "Summary unequal";
         System.out.println("MVEL prefers context variable to bean");
 
         //trying cleared context
         context = new HashMap();
 
         try {
-            BeanUtils.getFromPropertyExpression(expr, wrapper); //MVEL does weird shit -- it remembers context vars
+            Expressions.evaluate(expr, wrapper); //MVEL does weird shit -- it remembers context vars
         } catch(NotReadablePropertyException e) {
             assert true;
         }
@@ -85,7 +86,7 @@ public class BeanUtilsTest {
         //trying null context
         context = null;
         try {
-            assert SUMMARY_1.equals(BeanUtils.getFromPropertyExpression(expr, wrapper)) : ""; //MVEL does weird shit -- it remembers context vars
+            assert SUMMARY_1.equals(Expressions.evaluate(expr, wrapper)) : ""; //MVEL does weird shit -- it remembers context vars
         } catch(NotReadablePropertyException e) {
             assert true;
         }
@@ -94,7 +95,7 @@ public class BeanUtilsTest {
 
         //trying to use the same context but clearing it
         contextStored.clear();
-        assert SUMMARY_1.equals(BeanUtils.getFromPropertyExpression(expr, wrapper)) : "";
+        assert SUMMARY_1.equals(Expressions.evaluate(expr, wrapper)) : "";
     }
 
 

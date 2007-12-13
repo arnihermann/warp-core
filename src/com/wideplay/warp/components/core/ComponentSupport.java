@@ -2,7 +2,7 @@ package com.wideplay.warp.components.core;
 
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.RenderingContext;
-import com.wideplay.warp.util.beans.BeanUtils;
+import com.wideplay.warp.module.ioc.el.Expressions;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,7 +50,7 @@ public class ComponentSupport {
         Object[] attributes = (Object[]) attribs.get(RawText.WARP_RAW_TEXT_PROP_ATTRS);
 
         if (null == attributes)
-            return BeanUtils.EMPTY_ARRAY;
+            return Expressions.EMPTY_ARRAY;
 
         List<Object> targetAttributes = new ArrayList<Object>(attributes.length);
         Collections.addAll(targetAttributes, initialAttrs);

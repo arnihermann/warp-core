@@ -87,7 +87,7 @@ public class Link implements Renderable, AttributesInjectable {
         int topicId = 0;
         if (null != topic) {
             //value topic value from page
-            final Object topicValue = topic; //BeanUtils.getFromPropertyExpression(topic, page);
+            final Object topicValue = topic;
             topicId = topicValue.hashCode();
 
             //store it into the internal conversation for later retrieval if necessary...

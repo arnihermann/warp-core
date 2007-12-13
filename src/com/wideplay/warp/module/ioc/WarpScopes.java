@@ -34,16 +34,6 @@ import javax.servlet.http.HttpSession;
 class WarpScopes {
 
     /**
-     *
-     */
-    public static final Scope DISK = new Scope() {
-
-        public <T> Provider<T> scope(Key<T> key, Provider<T> provider) {
-            return null;  //To change body of implemented methods use File | Settings | File Templates.
-        }
-    };
-
-    /**
      * HTTP servlet request scope.
      *
      * @author crazybob@google.com (Bob Lee), dhanji@gmail.com (Dhanji R. Prasanna)

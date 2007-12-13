@@ -7,7 +7,7 @@ import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.rendering.RenderingContext;
 import com.wideplay.warp.util.Token;
-import com.wideplay.warp.util.beans.BeanUtils;
+import com.wideplay.warp.module.ioc.el.Expressions;
 
 import java.util.List;
 import java.util.Map;
@@ -68,7 +68,7 @@ public class RawText implements Renderable, AttributesInjectable {
         if (null != tokens) {
             for (Token token : tokens) {
                 if (token.isExpression()) {
-                    Object value = BeanUtils.getFromPropertyExpression(token.getToken(), context.getContextVars());
+                    Object value = Expressions.evaluate(token.getToken(), context.getContextVars());
 
                     //stringize the property only if it is not null
                     String outValue = null;

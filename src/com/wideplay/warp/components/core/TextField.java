@@ -3,10 +3,10 @@ package com.wideplay.warp.components.core;
 import com.wideplay.warp.annotations.Component;
 import com.wideplay.warp.components.AttributesInjectable;
 import com.wideplay.warp.module.componentry.Renderable;
+import com.wideplay.warp.module.ioc.el.Expressions;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.rendering.RenderingContext;
-import com.wideplay.warp.util.beans.BeanUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -27,7 +27,7 @@ public class TextField implements Renderable, AttributesInjectable {
         HtmlWriter writer = context.getWriter();
 
         //read the bound getValue
-        Object text = BeanUtils.getFromPropertyExpression(bind, context.getContextVars());
+        Object text = Expressions.evaluate(bind, context.getContextVars());
 
         String id = writer.makeIdFor(this);
         writer.registerInputBinding(id);

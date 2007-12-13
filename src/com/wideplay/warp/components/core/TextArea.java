@@ -2,10 +2,10 @@ package com.wideplay.warp.components.core;
 
 import com.wideplay.warp.components.AttributesInjectable;
 import com.wideplay.warp.module.componentry.Renderable;
+import com.wideplay.warp.module.ioc.el.Expressions;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.rendering.RenderingContext;
-import com.wideplay.warp.util.beans.BeanUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -33,7 +33,7 @@ public class TextArea implements Renderable, AttributesInjectable {
         writer.registerInputBinding(id);
         writer.elementWithAttrs("textarea",
                 ComponentSupport.getTagAttributesExcept(new Object[] { "id", id, "name", bind }, attribs, "name"));
-        writer.writeRaw(BeanUtils.getFromPropertyExpression(bind, context.getContextVars()).toString());
+        writer.writeRaw(Expressions.evaluate(bind, context.getContextVars()).toString());
         writer.end("textarea");
     }
 

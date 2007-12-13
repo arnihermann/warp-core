@@ -5,11 +5,11 @@ import com.wideplay.warp.annotations.Component;
 import com.wideplay.warp.components.AttributesInjectable;
 import static com.wideplay.warp.components.core.ComponentSupport.getTagAttributesExcept;
 import com.wideplay.warp.module.componentry.Renderable;
+import com.wideplay.warp.module.ioc.el.Expressions;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.rendering.RenderingContext;
 import com.wideplay.warp.rendering.RequestBinder;
-import com.wideplay.warp.util.beans.BeanUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -52,13 +52,13 @@ public class SelectBox implements Renderable, AttributesInjectable {
 
             writer.elementWithAttrs("select", getTagAttributesExcept(new Object[] { "id", id, "name", bindingExpression },
                     injectableAttributes, "name"));    //bind as expression
-            boundItem = BeanUtils.getFromPropertyExpression(bind, context.getContextVars());
+            boundItem = Expressions.evaluate(bind, context.getContextVars());
         }
         else
-            writer.element("select", getTagAttributesExcept(BeanUtils.EMPTY_ARRAY, injectableAttributes));
+            writer.element("select", getTagAttributesExcept(Expressions.EMPTY_ARRAY, injectableAttributes));
 
         //obtain the bound object (collection or array)
-        Object itemsObject = BeanUtils.getFromPropertyExpression(items, context.getContextVars());
+        Object itemsObject = Expressions.evaluate(items, context.getContextVars());
 
         //see if it is an iterable
         if (itemsObject instanceof Iterable)
@@ -84,7 +84,7 @@ public class SelectBox implements Renderable, AttributesInjectable {
         //resolve label from either set value or use the item itself
         String labelValue = this.label;
         if (null != labelValue)
-            labelValue = (String) BeanUtils.getFromPropertyExpression(this.label, item);
+            labelValue = (String) Expressions.evaluate(this.label, item);
         else
             labelValue = item.toString();
 

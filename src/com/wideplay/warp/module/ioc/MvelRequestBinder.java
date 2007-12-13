@@ -3,7 +3,7 @@ package com.wideplay.warp.module.ioc;
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestParameters;
 import com.wideplay.warp.rendering.RequestBinder;
-import com.wideplay.warp.util.beans.BeanUtils;
+import com.wideplay.warp.module.ioc.el.Expressions;
 
 import java.util.Collection;
 import java.util.Map;
@@ -76,7 +76,7 @@ class MvelRequestBinder implements RequestBinder {
         final Integer hashSelected = parseInt(value);
 
         //discard 1st delimiter, 2nd element is collection path
-        Object collection = BeanUtils.getFromPropertyExpression(collectionBindExpression[1], bean);
+        Object collection = Expressions.evaluate(collectionBindExpression[1], bean);
 
         if (collection instanceof Collection)
             bindFromJUCollection(collectionBindExpression, bean, hashSelected, paramName);
@@ -87,17 +87,17 @@ class MvelRequestBinder implements RequestBinder {
     }
 
     private void bindFromArray(String[] collectionBindExpression, Object bean, final Integer hashSelected, String paramName) {
-        Object[] col = (Object[]) BeanUtils.getFromPropertyExpression(collectionBindExpression[1], bean);
+        Object[] col = (Object[]) Expressions.evaluate(collectionBindExpression[1], bean);
 
         //selection is looked up by hashcode && locate the object now
         Object selected = selectClosureOverArray(col, hashSelected);
 
         //if everything's ok, 3rd element is target property path
-        BeanUtils.setProperty(collectionBindExpression[2], bean, selected);
+        Expressions.write(collectionBindExpression[2], bean, selected);
     }
 
     private void bindFromJUCollection(String[] collectionBindExpression, Object bean, final Integer hashSelected, String paramName) {
-        Collection<?> col = (Collection<?>) BeanUtils.getFromPropertyExpression(collectionBindExpression[1], bean);
+        Collection<?> col = (Collection<?>) Expressions.evaluate(collectionBindExpression[1], bean);
 
         //selection is looked up by hashcode
         if (!col.contains(new Object() {
@@ -118,7 +118,7 @@ class MvelRequestBinder implements RequestBinder {
         Object selected = selectClosureOverCollection(col, hashSelected);
 
         //if everything's ok, 3rd element is target property path
-        BeanUtils.setProperty(collectionBindExpression[2], bean, selected);
+        Expressions.write(collectionBindExpression[2], bean, selected);
     }
 
     private Object selectClosureOverCollection(Collection<?> col, Integer hashSelected) {
@@ -150,6 +150,6 @@ class MvelRequestBinder implements RequestBinder {
     }
 
     private void bindAsProperty(String paramName, String value, Object bean) {
-        BeanUtils.setProperty(paramName, bean, value);
+        Expressions.write(paramName, bean, value);
     }
 }

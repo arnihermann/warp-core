@@ -2,7 +2,6 @@ package com.wideplay.warp.internal.pages;
 
 import com.wideplay.warp.components.core.CoreScriptLibraries;
 import static com.wideplay.warp.internal.pages.JsSupportUtils.*;
-import com.wideplay.warp.module.ioc.RemoteEventProxy;
 import com.wideplay.warp.rendering.*;
 
 import java.util.LinkedHashSet;
@@ -43,14 +42,12 @@ class JsFrameHtmlWriter extends AbstractHtmlWriter {
     public void registerAsyncEvent(String id, ScriptEvents click, String encodedEvent, int topicId, String[] viewports) {
 
         //setup dwr engine and interface
-        registerScriptLibrary(CoreScriptLibraries.DWR_REMOTE_EVENT_PROXY);
         registerScriptLibrary(CoreScriptLibraries.DWR_ENGINE);
         registerScriptLibrary(CoreScriptLibraries.DWR_UTIL);
 
         //write event trigger function
         onFrameLoadWriter.append(String.format(getScriptTemplate(DWR_EVENT_DISPATCH_FUNC),
                 id,
-                viewports[0], RemoteEventProxy.WARP_TARGET_PAGE_URI,
 
                 RequestBinder.EVENT_PARAMETER_NAME, encodedEvent,
                 RequestBinder.EVENT_TOPIC_PARAMETER_NAME, topicId,

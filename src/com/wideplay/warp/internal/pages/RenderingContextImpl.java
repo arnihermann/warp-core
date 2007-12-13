@@ -4,7 +4,7 @@ import com.google.inject.Injector;
 import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.rendering.RenderingContext;
-import com.wideplay.warp.util.beans.BeanUtils;
+import com.wideplay.warp.module.ioc.el.Expressions;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -64,7 +64,7 @@ class RenderingContextImpl implements RenderingContext {
         public Object get(Object key) {
             Object value = super.get(key);
 
-            return (null == value) ? BeanUtils.getProperty((String) key, contextObject) : value;
+            return (null == value) ? Expressions.read((String) key, contextObject) : value;
         }
 
         @Override

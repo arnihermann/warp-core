@@ -6,10 +6,10 @@ import com.wideplay.warp.components.AttributesInjectable;
 import com.wideplay.warp.module.componentry.ClassReflectionCache;
 import com.wideplay.warp.module.componentry.PropertyDescriptor;
 import com.wideplay.warp.module.componentry.Renderable;
+import com.wideplay.warp.module.ioc.el.Expressions;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.rendering.RenderingContext;
-import com.wideplay.warp.util.beans.BeanUtils;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -52,7 +52,7 @@ public class Table implements Renderable, AttributesInjectable {
         writer.elementWithAttrs("table", ComponentSupport.getTagAttributesExcept(new Object[] { "id", id }, attribs, "id"));
 
         //obtain the bound object
-        Object itemsObject = items;//BeanUtils.getFromPropertyExpression(items, page);
+        Object itemsObject = items;
 
         try {
             if (null != pageVar)
@@ -197,7 +197,7 @@ public class Table implements Renderable, AttributesInjectable {
             writer.element("td");
             
             //stringize the property value only if it is not null (prevent NPE), also format the string into an expr
-            Object value = BeanUtils.getFromPropertyExpression(String.format("%s.%s", var, property), context.getContextVars());
+            Object value = Expressions.evaluate(String.format("%s.%s", var, property), context.getContextVars());
             if (null != value)
                 writer.writeRaw(value.toString());
             else
@@ -219,7 +219,7 @@ public class Table implements Renderable, AttributesInjectable {
 
             } else {    //write normally
                 //stringize the property value only if it is not null (prevent NPE), also format the string into an expr
-                Object value = BeanUtils.getFromPropertyExpression(String.format("%s.%s", var, property), context.getContextVars());
+                Object value = Expressions.evaluate(String.format("%s.%s", var, property), context.getContextVars());
                 if (null != value)
                     writer.writeRaw(value.toString());
                 else

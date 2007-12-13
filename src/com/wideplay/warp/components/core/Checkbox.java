@@ -7,7 +7,7 @@ import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.rendering.RenderingContext;
 import com.wideplay.warp.rendering.ScriptEvents;
 import com.wideplay.warp.util.TextTools;
-import com.wideplay.warp.util.beans.BeanUtils;
+import com.wideplay.warp.module.ioc.el.Expressions;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ public class Checkbox implements Renderable {
         boolean booleanValue=false;
 
         if (null != bind) {
-            Object objValue = BeanUtils.getFromPropertyExpression(bind, context.getContextVars());
+            Object objValue = Expressions.evaluate(bind, context.getContextVars());
 
             if(null != objValue) {
                 if (objValue instanceof Boolean)

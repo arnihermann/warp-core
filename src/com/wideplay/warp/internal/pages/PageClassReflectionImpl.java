@@ -4,7 +4,7 @@ import com.google.inject.Key;
 import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.module.pages.event.EventDispatcher;
 import com.wideplay.warp.module.pages.event.EventHandlerDelegate;
-import com.wideplay.warp.util.beans.BeanUtils;
+import com.wideplay.warp.module.ioc.el.Expressions;
 import com.wideplay.warp.util.reflect.FieldDescriptor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -58,12 +58,12 @@ class PageClassReflectionImpl implements PageClassReflection {
     }
 
     public Object getPropertyValue(Object bean, String name) {
-        return BeanUtils.getFromPropertyExpression(name, bean);
+        return Expressions.evaluate(name, bean);
     }
 
 
     public void setPropertyValue(Object bean, String name, Object value) {
-        BeanUtils.setProperty(name, bean, value);
+        Expressions.write(name, bean, value);
     }
 
     public Class<?> getPageClass() {
