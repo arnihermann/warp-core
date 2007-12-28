@@ -4,6 +4,8 @@ import com.google.inject.Inject;
 import com.wideplay.warp.example.model.MyDVD;
 
 import java.util.List;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,14 +16,22 @@ import java.util.List;
  */
 public class RepeaterDemo {
     private List<MyDVD> beans;
+    private TableDemo tableDemoPage;
 
     //borrow dvd list from the table demo via page-injection
     @Inject
-    private void setup(TableDemo tableDemoPage) {
+    void setup(TableDemo tableDemoPage) {
+        this.tableDemoPage = tableDemoPage;
+
         beans = tableDemoPage.getBeans();
     }
 
     public List<MyDVD> getBeans() {
         return beans;
+    }
+
+    //used in repeater to format movie release dates
+    public String format(Date date) {
+        return tableDemoPage.format(date);
     }
 }

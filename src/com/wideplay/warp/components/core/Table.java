@@ -270,4 +270,8 @@ public class Table implements Renderable, AttributesInjectable {
     public void setVar(String var) {
         this.var = var;
     }
+
+    public void setPageVar(String pageVar) {
+        this.pageVar = pageVar;
+    }
 }

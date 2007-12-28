@@ -7,6 +7,7 @@ import com.wideplay.warp.annotations.URIMapping;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.text.SimpleDateFormat;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,6 +20,7 @@ import java.util.List;
 @Template(name = "TableDemo.html")
 public class TableDemo {
     private List<MyDVD> beans;
+    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mm/dd/yy");
 
 
     public TableDemo() {
@@ -34,5 +36,10 @@ public class TableDemo {
         return beans;
     }
 
+
+    //used in table to format movie release dates
+    public String format(Date date) {
+        return simpleDateFormat.format(date);
+    }
 
 }

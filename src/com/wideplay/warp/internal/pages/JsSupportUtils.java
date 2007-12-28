@@ -15,9 +15,6 @@ import java.util.*;
  * @since 1.0
  */
 class JsSupportUtils {
-    public static final String DWR_EVENT_DISPATCH_FUNC = "dwrEventDispatch.js";
-    private static final Map<String, String> SCRIPTS = Collections.synchronizedMap(new HashMap<String, String>());
-
     static String wrapOnFrameLoadFn(StringBuilder content) {
         //insert content in reverse order at index 0
         content.insert(0, "{");
@@ -50,27 +47,4 @@ class JsSupportUtils {
         return builder.toString();
     }
 
-    static String getScriptTemplate(String name) {
-        String scriptTemplate = SCRIPTS.get(name);
-        if (null == scriptTemplate) {
-            //try to load it
-            try {
-                StringBuilder script = new StringBuilder();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(JsSupportUtils.class.getResourceAsStream(name)));
-
-                while(bufferedReader.ready()) {
-                    script.append(bufferedReader.readLine());
-                }
-
-                //cache it
-                scriptTemplate = script.toString();
-                SCRIPTS.put(name, scriptTemplate);
-
-            } catch (IOException e) {
-                throw new MissingResourceException("Cannot find resource file: " + name, JsSupportUtils.class.getName(), name);
-            }
-        }
-
-        return scriptTemplate;
-    }
 }

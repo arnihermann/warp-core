@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import net.jcip.annotations.NotThreadSafe;
+
 /**
  * Created with IntelliJ IDEA.
  * On: 17/03/2007
@@ -17,17 +19,26 @@ import java.util.Set;
  * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
+@NotThreadSafe
 class JsFrameHtmlWriter implements HtmlWriter {
     private final Set<String> linkedScripts = new LinkedHashSet<String>();
     private final SimpleHtmlWriter simpleHtmlWriter = new SimpleHtmlWriter();
     private final StringBuilder onFrameLoadWriter = new StringBuilder();
-    
     private final String contextPath;
+
+
+    private ContentFilter contentFilter;
 
     @Inject
     public JsFrameHtmlWriter(@Context HttpServletRequest request) {
         this.contextPath = request.getContextPath();
     }
+
+    @Inject(optional = true)
+    public void setContentFilter(ContentFilter contentFilter) {
+        this.contentFilter = contentFilter;
+    }
+
 
     //TODO this may be an expensive operation, maybe add an option to restrict it to the header?
     private static String contextualize(String contextPath, String html) {
@@ -101,13 +112,17 @@ class JsFrameHtmlWriter implements HtmlWriter {
 
     public String getBuffer() {
         //insert the onFrameLoadWriter content in the placeholder
-        final String html = simpleHtmlWriter.getWriter()
-                .toString()
-                .replaceFirst(HtmlWriter.LINKED_SCRIPTS_PLACEHOLDER, com.wideplay.warp.internal.pages.JsSupportUtils.wrapLinkedScripts(linkedScripts, contextPath))
-                .replaceFirst(HtmlWriter.ON_FRAME_LOAD_PLACEHOLDER, com.wideplay.warp.internal.pages.JsSupportUtils.wrapOnFrameLoadFn(onFrameLoadWriter));
+        String html = simpleHtmlWriter.getWriter()
+
+        .toString()
+                .replaceFirst(HtmlWriter.LINKED_SCRIPTS_PLACEHOLDER, JsSupportUtils.wrapLinkedScripts(linkedScripts, contextPath))
+                .replaceFirst(HtmlWriter.ON_FRAME_LOAD_PLACEHOLDER, JsSupportUtils.wrapOnFrameLoadFn(onFrameLoadWriter));
 
         //only contextualize if there is a valid servlet context path!!
-        return TextTools.isEmptyString(contextPath) ? html : JsFrameHtmlWriter.contextualize(contextPath, html);
+        html = TextTools.isEmptyString(contextPath) ? html : JsFrameHtmlWriter.contextualize(contextPath, html);
+
+        //filter html if there is a content filter bound
+        return (null == contentFilter) ? html : contentFilter.filter(html);
     }
 
 }

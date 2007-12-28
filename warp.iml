@@ -97,6 +97,11 @@
           </containerElement>
           <containerElement type="library" level="module">
             <attribute name="method" value="1" />
+            <attribute name="URI" value="/WEB-INF/lib/warp-jcip-annotations.jar" />
+            <url>jar://$MODULE_DIR$/lib/warp-jcip-annotations.jar!/</url>
+          </containerElement>
+          <containerElement type="library" level="module">
+            <attribute name="method" value="1" />
             <attribute name="URI" value="/WEB-INF/lib/xpp3-1.1.4.jar" />
             <url>jar://$MODULE_DIR$/lib/xpp3-1.1.4.jar!/</url>
           </containerElement>
@@ -235,6 +240,15 @@
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/xpp3-1.1.4.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/warp-jcip-annotations.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
