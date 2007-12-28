@@ -1,6 +1,9 @@
 package com.wideplay.warp.internal;
 
-import com.google.inject.*;
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Module;
 import com.wideplay.warp.WarpModule;
 import com.wideplay.warp.annotations.Component;
 import com.wideplay.warp.internal.componentry.ComponentBuilders;

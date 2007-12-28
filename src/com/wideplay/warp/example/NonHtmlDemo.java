@@ -1,11 +1,11 @@
 package com.wideplay.warp.example;
 
+import com.google.inject.Inject;
+import com.wideplay.warp.annotations.Context;
+import com.wideplay.warp.annotations.OnEvent;
 import com.wideplay.warp.annotations.Template;
 import com.wideplay.warp.annotations.URIMapping;
-import com.wideplay.warp.annotations.OnEvent;
-import com.wideplay.warp.annotations.Context;
 import com.wideplay.warp.annotations.event.PostRender;
-import com.google.inject.Inject;
 
 import javax.servlet.http.HttpServletResponse;
 

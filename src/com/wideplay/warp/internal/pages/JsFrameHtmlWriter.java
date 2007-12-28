@@ -1,16 +1,18 @@
 package com.wideplay.warp.internal.pages;
 
-import com.wideplay.warp.components.AttributesInjectable;
-import com.wideplay.warp.rendering.*;
-import com.wideplay.warp.util.TextTools;
-import com.wideplay.warp.annotations.Context;
 import com.google.inject.Inject;
+import com.wideplay.warp.annotations.Context;
+import com.wideplay.warp.components.AttributesInjectable;
+import com.wideplay.warp.rendering.ContentFilter;
+import com.wideplay.warp.rendering.HtmlWriter;
+import com.wideplay.warp.rendering.ScriptEvents;
+import com.wideplay.warp.rendering.ScriptLibrary;
+import com.wideplay.warp.util.TextTools;
+import net.jcip.annotations.NotThreadSafe;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.LinkedHashSet;
 import java.util.Set;
-
-import net.jcip.annotations.NotThreadSafe;
 
 /**
  * Created with IntelliJ IDEA.

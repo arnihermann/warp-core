@@ -1,17 +1,17 @@
 package com.wideplay.warp.internal.pages;
 
-import com.wideplay.warp.rendering.PageHandler;
-import com.wideplay.warp.rendering.ComponentHandler;
-import com.wideplay.warp.rendering.PageRenderException;
-import com.wideplay.warp.module.pages.PageClassReflection;
-import com.wideplay.warp.util.reflect.FieldDescriptor;
-import com.wideplay.warp.annotations.Asset;
 import com.google.inject.Injector;
+import com.wideplay.warp.annotations.Asset;
+import com.wideplay.warp.module.pages.PageClassReflection;
+import com.wideplay.warp.rendering.ComponentHandler;
+import com.wideplay.warp.rendering.PageHandler;
+import com.wideplay.warp.rendering.PageRenderException;
+import com.wideplay.warp.util.reflect.FieldDescriptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Set;
 import java.io.IOException;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.

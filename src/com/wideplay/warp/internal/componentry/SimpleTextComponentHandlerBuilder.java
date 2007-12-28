@@ -1,16 +1,16 @@
 package com.wideplay.warp.internal.componentry;
 
+import com.wideplay.warp.components.core.RawText;
 import com.wideplay.warp.module.ComponentRegistry;
 import com.wideplay.warp.module.componentry.ComponentClassReflection;
 import com.wideplay.warp.module.componentry.PropertyDescriptor;
 import com.wideplay.warp.rendering.ComponentHandler;
-import com.wideplay.warp.components.core.RawText;
 import com.wideplay.warp.util.TextTools;
 
-import java.util.List;
 import java.util.Collections;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.

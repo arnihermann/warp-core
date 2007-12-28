@@ -3,11 +3,11 @@ package com.wideplay.warp.components.core;
 import com.wideplay.warp.annotations.Component;
 import com.wideplay.warp.components.AttributesInjectable;
 import com.wideplay.warp.module.componentry.Renderable;
+import com.wideplay.warp.module.ioc.el.Expressions;
 import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.rendering.RenderingContext;
 import com.wideplay.warp.util.Token;
-import com.wideplay.warp.module.ioc.el.Expressions;
 
 import java.util.List;
 import java.util.Map;

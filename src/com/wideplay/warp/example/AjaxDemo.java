@@ -1,9 +1,9 @@
 package com.wideplay.warp.example;
 
+import com.wideplay.warp.annotations.Asset;
 import org.directwebremoting.annotations.RemoteMethod;
 import org.directwebremoting.annotations.RemoteProxy;
 import org.directwebremoting.guice.GuiceCreator;
-import com.wideplay.warp.annotations.Asset;
 
 /**
  * Created with IntelliJ IDEA.

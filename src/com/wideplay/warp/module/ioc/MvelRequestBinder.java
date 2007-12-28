@@ -2,8 +2,8 @@ package com.wideplay.warp.module.ioc;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestParameters;
-import com.wideplay.warp.rendering.RequestBinder;
 import com.wideplay.warp.module.ioc.el.Expressions;
+import com.wideplay.warp.rendering.RequestBinder;
 
 import java.util.Collection;
 import java.util.Map;

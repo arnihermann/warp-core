@@ -1,9 +1,6 @@
 package com.wideplay.warp.components.core;
 
 import com.google.inject.Inject;
-import com.google.inject.Key;
-import com.google.inject.Provider;
-import com.wideplay.warp.annotations.Context;
 import com.wideplay.warp.components.AttributesInjectable;
 import com.wideplay.warp.module.WarpConfiguration;
 import com.wideplay.warp.module.componentry.Renderable;
@@ -12,7 +9,6 @@ import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.rendering.PageRenderException;
 import com.wideplay.warp.rendering.RenderingContext;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;

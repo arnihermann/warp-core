@@ -1,10 +1,10 @@
 package com.wideplay.warp.internal.pages;
 
 import com.google.inject.Injector;
+import com.wideplay.warp.module.ioc.el.Expressions;
 import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.HtmlWriter;
 import com.wideplay.warp.rendering.RenderingContext;
-import com.wideplay.warp.module.ioc.el.Expressions;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,10 +1,10 @@
 package com.wideplay.warp.internal.pages;
 
 import com.google.inject.Key;
+import com.wideplay.warp.module.ioc.el.Expressions;
 import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.module.pages.event.EventDispatcher;
 import com.wideplay.warp.module.pages.event.EventHandlerDelegate;
-import com.wideplay.warp.module.ioc.el.Expressions;
 import com.wideplay.warp.util.reflect.FieldDescriptor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

@@ -1,13 +1,13 @@
 package com.wideplay.warp.example;
 
-import com.wideplay.warp.example.model.MyDVD;
 import com.wideplay.warp.annotations.Template;
 import com.wideplay.warp.annotations.URIMapping;
+import com.wideplay.warp.example.model.MyDVD;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.text.SimpleDateFormat;
 
 /**
  * Created with IntelliJ IDEA.

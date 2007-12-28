@@ -3,9 +3,8 @@ package com.wideplay.warp.example;
 import com.google.inject.Inject;
 import com.wideplay.warp.example.model.MyDVD;
 
-import java.util.List;
 import java.util.Date;
-import java.text.SimpleDateFormat;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
