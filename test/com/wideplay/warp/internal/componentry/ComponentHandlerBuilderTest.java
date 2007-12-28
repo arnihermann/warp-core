@@ -37,7 +37,7 @@ public class ComponentHandlerBuilderTest {
 
     @Test(dataProvider = "simpleDocument")
     public final void testBuild(Document document) {
-        ComponentHandler handler = new ComponentHandlerBuilder(registry).build(document);
+        ComponentHandler handler = new DomComponentHandlerBuilder(registry).build(document);
 
 //        YUIFrameHtmlWriter writer = new YUIFrameHtmlWriter();
 //        handler.handleRender(writer, Guice.createInjector(), as, new PageInjectDemo());

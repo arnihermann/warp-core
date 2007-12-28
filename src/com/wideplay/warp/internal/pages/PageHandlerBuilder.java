@@ -59,6 +59,20 @@ class PageHandlerBuilder {
         if (null == documentText)
             return;
 
+
+        //check for the explicit presence of a URI mapping or use the conventional name
+        String[] uris = discoverUriMappings(pageClass, template);
+
+        //store different instances of the pagehandler for the given URIs
+        storePagesAtUris(pageClass, pages, pagesByTemplate, documentText, template, uris);
+
+
+        //load and store any bound assets (static resources)
+        if (pageClass.isAnnotationPresent(Asset.class))
+            loadAndStoreAssets(pageClass, pages);
+    }
+
+    private Document parseDom(String template, String documentText) {
         Document document;
         try {
             XPP3Reader reader = new XPP3Reader();
@@ -71,17 +85,7 @@ class PageHandlerBuilder {
         } catch (XmlPullParserException e) {
             throw new WarpConfigurationException("could not parse xhtml template for: " + template + " because of " + e.getMessage(), e);
         }
-
-        //check for the explicit presence of a URI mapping or use the conventional name
-        String[] uris = discoverUriMappings(pageClass, template);
-
-        //store different instances of the pagehandler for the given URIs
-        storePagesAtUris(pageClass, pages, pagesByTemplate, document, uris);
-
-
-        //load and store any bound assets (static resources)
-        if (pageClass.isAnnotationPresent(Asset.class))
-            loadAndStoreAssets(pageClass, pages);
+        return document;
     }
 
     //scans the classpath for assets, then stores them as static resource page handlers bound to specified URIs
@@ -110,19 +114,38 @@ class PageHandlerBuilder {
         }
     }
 
-    private void storePagesAtUris(Class<?> pageClass, Map<String, PageHandler> pages, Map<String, Object> pagesByTemplate, Document document, String[] uris) {
+    private void storePagesAtUris(Class<?> pageClass, Map<String, PageHandler> pages, Map<String, Object> pagesByTemplate,
+                                  String documentText, String template, String[] uris) {
+
+        //should we process this as an xml (i.e. DOM) template?
+        boolean isXmlTemplate = TextTools.isXmlTemplate(template, documentText);
+
+        ComponentHandler rootComponentHandler;
+
+        //parse into dom if appropriate & Build the component tree
+        if (isXmlTemplate)
+            rootComponentHandler = buildComponentHandler(parseDom(template, documentText));
+        else
+            rootComponentHandler = buildComponentHandler(documentText);
+
+
+
         for (String uri : uris) {
+
+
             //check if this is a simple URI first
-            if (isStaticUri(uri))
-                pages.put(uri, new PageHandlerImpl(uri, new PageClassReflectionBuilder(pageClass).build(), 
-                        buildComponentHandler(document)));
+            if (isStaticUri(uri)) {
+                pages.put(uri, new PageHandlerImpl(uri, new PageClassReflectionBuilder(pageClass).build(),
+                        rootComponentHandler));
+            }
             else
                 new UriMatchTreeBuilder().buildAndStore(uri,
                         new PageHandlerImpl(uri, new PageClassReflectionBuilder(pageClass).build(),
-                                buildComponentHandler(document)),
+                                rootComponentHandler),
                         pagesByTemplate);
         }
     }
+
 
     //a URI is not allowed to have both { } -- unless it is dynamic, i.e. a template
     private boolean isStaticUri(String uri) {
@@ -153,7 +176,13 @@ class PageHandlerBuilder {
     }
 
 
+
+    private ComponentHandler buildComponentHandler(String documentText) {
+        return ComponentBuilders.buildComponentHandler(registry, documentText);
+    }
     
+
+
 
 
     //smartly loads a template from the context filesystem

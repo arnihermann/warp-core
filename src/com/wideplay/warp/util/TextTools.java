@@ -118,6 +118,20 @@ public class TextTools {
         return pageClass.getName().substring(packageName.length() + 1);   //remove leading "."
     }
 
+
+    /**
+     *
+     * @param template Name of a file
+     * @param documentText The content of the file
+     * 
+     * @return Returns true if the file refers to an XML or DOM-ifyable document.
+     */
+    public static boolean isXmlTemplate(String template, String documentText) {
+        //kind of a weak test to see whether this is an xml template--TODO maybe improve this validating the doc?
+        return (null != documentText)
+                && (template.endsWith(".html") || template.endsWith(".xhtml"));
+    }
+
     private enum TokenizerState { READING_TEXT, READING_EXPRESSION }
 
 

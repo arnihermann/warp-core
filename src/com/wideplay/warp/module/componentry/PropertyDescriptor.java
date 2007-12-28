@@ -1,5 +1,7 @@
 package com.wideplay.warp.module.componentry;
 
+import net.jcip.annotations.Immutable;
+
 /**
  * Created with IntelliJ IDEA.
  * On: 17/03/2007
@@ -7,10 +9,11 @@ package com.wideplay.warp.module.componentry;
  * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
+@Immutable
 public final class PropertyDescriptor {
-    private String name;
-    private String value;
-    private boolean isExpression;
+    private final String name;
+    private final String value;
+    private final boolean isExpression;
 
 
     public PropertyDescriptor(String name, String value, boolean expression) {
@@ -23,23 +26,11 @@ public final class PropertyDescriptor {
         return isExpression;
     }
 
-    public void setExpression(boolean expression) {
-        isExpression = expression;
-    }
-
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getValue() {
         return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
     }
 }

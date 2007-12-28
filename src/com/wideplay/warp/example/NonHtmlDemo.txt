@@ -1,0 +1,5 @@
+This is a raw text document.
+
+The following text is rendered dynamically: ${message}
+
+in the same way as page objects in html-writer.

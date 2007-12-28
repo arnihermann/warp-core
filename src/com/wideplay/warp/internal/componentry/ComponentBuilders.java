@@ -22,8 +22,15 @@ public class ComponentBuilders {
     }
 
     public static ComponentHandler buildComponentHandler(ComponentRegistry componentRegistry, Document document) {
-        return new ComponentHandlerBuilder(componentRegistry).build(document);
+        return new DomComponentHandlerBuilder(componentRegistry).build(document);
     }
+
+
+    public static ComponentHandler buildComponentHandler(ComponentRegistry componentRegistry, String documentText) {
+        return new SimpleTextComponentHandlerBuilder(componentRegistry).build(documentText);
+    }
+
+
 
     public static void buildAndRegisterComponent(ServletContext context, ComponentRegistry registry, Class<?> componentClass, String packageName, Map<String, PageHandler> pages) {
         Component componentAnnotation = componentClass.getAnnotation(Component.class);
