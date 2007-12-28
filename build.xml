@@ -30,6 +30,7 @@
         <copy todir="${build}">
             <fileset dir="${src}">
                 <include name="**/*.xml"/>
+                <exclude name="log4j.properties"/>
                 <include name="**/*.properties"/>
                 <include name="**/*.js"/>
 
@@ -45,14 +46,29 @@
         </jar>
     </target>
 
-    <target name="assemble.jar.deps" depends="build" description="Assembles an archive of Warp core classes (for use in WEB-INF/lib for example) along with all deps">
-        <zip basedir="${dir.distribute}" destfile="${dir.distribute}/${deps.artifact}">
+    <target name="assemble.jar.nodeps" depends="build" description="Assembles a drop-in version of Warp (for use in WEB-INF/lib for example) along with all deps built in">
+        <taskdef name="jarjar" classname="com.tonicsystems.jarjar.JarJarTask" classpath="${lib}/jarjar-1.0rc6.jar"/>
+        
+        <jarjar jarfile="${dir.distribute}/${deps.artifact}">
             <include name="${core.artifact}"/>
-            <fileset dir="${lib}">
-                <exclude name="javaee.jar"/>
-                <exclude name="testng*"/>
-                <exclude name="log4j*"/>
+            <!-- package binaries -->
+            <fileset dir="${build}">
+                <exclude name="com/wideplay/warp/example/**"/>
+                <exclude name="dist/**"/>
             </fileset>
-        </zip>
+
+            <!-- and dependencies -->
+            <zipfileset src="${lib}/commons-io.jar"/>
+            <zipfileset src="${lib}/commons-logging-1.0.4.jar"/>
+            <zipfileset src="${lib}/aopalliance.jar"/>
+            <zipfileset src="${lib}/guice-1.0.jar"/>
+            <zipfileset src="${lib}/guice-servlet-1.0.jar"/>
+            <zipfileset src="${lib}/dom4j-1.6.1.jar"/>
+            <zipfileset src="${lib}/jaxen-1.1-beta-7.jar"/>
+            <zipfileset src="${lib}/xpp3-1.1.4.jar"/>
+            <zipfileset src="${lib}/asm.jar"/>
+            <zipfileset src="${lib}/mvel.jar"/>
+            <zipfileset src="${lib}/dwr.jar"/>
+        </jarjar>
     </target>
 </project>
