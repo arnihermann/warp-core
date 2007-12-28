@@ -16,5 +16,4 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface Template {
     String name();
-    String stylesheet() default "";
 }

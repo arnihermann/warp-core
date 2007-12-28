@@ -2,6 +2,7 @@ package com.wideplay.warp.internal.pages;
 
 import com.wideplay.warp.annotations.Template;
 import com.wideplay.warp.annotations.URIMapping;
+import com.wideplay.warp.annotations.Asset;
 import com.wideplay.warp.internal.pages.UriMatchTreeBuilder;
 import com.wideplay.warp.internal.componentry.ComponentBuilders;
 import com.wideplay.warp.module.ComponentRegistry;
@@ -10,6 +11,7 @@ import com.wideplay.warp.rendering.ComponentHandler;
 import com.wideplay.warp.rendering.PageHandler;
 import com.wideplay.warp.util.TextTools;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.Document;
@@ -18,11 +20,9 @@ import org.dom4j.io.XPP3Reader;
 import org.xmlpull.v1.XmlPullParserException;
 
 import javax.servlet.ServletContext;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.StringReader;
+import java.io.*;
 import java.util.Map;
+import java.lang.annotation.Annotation;
 
 /**
  * Created with IntelliJ IDEA.
@@ -44,7 +44,7 @@ class PageHandlerBuilder {
 
     public void build(Class<?> pageClass, String packageName, Map<String, PageHandler> pages, Map<String, Object> pagesByTemplate) {
         //resolve template name from class name
-        String template = pageClass.getName().substring(packageName.length() + 1);   //remove leading "."
+        String template = TextTools.subtractPackagePrefix(pageClass, packageName);
 
         //use declared template name
         boolean isSearchForTemplate = true;
@@ -76,13 +76,50 @@ class PageHandlerBuilder {
         String[] uris = discoverUriMappings(pageClass, template);
 
         //store different instances of the pagehandler for the given URIs
+        storePagesAtUris(pageClass, pages, pagesByTemplate, document, uris);
+
+
+        //load and store any bound assets (static resources)
+        if (pageClass.isAnnotationPresent(Asset.class))
+            loadAndStoreAssets(pageClass, pages);
+    }
+
+    //scans the classpath for assets, then stores them as static resource page handlers bound to specified URIs
+    private void loadAndStoreAssets(Class<?> pageClass, Map<String, PageHandler> pages) {
+        //there may be more than one asset...
+        for (Annotation annotation : pageClass.getAnnotations()) {
+            if (annotation instanceof Asset) {
+                Asset asset = (Asset) annotation;
+
+                //attempt to load the resource and cache it
+                final InputStream asStream = pageClass.getResourceAsStream(asset.resource());
+                byte[] content;
+                if (null != asStream) {
+                    try {
+                        content = IOUtils.toByteArray(asStream);
+                    } catch (IOException e) {
+                        throw new WarpConfigurationException("could not load a registered static resource: " + asset.resource());
+                    }
+                } else
+                    throw new WarpConfigurationException("could not find a registered static resource: " + asset.resource());
+
+
+                //everyhing was ok, store the asset-pagehandler
+                pages.put(asset.uri(), new AssetHandlerImpl(content, asset));
+            }
+        }
+    }
+
+    private void storePagesAtUris(Class<?> pageClass, Map<String, PageHandler> pages, Map<String, Object> pagesByTemplate, Document document, String[] uris) {
         for (String uri : uris) {
             //check if this is a simple URI first
             if (isStaticUri(uri))
-                pages.put(uri, new PageHandlerImpl(uri, new PageClassReflectionBuilder(pageClass).build(), buildComponentHandler(document)));
+                pages.put(uri, new PageHandlerImpl(uri, new PageClassReflectionBuilder(pageClass).build(), 
+                        buildComponentHandler(document)));
             else
                 new UriMatchTreeBuilder().buildAndStore(uri,
-                        new PageHandlerImpl(uri, new PageClassReflectionBuilder(pageClass).build(), buildComponentHandler(document)), 
+                        new PageHandlerImpl(uri, new PageClassReflectionBuilder(pageClass).build(),
+                                buildComponentHandler(document)),
                         pagesByTemplate);
         }
     }
@@ -127,7 +164,9 @@ class PageHandlerBuilder {
         //if template is specified literally, no need to search for it
         if (!isSearchForTemplate) {
             try {
-                documentText = FileUtils.readFileToString(new File(context.getRealPath(template)), null);
+                //first try on classpath (adjacent to page class file) and fail to resource path
+                documentText = fromClassOrFile(template, pageClass);
+
             } catch (IOException e) {
                 throw new WarpConfigurationException("could not find/read template for: " + template, e);
             }
@@ -139,19 +178,36 @@ class PageHandlerBuilder {
 
         //otherwise, try to search & load either an .xhtml or .html file as a matching template
         try {
-            documentText = FileUtils.readFileToString(new File(context.getRealPath(template + ".html")), null);
+            //first try on classpath (adjacent to page class file) and fail to resource path
+            documentText = fromClassOrFile(String.format("%s.html", template) , pageClass);
+
         } catch (FileNotFoundException fnfe) {
-            //try the .html now
+
+
+            //NO HTML, so try the .xhtml now
             try {
-                documentText = FileUtils.readFileToString(new File(context.getRealPath(template + ".xhtml")), null);
+                documentText = fromClassOrFile(String.format("%s.xhtml", template), pageClass);
             } catch (IOException e) {
                 log.info(String.format("Class found that did not have a matching template (not an error or warning, just letting u know) : %s", pageClass.getName()));
             }
+
 
         } catch (IOException e) {
             throw new WarpConfigurationException("could not find/read template for: " + template, e);
         }
 
         return documentText;
+    }
+
+
+    //first tries to load the template as adjacent to the page class, then defaults to the servlet resource path
+    private String fromClassOrFile(String template, Class<?> pageClass) throws IOException {
+        final InputStream asStream = pageClass.getResourceAsStream(template);
+
+        if (null != asStream)
+            return IOUtils.toString(asStream);
+        else
+            //otherwise try on servlet resource path
+            return FileUtils.readFileToString(new File(context.getRealPath(template)), null);
     }
 }

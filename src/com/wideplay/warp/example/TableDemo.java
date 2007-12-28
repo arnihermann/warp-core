@@ -1,6 +1,8 @@
 package com.wideplay.warp.example;
 
 import com.wideplay.warp.example.model.MyDVD;
+import com.wideplay.warp.annotations.Template;
+import com.wideplay.warp.annotations.URIMapping;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,6 +15,8 @@ import java.util.List;
  * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
+@URIMapping("/TableDemo")
+@Template(name = "TableDemo.html")
 public class TableDemo {
     private List<MyDVD> beans;
 

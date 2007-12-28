@@ -133,7 +133,7 @@ class PageClassReflectionBuilder {
         
         //no viable ctor!! error!!
         if (null == injectable)
-            throw new WarpConfigurationException("Page class has got neither guice-injectable (@Inject) constructors nor a nullary (default) constructor; there is no strategy to create instances: " + pageClass.getName());
+            throw new WarpConfigurationException("Page class has got neither guice-injectable (@Inject-annotated) constructors nor a nullary (default) constructor; there is no strategy to create instances: " + pageClass.getName());
 
 
 

@@ -30,13 +30,15 @@ class MvelRequestBinder implements RequestBinder {
         return String.format("%s%s%s%s", COLLECTION_BIND_DELIMITER, items, COLLECTION_BIND_DELIMITER, bind);
     }
 
-    public void bindBean(Object bean, @RequestParameters Map<String, String[]> parameters) {
+    public void bindObject(Object bean, @RequestParameters Map<String, String[]> parameters) {
         //iterate the parameter set and bind the values to the provided bean
         for (String paramName : parameters.keySet()) {
 
             if (reservedParameterNames.contains(paramName))
                 continue;
 
+
+            //should we bind this from a collection?
             if (null != paramName && paramName.startsWith(COLLECTION_BIND_DELIMITER)) {
                 for (String value : parameters.get(paramName))
                     bindFromCollection(paramName, bean, value);
@@ -100,6 +102,7 @@ class MvelRequestBinder implements RequestBinder {
         Collection<?> col = (Collection<?>) Expressions.evaluate(collectionBindExpression[1], bean);
 
         //selection is looked up by hashcode
+        //noinspection SuspiciousMethodCalls
         if (!col.contains(new Object() {
 
             @Override

@@ -85,55 +85,13 @@ public class Viewport implements Renderable, AttributesInjectable {
 
         //if asynchronous, we should proxy the html writer to trap and watch input bindings separately from the rest of the page
         if (async) {
-            renderAsyncViewport(writer, embeddedContent, context, embedded, uri);
+            throw new UnsupportedOperationException();
         } else
             //render the embedded content as my children, rather than my own children (which are discarded), using the embedded object as page
             ComponentSupport.renderMultiple(PageBuilders.newRenderingContext(writer, context.getInjector(), context.getReflection(), embedded),
                     embeddedContent);
     }
 
-
-
-    private void renderAsyncViewport(HtmlWriter writer, List<? extends ComponentHandler> embeddedContent, RenderingContext context, Object embedded, String uri) {
-        //grab the id from the property map
-        String id = makeId(writer);
-
-        //grab the tag name and write it as is
-        String tagName = attribs.get(RawText.WARP_RAW_TEXT_PROP_TAG).toString();
-        writer.element(tagName, "id", id);
-
-        //use a static proxy pattern to intercept calls to register input bindings
-        AsyncViewportHtmlWriter asyncWriter = new AsyncViewportHtmlWriter(id, writer);
-
-        //wrap this in a new context
-        RenderingContext proxyContext = PageBuilders.newRenderingContext(asyncWriter, context.getInjector(), context.getReflection(), embedded);
-
-        //render viewport contents
-        ComponentSupport.renderMultiple(proxyContext, embeddedContent);
-
-        //getValue "watched" bindings and write them into a viewport property (using js)
-        writer.writeToOnLoad("document.getElementById(\"");
-        writer.writeToOnLoad(id);
-        writer.writeToOnLoad("\").bindings=new Array(\"");
-        for (int i = 0; i < asyncWriter.getBindings().size(); i++) {
-            String binding = asyncWriter.getBindings().get(i);
-            writer.writeToOnLoad(binding);
-
-            //write commans except for last one
-            if (i < asyncWriter.getBindings().size() - 1)
-                writer.writeToOnLoad("\", ");
-        }
-        writer.writeToOnLoad("\");");
-
-        //write target URI for asynchronous callback
-        writer.writeToOnLoad("document.getElementById(\"");
-        writer.writeToOnLoad(id);
-        writer.writeToOnLoad("\").targetUri=\"");
-        writer.writeToOnLoad(uri);
-        writer.writeToOnLoad("\";");
-
-        writer.end(tagName);
-    }
 
     private String makeId(HtmlWriter writer) {
         if (null == this.id)

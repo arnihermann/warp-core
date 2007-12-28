@@ -55,7 +55,7 @@ import java.util.Map;
  * </pre>
  *
  * Note that the event handler can be declared with any argument type (not just java.lang.Object) so long
- * as the topic object can be coerced into that type (example: String can be coerced into Serializable).
+ * as the topic object can be cast into that type (example: String can be cast into Serializable, but not Integer).
  *
  * An event handler without a topic *must* take no arguments. An event handler with a topic *must* declare
  * one argument exactly. 
@@ -65,7 +65,6 @@ import java.util.Map;
 public class Link implements Renderable, AttributesInjectable {
     private String event;
     private Object topic;
-    private String viewports;
     private final InternalConversation conversation;
     private Map<String, Object> attribs;
 
@@ -98,10 +97,7 @@ public class Link implements Renderable, AttributesInjectable {
                 attribs, "id", "href", "onclick"));
 
         //register event publication
-        if (null != viewports)
-            writer.registerAsyncEvent(id, ScriptEvents.CLICK, encodedEvent, topicId, TextTools.commaSeparatorRegexSplit(viewports));
-        else
-            writer.registerEvent(id, ScriptEvents.CLICK, encodedEvent, topicId);
+        writer.registerEvent(id, ScriptEvents.CLICK, encodedEvent, topicId);
 
         ComponentSupport.renderMultiple(context, nestedComponents);
         writer.end("a");
@@ -118,10 +114,6 @@ public class Link implements Renderable, AttributesInjectable {
 
     public void setTopic(Object topic) {
         this.topic = topic;
-    }
-
-    public void setViewports(String viewports) {
-        this.viewports = viewports;
     }
 
     public void setAttributeNameValuePairs(Map<String, Object> attribs) {

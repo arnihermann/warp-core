@@ -21,8 +21,8 @@ import java.io.IOException;
  * @since 1.0
  */
 class PageHandlerImpl implements PageHandler {
-    private PageClassReflectionImpl reflection;
-    private String uri;
+    private final PageClassReflectionImpl reflection;
+    private final String uri;
     private final ComponentHandler rootComponentHandler;
 
     public PageHandlerImpl(String uri, PageClassReflectionImpl reflection, ComponentHandler root) {
@@ -99,7 +99,7 @@ class PageHandlerImpl implements PageHandler {
     @SuppressWarnings("unchecked")
     private void bindRequestParameters(HttpServletRequest request, Injector injector, Object page) {
         if (null != request.getParameter(RequestBinder.EVENT_PARAMETER_NAME))
-            injector.getInstance(RequestBinder.class).bindBean(page, request.getParameterMap());
+            injector.getInstance(RequestBinder.class).bindObject(page, request.getParameterMap());
     }
 
 

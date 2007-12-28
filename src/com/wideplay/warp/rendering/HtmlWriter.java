@@ -54,7 +54,5 @@ public interface HtmlWriter {
 
     String getBuffer();
 
-    void registerAsyncEvent(String id, ScriptEvents click, String encodedEvent, int topicId, String[] viewports);
-
     String newId(Object object);
 }

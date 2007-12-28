@@ -16,7 +16,7 @@ public interface RequestBinder {
     String EVENT_TOPIC_PARAMETER_NAME = "w_event_topic";
 //    String EXPR_PARAMETER_NAME = "__eval_as_expr_";
 
-    void bindBean(Object bean, @RequestParameters Map<String, String[]> parameters);
+    void bindObject(Object bean, @RequestParameters Map<String, String[]> parameters);
 
     void bindBeanFromMap(Object bean, @RequestParameters Map<String, String> parameters);
 

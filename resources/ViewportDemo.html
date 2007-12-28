@@ -17,8 +17,7 @@
     </i>
 
     <p>
-        Notice that the embedded page is set as the event delegate and so we inherit the counter demo's functionality as-is. However, 
-        @Managed functionality is not inherited.
+        Notice that the embedded page is set as the event delegate and so we inherit the counter demo's functionality as-is.
     </p>
 
     <h3>Page embedded in viewport normally:</h3>
@@ -28,20 +27,10 @@
         </span>
     </p>
 
-
-    <h3>Page embedded in async viewport:</h3>
-    <p>
-
-        <div w:id="myport" w:component="viewport" w:embed="${counter}" w:async="${true}">
-            The content of the counter demo should show up here.
-        </div>
-
-        <a w:component="link" w:viewports="myport">Asynchronous update</a>
-    </p>
-
     <h3>Custom Component direct use (custom attribs bound to embedded counter page):</h3>
     <p>
-        <span w:component="counter" counter="${counter.counter}">
+        <span w:component="counter" counter="${counter.counter}"> <!-- pass in any attributes so long as it is not w: prefixed
+        these are passed on to the counter page -->
             The content of the counter demo should show up here.
         </span>
     </p>

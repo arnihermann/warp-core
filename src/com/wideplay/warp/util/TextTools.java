@@ -114,6 +114,10 @@ public class TextTools {
         //TODO return viewports.split(",[ ]*") 
     }
 
+    public static String subtractPackagePrefix(Class<?> pageClass, String packageName) {
+        return pageClass.getName().substring(packageName.length() + 1);   //remove leading "."
+    }
+
     private enum TokenizerState { READING_TEXT, READING_EXPRESSION }
 
 
@@ -124,7 +128,7 @@ public class TextTools {
     //URI test regex: (([a-zA-Z][0-9a-zA-Z+\\-\\.]*:)?/{0,2}[0-9a-zA-Z;/?:@&=+$\\.\\-_!~*'()%]+)?(#[0-9a-zA-Z;/?:@&=+$\\.\\-_!~*'()%]+)?
     //Taken from stylus studio message board http://www.stylusstudio.com/xmldev/200108/post10890.html
 
-    private final static Pattern uriPattern = Pattern.compile("(([a-zA-Z][0-9a-zA-Z+\\\\-\\\\.]*:)?/{0,2}[0-9a-zA-Z;" +
+    private final static Pattern URI_REGEX = Pattern.compile("(([a-zA-Z][0-9a-zA-Z+\\\\-\\\\.]*:)?/{0,2}[0-9a-zA-Z;" +
             "/?:@&=+$\\\\.\\\\-_!~*'()%]+)?(#[0-9a-zA-Z;/?:@&=+$\\\\.\\\\-_!~*'()%]+)?");
 
     //TODO
@@ -134,9 +138,9 @@ public class TextTools {
 
     //less expensive method tests whether string is a valid URI
     public static boolean isValidURI(String uri) {
-        if (null == uri)
-            return false;
-
-        return uriPattern.matcher(uri).matches();
+        return (null != uri)
+                && URI_REGEX
+                .matcher(uri)
+                .matches();
     }
 }
