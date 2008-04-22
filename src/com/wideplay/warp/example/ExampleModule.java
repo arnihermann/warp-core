@@ -3,8 +3,7 @@ package com.wideplay.warp.example;
 import com.wideplay.warp.StartupListener;
 import com.wideplay.warp.Warp;
 import com.wideplay.warp.WarpModule;
-import org.directwebremoting.guice.AbstractDwrModule;
-import org.directwebremoting.guice.ParamName;
+import com.google.inject.AbstractModule;
 import org.mvel.optimizers.OptimizerFactory;
 
 /**
@@ -14,7 +13,7 @@ import org.mvel.optimizers.OptimizerFactory;
  * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
-public class ExampleModule extends AbstractDwrModule implements WarpModule, StartupListener {
+public class ExampleModule extends AbstractModule implements WarpModule, StartupListener {
 
     public void configure(Warp warp) {
         //install me as a module (convenience)
@@ -34,9 +33,9 @@ public class ExampleModule extends AbstractDwrModule implements WarpModule, Star
         //....
 
         //ajaxdemo is dual purpose, service as a dwr service as well as a dummy backing for the warp page (Really not used by warp)
-        bindAnnotatedClasses(AjaxDemo.class);
-
-        bindParameter(ParamName.DEBUG).to(true);
+//        bindAnnotatedClasses(AjaxDemo.class);
+//
+//        bindParameter(ParamName.DEBUG).to(true);
 
 //        bindDwrScopes();
     }

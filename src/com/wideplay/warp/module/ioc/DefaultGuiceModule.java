@@ -3,8 +3,6 @@ package com.wideplay.warp.module.ioc;
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
-import com.google.inject.servlet.RequestScoped;
-import com.google.inject.servlet.SessionScoped;
 import com.wideplay.warp.annotations.Context;
 import com.wideplay.warp.internal.Builders;
 import com.wideplay.warp.module.StateManager;
@@ -14,12 +12,15 @@ import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.RequestBinder;
 import com.wideplay.warp.util.Cube;
 import com.wideplay.warp.util.HashCube;
+import com.wideplay.warp.servlet.SessionScoped;
+import com.wideplay.warp.servlet.RequestScoped;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+
 
 /**
  * Created with IntelliJ IDEA.
@@ -34,7 +35,8 @@ class DefaultGuiceModule extends AbstractModule {
     @SuppressWarnings("unchecked")
     protected void configure() {
         //bind warp scopes
-        bindScope(SessionScoped.class, WarpScopes.SESSION);
+        bindScope(SessionScoped.class,
+                WarpScopes.SESSION);
         bindScope(RequestScoped.class, WarpScopes.REQUEST);
 
         //bind request & response providers

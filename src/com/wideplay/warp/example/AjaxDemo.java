@@ -1,9 +1,6 @@
 package com.wideplay.warp.example;
 
 import com.wideplay.warp.annotations.Asset;
-import org.directwebremoting.annotations.RemoteMethod;
-import org.directwebremoting.annotations.RemoteProxy;
-import org.directwebremoting.guice.GuiceCreator;
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,11 +21,11 @@ import org.directwebremoting.guice.GuiceCreator;
  * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
-@RemoteProxy(creator = GuiceCreator.class)
+//@RemoteProxy(creator = GuiceCreator.class)
 @Asset(uri = "/suggest.js", resource = "suggest.js")    //tell warp to load and serve suggest.js
 public class AjaxDemo {
 
-    @RemoteMethod
+//    @RemoteMethod
     public String remoteMethod(String name) {
         return String.format("Hi there, %s!", name);
     }

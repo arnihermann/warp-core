@@ -23,7 +23,6 @@ import java.io.IOException;
 public class WarpFilter implements Filter {
     private volatile Templater templater;
     private volatile WarpModuleAssembly assembly;
-    private final DwrWarpAdapter dwrWarpAdapter = new DwrWarpAdapter();
 
     private volatile ServletContext servletContext;
 
@@ -37,7 +36,7 @@ public class WarpFilter implements Filter {
     
     public void destroy() {
         assembly.fireShutdownEvents();
-        dwrWarpAdapter.shutdown(servletContext);
+//        dwrWarpAdapter.shutdown(servletContext);
 
         assembly = null;
         templater = null;
@@ -56,8 +55,8 @@ public class WarpFilter implements Filter {
         try {
 
             //is a dwr dispatch (intercept for ajax requests)
-            if (dwrWarpAdapter.isDwrServiceable(contextualUri)) {
-                dwrWarpAdapter.service(contextualUri, httpServletRequest, servletResponse);
+            if (true) {
+//                dwrWarpAdapter.service(contextualUri, httpServletRequest, servletResponse);
 
             } else if (!templater.process(httpServletRequest, (HttpServletResponse)servletResponse))                //dispatch to warp filter
 
@@ -107,7 +106,7 @@ public class WarpFilter implements Filter {
             templater = assembly.getInjector().getInstance(Templater.class);
 
             //start dwr services
-            dwrWarpAdapter.start(filterConfig.getServletContext(), assembly.getInjector());
+//            dwrWarpAdapter.start(filterConfig.getServletContext(), assembly.getInjector());
 
             //initialize user services
             assembly.fireStartupEvents();

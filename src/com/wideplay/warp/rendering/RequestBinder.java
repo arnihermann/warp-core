@@ -1,6 +1,6 @@
 package com.wideplay.warp.rendering;
 
-import com.google.inject.servlet.RequestParameters;
+import com.wideplay.warp.servlet.RequestParameters;
 
 import java.util.Map;
 

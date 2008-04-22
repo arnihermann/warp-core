@@ -1,6 +1,7 @@
 package com.wideplay.warp.internal.conversation;
 
-import com.google.inject.servlet.SessionScoped;
+
+import com.wideplay.warp.servlet.SessionScoped;
 
 import java.util.HashMap;
 import java.util.Map;
