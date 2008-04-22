@@ -69,7 +69,8 @@ class DomComponentHandlerBuilder {
 
 
         //we treat text and cdata nodes as RawText type
-        if (Node.TEXT_NODE == node.getNodeType() || Node.CDATA_SECTION_NODE == node.getNodeType() || Node.COMMENT_NODE == node.getNodeType()
+        if (Node.TEXT_NODE == node.getNodeType() || Node.CDATA_SECTION_NODE == node.getNodeType()
+                || Node.COMMENT_NODE == node.getNodeType()
 
                 //there was no w:component attribute so we treat this ELEMENT as a raw text component
                 || (Node.ELEMENT_NODE == node.getNodeType() &&

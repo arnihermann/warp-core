@@ -73,7 +73,7 @@ public class TextTools {
 
         //should never be in reading expr mode at this point
         if (TokenizerState.READING_EXPRESSION.equals(state))
-            throw new PageRenderException("Error: ognl expression was not terminated properly: " + token.toString());
+            throw new IllegalStateException("Error. Expression was not terminated properly: " + token.toString());
 
         //add last token read if it has any content (is always text)
         if (token.length() > 0)
