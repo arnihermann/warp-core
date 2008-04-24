@@ -16,7 +16,11 @@ public interface Respond {
 
     String toString();
 
+    void writeToHead(String text);
+
     public static interface HtmlTagBuilder {
         void textField(String value, String s);
+
+        void headerPlaceholder();
     }
 }

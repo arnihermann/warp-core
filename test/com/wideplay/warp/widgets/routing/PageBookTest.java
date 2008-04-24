@@ -4,6 +4,8 @@ import org.testng.annotations.Test;
 import org.testng.annotations.DataProvider;
 import com.wideplay.warp.widgets.RenderableWidget;
 import com.wideplay.warp.widgets.Respond;
+import com.wideplay.warp.widgets.At;
+import com.wideplay.warp.widgets.rendering.EmbedAs;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
@@ -23,13 +25,13 @@ public class PageBookTest {
             }
         };
 
-        final PageBook pageBook = new PageBook();
-        pageBook.at("/wiki", mock);
+        final PageBook pageBook = new PageBookImpl(null);
+        pageBook.at("/wiki", mock, MyPage.class);
 
-        RenderableWidget page = pageBook.get("/wiki");
-        page.render(new Object(), respond);
+        PageBook.Page page = pageBook.get("/wiki");
+        page.widget().render(new Object(), respond);
 
-        assert page.equals(mock);
+        assert page.widget().equals(mock);
     }
 
     @DataProvider(name = URI_TEMPLATES_AND_MATCHES)
@@ -53,13 +55,13 @@ public class PageBookTest {
             }
         };
 
-        final PageBook pageBook = new PageBook();
-        pageBook.at(template, mock);
+        final PageBook pageBook = new PageBookImpl(null);
+        pageBook.at(template, mock, MyPage.class);
 
-        RenderableWidget page = pageBook.get(toMatch);
-        page.render(new Object(), respond);
+        PageBook.Page page = pageBook.get(toMatch);
+        page.widget().render(new Object(), respond);
 
-        assert mock.equals(page);
+        assert mock.equals(page.widget());
     }
 
     @DataProvider(name = NOT_URIS_AND_TEMPLATES)
@@ -81,11 +83,17 @@ public class PageBookTest {
             }
         };
 
-        final PageBook pageBook = new PageBook();
-        pageBook.at(template, mock);
+        final PageBook pageBook = new PageBookImpl(null);
+        pageBook.at(template, mock, MyPage.class);
 
         //cant find
         assert null == pageBook.get(toMatch);
+
+    }
+
+    @At("/oas")
+    @EmbedAs("Hi")
+    public static class MyPage {
 
     }
 
@@ -103,7 +111,7 @@ public class PageBookTest {
 
     @Test(dataProvider = FIRST_PATH_ELEMENTS)
     public final void firstPathElement(final String uri, final String answer) {
-        final String fPath = new PageBook()
+        final String fPath = new PageBookImpl(null)
                 .firstPathElement(uri);
 
         assert answer.equals(fPath) : "wrong path: " + fPath;
@@ -123,6 +131,10 @@ public class PageBookTest {
 
         public void chew() {
 
+        }
+
+        public void writeToHead(String text) {
+            
         }
     }
 }

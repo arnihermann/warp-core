@@ -56,7 +56,7 @@ public class TextWidgetTest {
     @Test(dataProvider = NAME_VALUES)
     public final void renderATemplateWithObject(final String name) {
         final String[] out = new String[1];
-        Respond respond = new StringBufferRespond() {
+        Respond respond = new StringBuilderRespond() {
             public void write(String string) {
                 out[0] = string;
             }
@@ -73,7 +73,7 @@ public class TextWidgetTest {
     @Test(dataProvider = MVEL_NAMES)
     public final void renderATemplateWithObjectGraph(final Map<String, String> data, String name) {
         final String[] out = new String[1];
-        Respond respond = new StringBufferRespond() {
+        Respond respond = new StringBuilderRespond() {
             public void write(String string) {
                 out[0] = string;
             }

@@ -38,7 +38,7 @@ public class RepeatWidgetTest {
         new RepeatWidget(mockChain, "beans", new MvelEvaluator())
                 .render(new HashMap<String, Object>() {{
                     put("beans", ints);
-                }}, new StringBufferRespond());
+                }}, new StringBuilderRespond());
 
         assert times[0] == should : "Did not run expected number of times: " + should;
     }

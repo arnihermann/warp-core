@@ -13,7 +13,7 @@ public class TextFieldWidgetTest {
     public final void textTagRender() {
 
         final String[] out = new String[1];
-        Respond mockRespond = new StringBufferRespond() {
+        Respond mockRespond = new StringBuilderRespond() {
             @Override
             public void write(String text) {
                 out[0] = text;

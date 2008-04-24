@@ -36,7 +36,7 @@ public class ShowIfWidgetTest {
         new ShowIfWidget(mockChain, expression, new MvelEvaluator())
                 .render(new HashMap<String, Object>() {{
                     put("visible", true);
-                }}, new StringBufferRespond());
+                }}, new StringBuilderRespond());
 
         assert run[0] == should : "ShowIf did not do as it should " + should;
     }

@@ -8,9 +8,10 @@ import java.lang.annotation.ElementType;
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
-
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.METHOD})
-public @interface Show {
-    String value();
+@Target(ElementType.TYPE)
+public @interface On {
+    String value(); //parameter?
+    SwitchKind kind() default SwitchKind.REQUEST_PARAMETER;
+
 }

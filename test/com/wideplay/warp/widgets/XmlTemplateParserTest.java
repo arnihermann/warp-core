@@ -39,7 +39,7 @@ public class XmlTemplateParserTest {
         assert null != widget : " null ";
 
         final StringBuilder builder = new StringBuilder();
-        final Respond mockRespond = new StringBufferRespond() {
+        final Respond mockRespond = new StringBuilderRespond() {
             @Override
             public void write(String text) {
                 builder.append(text);
@@ -77,7 +77,7 @@ public class XmlTemplateParserTest {
         assert null != widget : " null ";
 
         final StringBuilder builder = new StringBuilder();
-        final Respond mockRespond = new StringBufferRespond() {
+        final Respond mockRespond = new StringBuilderRespond() {
             @Override
             public void write(String text) {
                 builder.append(text);
@@ -115,7 +115,7 @@ public class XmlTemplateParserTest {
         assert null != widget : " null ";
 
         final StringBuilder builder = new StringBuilder();
-        final Respond mockRespond = new StringBufferRespond() {
+        final Respond mockRespond = new StringBuilderRespond() {
             @Override
             public void write(String text) {
                 builder.append(text);
@@ -159,7 +159,7 @@ public class XmlTemplateParserTest {
         assert null != widget : " null ";
 
         final StringBuilder builder = new StringBuilder();
-        final Respond mockRespond = new StringBufferRespond() {
+        final Respond mockRespond = new StringBuilderRespond() {
             @Override
             public void write(String text) {
                 builder.append(text);
@@ -205,7 +205,7 @@ public class XmlTemplateParserTest {
         assert null != widget : " null ";
 
         final StringBuilder builder = new StringBuilder();
-        final Respond mockRespond = new StringBufferRespond() {
+        final Respond mockRespond = new StringBuilderRespond() {
             @Override
             public void write(String text) {
                 builder.append(text);
