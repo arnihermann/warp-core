@@ -37,6 +37,8 @@ class ElRequestBinder implements RequestBinder {
                         evaluator.write(entry.getKey(), o, value);
             } catch (PropertyAccessException e) {
                 //log missing property
+                if (log.isDebugEnabled())
+                    log.debug("A property could not be bound, but not necessarily an error: " + entry.getKey());
             }
         }
     }

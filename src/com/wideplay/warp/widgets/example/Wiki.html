@@ -3,12 +3,11 @@
 <html   xmlns="http://www.w3.org/1999/xhtml"
         xml:lang="en" lang="en">
 
-  @Widget(meta)
+  @Meta
   <head>
     <title>Warp :: Counter demo</title>
   </head>
 
-  @Widget(frame)
   <body>
 
     <p>
@@ -17,19 +16,18 @@
         <br/>
         Counter value: <b>${counter}</b>
         <br/>
-        <input id="ctr" w:component="textfield" w:bind="counter"/>
+        <input id="ctr" />
 
         
     </p>
 
     <br/>
-    @Widget(link)
     <a href="#">increment</a>
     <br/>
-    @Widget(link, event=fwd)
+    @ShowIf(true)
     <a href="#">reset ctr</a>
     <br/>
-    @Widget(link, event="fwd")
+    
     <a href="#">reset ctr</a>
   </body>
 </html>

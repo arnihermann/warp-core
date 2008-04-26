@@ -10,11 +10,11 @@ import com.wideplay.warp.widgets.rendering.SelfRendering;
 class HeaderWidget implements RenderableWidget {
     private final WidgetChain widgetChain;
     private final String expression;
-    private final MvelEvaluator evaluator;
+    private final Evaluator evaluator;
 
-    private static final String PLACEHOLDER = "__w:w:HEADER_PLACEHOLDER:NOWRITE__";
+//    private static final String PLACEHOLDER = "__w:w:HEADER_PLACEHOLDER:NOWRITE__";
 
-    public HeaderWidget(WidgetChain widgetChain, String expression, MvelEvaluator evaluator) {
+    public HeaderWidget(WidgetChain widgetChain, String expression, Evaluator evaluator) {
         this.widgetChain = widgetChain;
         this.expression = expression;
         this.evaluator = evaluator;

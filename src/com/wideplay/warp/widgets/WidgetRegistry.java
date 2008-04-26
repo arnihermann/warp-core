@@ -25,7 +25,7 @@ class WidgetRegistry {
     }
 
     public void add(String key, Class<? extends RenderableWidget> widget) {
-        widgets.put(key, WidgetWrapper.forWidget(widget));
+        widgets.put(key.toLowerCase().trim(), WidgetWrapper.forWidget(widget));
     }
 
     public boolean isSelfRendering(String widget) {

@@ -10,7 +10,7 @@ import com.wideplay.warp.widgets.rendering.EmbedAs;
  *
  */
 @At("/wiki/page/:title")
-@Show("WikiPage.html") 
+@Show("Wiki.html") 
 @EmbedAs("Wiki")
 public class Wiki {
     private String title;

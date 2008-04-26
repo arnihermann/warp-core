@@ -6,7 +6,7 @@ import com.wideplay.warp.widgets.*;
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
 @At("/aPage")
-@On(value = "Accept", kind = SwitchKind.HEADER)
+@On(value = "Accept", kind = SwitchKind.HEADER) @Show("Wiki.html")
 public class ContentNegotiationExample {
 
     @Get("text/plain") @Show("text.txt")

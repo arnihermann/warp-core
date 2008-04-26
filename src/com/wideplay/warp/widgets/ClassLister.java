@@ -1,15 +1,11 @@
-package com.wideplay.warp.widgets.example;
+package com.wideplay.warp.widgets;
 
-import com.google.inject.matcher.Matchers;
 import com.google.inject.matcher.Matcher;
 import com.google.inject.Inject;
-import com.wideplay.warp.widgets.At;
 
 import javax.servlet.*;
-import java.io.IOException;
 import java.util.Set;
 import java.util.HashSet;
-import java.lang.reflect.AnnotatedElement;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +29,10 @@ class ClassLister {
     public Set<Class<?>> list(Package pack, Matcher<? super Class<?>> matcher) {
         Set<Class<?>> classes = new HashSet<Class<?>>();
 
-        final String searchIn = String.format("%s%s/", PREFIX, pack.getName().replaceAll("\\.", "/"));
+        final String searchIn = String.format("%s%s/", PREFIX,
+                pack.getName()
+                    .replaceAll("\\.", "/")
+        );
         
         list(classes, searchIn, context, matcher);
 

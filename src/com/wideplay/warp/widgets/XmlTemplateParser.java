@@ -9,15 +9,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.LinkedHashMap;
 
+import com.google.inject.Inject;
+import net.jcip.annotations.Immutable;
+import net.jcip.annotations.ThreadSafe;
+
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
+@ThreadSafe //only because registry is @ThreadSafe
 class XmlTemplateParser {
     private final Evaluator evaluator;
     private final WidgetRegistry registry;
     public static final Pattern WIDGET_ANNOTATION_REGEX = Pattern.compile("(@\\w\\w*(\\([\\w,=\" ]*\\))?[ \n\r\t]*)$");
 //    public static final Pattern WIDGET_ANNOTATION_REGEX = Pattern.compile("@\\w\\w*(\\([\\w,=\" ]*\\))?");
 
+    @Inject
     public XmlTemplateParser(Evaluator evaluator, WidgetRegistry registry) {
         this.evaluator = evaluator;
         this.registry = registry;
@@ -119,7 +125,7 @@ class XmlTemplateParser {
 
 
         //if this is NOT a self-rendering widget, give it an xml child
-        final String widgetName = extract[0];
+        final String widgetName = extract[0].trim();
         if (!registry.isSelfRendering(widgetName))
             childsChildren = new SingleWidgetChain(
                              new XmlWidget(childsChildren, element.getName(), evaluator,
