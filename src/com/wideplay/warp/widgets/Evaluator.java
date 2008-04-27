@@ -1,7 +1,7 @@
 package com.wideplay.warp.widgets;
 
-import org.jetbrains.annotations.Nullable;
 import com.google.inject.ImplementedBy;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)

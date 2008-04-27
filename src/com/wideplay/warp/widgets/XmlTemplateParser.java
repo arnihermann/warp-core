@@ -1,17 +1,15 @@
 package com.wideplay.warp.widgets;
 
+import com.google.inject.Inject;
+import net.jcip.annotations.ThreadSafe;
 import org.dom4j.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.LinkedHashMap;
-
-import com.google.inject.Inject;
-import net.jcip.annotations.Immutable;
-import net.jcip.annotations.ThreadSafe;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)

@@ -1,7 +1,5 @@
 package com.wideplay.warp.widgets;
 
-import java.io.IOException;
-
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */

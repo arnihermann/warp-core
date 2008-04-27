@@ -1,7 +1,5 @@
 package com.wideplay.warp.widgets;
 
-import org.dom4j.DocumentException;
-
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */

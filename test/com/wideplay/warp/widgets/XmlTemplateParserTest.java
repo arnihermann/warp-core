@@ -2,8 +2,8 @@ package com.wideplay.warp.widgets;
 
 import org.testng.annotations.Test;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)

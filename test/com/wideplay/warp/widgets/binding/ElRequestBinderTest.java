@@ -1,12 +1,11 @@
 package com.wideplay.warp.widgets.binding;
 
-import org.testng.annotations.Test;
 import com.google.inject.Guice;
 import com.wideplay.warp.widgets.Evaluator;
+import static org.easymock.EasyMock.*;
+import org.testng.annotations.Test;
 
 import javax.servlet.http.HttpServletRequest;
-import static org.easymock.EasyMock.*;
-
 import java.util.HashMap;
 
 /**

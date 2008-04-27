@@ -1,14 +1,13 @@
 package com.wideplay.warp.widgets;
 
-import com.google.inject.matcher.Matcher;
 import com.google.inject.Inject;
-
-import javax.servlet.*;
-import java.util.Set;
-import java.util.HashSet;
-
+import com.google.inject.matcher.Matcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.servlet.ServletContext;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)

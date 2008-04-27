@@ -2,7 +2,6 @@ package com.wideplay.warp.util;
 
 import com.wideplay.warp.WarpFilter;
 import com.wideplay.warp.WarpModule;
-import com.wideplay.warp.rendering.PageRenderException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;

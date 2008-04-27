@@ -1,6 +1,8 @@
 package com.wideplay.warp.widgets.example;
 
-import com.wideplay.warp.widgets.*;
+import com.wideplay.warp.widgets.At;
+import com.wideplay.warp.widgets.Get;
+import com.wideplay.warp.widgets.On;
 
 import java.util.Collection;
 

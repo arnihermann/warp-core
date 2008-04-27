@@ -1,10 +1,10 @@
 package com.wideplay.warp.widgets;
 
-import org.testng.annotations.Test;
 import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
-import java.util.Collection;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 
 /**

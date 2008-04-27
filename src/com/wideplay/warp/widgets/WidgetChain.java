@@ -2,9 +2,8 @@ package com.wideplay.warp.widgets;
 
 import net.jcip.annotations.NotThreadSafe;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)

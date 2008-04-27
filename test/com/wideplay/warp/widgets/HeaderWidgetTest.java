@@ -1,9 +1,7 @@
 package com.wideplay.warp.widgets;
 
-import org.testng.annotations.Test;
 import org.testng.annotations.DataProvider;
-
-import java.util.HashMap;
+import org.testng.annotations.Test;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)

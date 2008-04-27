@@ -1,14 +1,13 @@
 package com.wideplay.warp.widgets.binding;
 
-import com.wideplay.warp.widgets.Evaluator;
 import com.wideplay.warp.util.TextTools;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
-
+import com.wideplay.warp.widgets.Evaluator;
 import org.mvel.PropertyAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)

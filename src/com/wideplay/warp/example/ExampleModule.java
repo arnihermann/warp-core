@@ -1,9 +1,9 @@
 package com.wideplay.warp.example;
 
+import com.google.inject.AbstractModule;
 import com.wideplay.warp.StartupListener;
 import com.wideplay.warp.Warp;
 import com.wideplay.warp.WarpModule;
-import com.google.inject.AbstractModule;
 import org.mvel.optimizers.OptimizerFactory;
 
 /**

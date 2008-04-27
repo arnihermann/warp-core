@@ -1,8 +1,8 @@
 package com.wideplay.warp.widgets;
 
-import com.wideplay.warp.widgets.routing.PageBook;
-import com.wideplay.warp.widgets.example.Wiki;
 import com.google.inject.Guice;
+import com.wideplay.warp.widgets.example.Wiki;
+import com.wideplay.warp.widgets.routing.PageBook;
 import static org.easymock.EasyMock.*;
 import org.testng.annotations.Test;
 

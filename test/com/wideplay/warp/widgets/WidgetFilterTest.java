@@ -1,17 +1,16 @@
 package com.wideplay.warp.widgets;
 
+import com.wideplay.warp.widgets.routing.RoutingDispatcher;
+import static org.easymock.EasyMock.*;
 import org.testng.annotations.Test;
 
-import javax.servlet.ServletException;
 import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
-
-import static org.easymock.EasyMock.*;
-import com.wideplay.warp.widgets.routing.RoutingDispatcher;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)

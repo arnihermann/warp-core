@@ -1,19 +1,13 @@
 package com.wideplay.warp.widgets.routing;
 
-import org.testng.annotations.Test;
+import com.google.inject.Provider;
+import com.wideplay.warp.widgets.RenderableWidget;
+import com.wideplay.warp.widgets.Respond;
+import com.wideplay.warp.widgets.binding.RequestBinder;
 import static org.easymock.EasyMock.*;
+import org.testng.annotations.Test;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
-
-import com.google.inject.Provider;
-import com.wideplay.warp.widgets.Respond;
-import com.wideplay.warp.widgets.RenderableWidget;
-import com.wideplay.warp.widgets.binding.RequestBinder;
-
-import java.io.IOException;
-import java.io.PrintWriter;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)

@@ -1,14 +1,13 @@
 package com.wideplay.warp.widgets;
 
-import net.jcip.annotations.ThreadSafe;
-
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ConcurrentHashMap;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Constructor;
-
 import com.google.inject.Singleton;
 import com.wideplay.warp.widgets.rendering.SelfRendering;
+import net.jcip.annotations.ThreadSafe;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)

@@ -1,7 +1,7 @@
 package com.wideplay.warp.widgets;
 
-import net.jcip.annotations.Immutable;
 import com.wideplay.warp.widgets.rendering.SelfRendering;
+import net.jcip.annotations.Immutable;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)

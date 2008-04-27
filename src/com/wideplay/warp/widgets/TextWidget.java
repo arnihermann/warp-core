@@ -1,12 +1,11 @@
 package com.wideplay.warp.widgets;
 
+import static com.wideplay.warp.util.TextTools.tokenize;
 import com.wideplay.warp.util.Token;
-import static com.wideplay.warp.util.TextTools.*;
 import com.wideplay.warp.widgets.rendering.SelfRendering;
+import net.jcip.annotations.ThreadSafe;
 
 import java.util.List;
-
-import net.jcip.annotations.ThreadSafe;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)

@@ -1,7 +1,7 @@
 package com.wideplay.warp.widgets.routing;
 
-import com.wideplay.warp.widgets.RenderableWidget;
 import com.google.inject.ImplementedBy;
+import com.wideplay.warp.widgets.RenderableWidget;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)

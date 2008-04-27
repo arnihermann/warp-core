@@ -1,8 +1,8 @@
 package com.wideplay.warp.widgets;
 
-import java.util.Properties;
-import java.util.Map;
 import java.io.IOException;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)

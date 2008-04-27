@@ -1,9 +1,8 @@
 package com.wideplay.warp.widgets;
 
-import com.wideplay.warp.widgets.routing.PageBook;
 import com.google.inject.Inject;
-import com.google.inject.matcher.Matchers;
-import static com.google.inject.matcher.Matchers.*;
+import static com.google.inject.matcher.Matchers.annotatedWith;
+import com.wideplay.warp.widgets.routing.PageBook;
 
 import java.util.Set;
 

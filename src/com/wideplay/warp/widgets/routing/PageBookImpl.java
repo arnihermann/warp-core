@@ -1,21 +1,21 @@
 package com.wideplay.warp.widgets.routing;
 
-import com.wideplay.warp.widgets.RenderableWidget;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.Singleton;
 import com.wideplay.warp.widgets.Get;
 import com.wideplay.warp.widgets.Post;
+import com.wideplay.warp.widgets.RenderableWidget;
 import com.wideplay.warp.widgets.rendering.EmbedAs;
-import com.google.inject.Singleton;
-import com.google.inject.Injector;
-import com.google.inject.Inject;
 import net.jcip.annotations.ThreadSafe;
 
-import java.util.Map;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
-import java.lang.reflect.Method;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.annotation.Annotation;
+import java.util.Map;
 
 /**
  * contains active uri/widget mappings

@@ -1,11 +1,11 @@
 package com.wideplay.warp.widgets;
 
-import com.wideplay.warp.widgets.routing.RoutingDispatcher;
 import com.google.inject.Inject;
+import com.wideplay.warp.widgets.routing.RoutingDispatcher;
 
 import javax.servlet.*;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**

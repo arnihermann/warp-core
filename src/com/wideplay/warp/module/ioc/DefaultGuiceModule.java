@@ -10,10 +10,10 @@ import com.wideplay.warp.module.componentry.ClassReflectionCache;
 import com.wideplay.warp.module.pages.InjectPageProvider;
 import com.wideplay.warp.module.pages.PageClassReflection;
 import com.wideplay.warp.rendering.RequestBinder;
+import com.wideplay.warp.servlet.RequestScoped;
+import com.wideplay.warp.servlet.SessionScoped;
 import com.wideplay.warp.util.Cube;
 import com.wideplay.warp.util.HashCube;
-import com.wideplay.warp.servlet.SessionScoped;
-import com.wideplay.warp.servlet.RequestScoped;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

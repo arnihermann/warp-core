@@ -1,16 +1,15 @@
 package com.wideplay.warp.widgets;
 
-import com.wideplay.warp.util.Token;
 import com.wideplay.warp.util.TextTools;
+import com.wideplay.warp.util.Token;
 import com.wideplay.warp.widgets.rendering.Attributes;
 import com.wideplay.warp.widgets.rendering.SelfRendering;
+import net.jcip.annotations.ThreadSafe;
 
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.LinkedHashMap;
-import java.util.Collections;
-
-import net.jcip.annotations.ThreadSafe;
 
 /**
  * <p>

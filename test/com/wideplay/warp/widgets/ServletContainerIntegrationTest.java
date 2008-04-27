@@ -1,15 +1,12 @@
 package com.wideplay.warp.widgets;
 
-import org.testng.annotations.Test;
-import org.mortbay.jetty.Server;
 import org.mortbay.jetty.Handler;
-import org.mortbay.jetty.servlet.ServletHandler;
+import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.FilterHolder;
-import org.mortbay.jetty.nio.SelectChannelConnector;
+import org.mortbay.jetty.servlet.ServletHandler;
 
 import javax.servlet.*;
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.util.Set;
 
 /**

@@ -1,10 +1,9 @@
 package com.wideplay.warp.widgets;
 
+import com.wideplay.warp.widgets.rendering.EmbedAs;
 import net.jcip.annotations.Immutable;
 
 import java.util.Collection;
-
-import com.wideplay.warp.widgets.rendering.EmbedAs;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)

@@ -1,17 +1,14 @@
 package com.wideplay.warp.widgets;
 
 import com.wideplay.warp.util.TextTools;
-import com.wideplay.warp.util.Token;
-
-import java.io.Serializable;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.List;
-
+import net.jcip.annotations.ThreadSafe;
+import org.jetbrains.annotations.Nullable;
 import org.mvel.MVEL;
 import org.mvel.PropertyAccessException;
-import org.jetbrains.annotations.Nullable;
-import net.jcip.annotations.ThreadSafe;
+
+import java.io.Serializable;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)

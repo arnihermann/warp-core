@@ -2,8 +2,8 @@ package com.wideplay.warp.widgets.example;
 
 import com.google.inject.name.Named;
 import com.wideplay.warp.widgets.At;
-import com.wideplay.warp.widgets.Show;
 import com.wideplay.warp.widgets.Get;
+import com.wideplay.warp.widgets.Show;
 import com.wideplay.warp.widgets.rendering.EmbedAs;
 
 /**
