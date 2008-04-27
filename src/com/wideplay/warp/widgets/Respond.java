@@ -5,6 +5,7 @@ import com.google.inject.ImplementedBy;
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
+@ImplementedBy(StringBuilderRespond.class)
 public interface Respond {
     void write(String text);
 
