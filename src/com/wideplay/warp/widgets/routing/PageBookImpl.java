@@ -1,6 +1,8 @@
 package com.wideplay.warp.widgets.routing;
 
 import com.wideplay.warp.widgets.RenderableWidget;
+import com.wideplay.warp.widgets.Get;
+import com.wideplay.warp.widgets.Post;
 import com.wideplay.warp.widgets.rendering.EmbedAs;
 import com.google.inject.Singleton;
 import com.google.inject.Injector;
@@ -11,6 +13,9 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.annotation.Annotation;
 
 /**
  * contains active uri/widget mappings
@@ -111,11 +116,39 @@ class PageBookImpl implements PageBook {
         private final Class<?> clazz;
         private final Injector injector;
 
+        private final Method get;
+        private final Method post;
+
         public PageTuple(PathMatcher matcher, RenderableWidget pageWidget, Class<?> clazz, Injector injector) {
             this.matcher = matcher;
             this.pageWidget = pageWidget;
             this.clazz = clazz;
             this.injector = injector;
+
+            this.get = reflect(Get.class);
+            this.post = reflect(Post.class);
+        }
+
+        private Method reflect(Class<? extends Annotation> annotation) {
+            //first search class's methods only
+
+            for (Method method : clazz.getDeclaredMethods()) {
+                if (method.isAnnotationPresent(annotation)) {
+                    if (!method.isAccessible())
+                        method.setAccessible(true); //ugh
+                    return method;
+                }
+            }
+
+            for (Method method : clazz.getMethods()) {
+                if (method.isAnnotationPresent(annotation)) {
+                    if (!method.isAccessible())
+                        method.setAccessible(true); //ugh
+                    return method;
+                }
+            }
+
+            return null;
         }
 
         public RenderableWidget widget() {
@@ -125,5 +158,25 @@ class PageBookImpl implements PageBook {
         public Object instantiate() {
             return injector.getInstance(clazz);
         }
+
+        public void doGet(Object page) {
+            call(page, get);
+        }
+
+        public void doPost(Object page) {
+            call(page, post);
+        }
+
+        private void call(Object page, final Method method) {
+            if (null != method)
+                try {
+                    method.invoke(page);
+                } catch (IllegalAccessException e) {
+                    throw new EventDispatchException("Could not access event method: " + method, e);
+                } catch (InvocationTargetException e) {
+                    throw new EventDispatchException("Event method threw an exception: " + method, e);
+                }
+        }
+
     }
 }

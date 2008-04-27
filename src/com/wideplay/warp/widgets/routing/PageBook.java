@@ -18,5 +18,9 @@ public interface PageBook {
         RenderableWidget widget();
 
         Object instantiate();
+
+        void doGet(Object page);
+
+        void doPost(Object page);
     }
 }
