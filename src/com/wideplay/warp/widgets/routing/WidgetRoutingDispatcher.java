@@ -2,17 +2,21 @@ package com.wideplay.warp.widgets.routing;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.inject.Singleton;
 import com.wideplay.warp.widgets.Respond;
 import com.wideplay.warp.widgets.binding.RequestBinder;
 
 import javax.servlet.http.HttpServletRequest;
 
+import net.jcip.annotations.Immutable;
+
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
+@Immutable @Singleton
 class WidgetRoutingDispatcher implements RoutingDispatcher {
     private final PageBook book;
-    private RequestBinder binder;
+    private final RequestBinder binder;
     private final Provider<Respond> respondProvider;
 
     @Inject
@@ -46,9 +50,11 @@ class WidgetRoutingDispatcher implements RoutingDispatcher {
 
     private void fireEvent(HttpServletRequest request, PageBook.Page page, Object instance) {
         final String method = request.getMethod();
+        final String pathInfo = request.getPathInfo();
+        
         if ("GET".equalsIgnoreCase(method))
-            page.doGet(instance);
+            page.doGet(instance, pathInfo);
         else if ("POST".equalsIgnoreCase(method))
-            page.doPost(instance);
+            page.doPost(instance, pathInfo);
     }
 }

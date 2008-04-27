@@ -25,7 +25,8 @@ public class WidgetRoutingDispatcherTest {
         Object pageOb = new Object() ;
 
         expect(request.getPathInfo())
-                .andReturn("/thing");
+                .andReturn("/thing")
+                .anyTimes();
 
         expect(pageBook.get("/thing"))
                 .andReturn(page);
@@ -42,7 +43,7 @@ public class WidgetRoutingDispatcherTest {
         expect(request.getMethod())
                 .andReturn("GET");
 
-        page.doGet(pageOb);
+        page.doGet(pageOb, "/thing");
         expectLastCall().once();
 
 
@@ -78,7 +79,8 @@ public class WidgetRoutingDispatcherTest {
         Object pageOb = new Object() ;
 
         expect(request.getPathInfo())
-                .andReturn("/thing");
+                .andReturn("/thing")
+                .anyTimes();
 
         expect(pageBook.get("/thing"))
                 .andReturn(page);
@@ -95,7 +97,7 @@ public class WidgetRoutingDispatcherTest {
         expect(request.getMethod())
                 .andReturn("POST");
 
-        page.doPost(pageOb);
+        page.doPost(pageOb, "/thing");
         expectLastCall().once();
 
 

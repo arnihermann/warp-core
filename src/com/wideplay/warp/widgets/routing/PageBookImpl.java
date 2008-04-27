@@ -3,6 +3,7 @@ package com.wideplay.warp.widgets.routing;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import com.wideplay.warp.widgets.Get;
 import com.wideplay.warp.widgets.Post;
 import com.wideplay.warp.widgets.RenderableWidget;
@@ -12,10 +13,9 @@ import net.jcip.annotations.ThreadSafe;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import org.jetbrains.annotations.Nullable;
 
 /**
  * contains active uri/widget mappings
@@ -81,6 +81,7 @@ class PageBookImpl implements PageBook {
         return (index >= 0) ? shortUri.substring(0, index) : shortUri;
     }
 
+    @Nullable
     public Page get(String uri) {
         final String key = firstPathElement(uri);
 
@@ -117,7 +118,10 @@ class PageBookImpl implements PageBook {
         private final Injector injector;
 
         private final Method get;
+        private final List<String> getArgs;
+
         private final Method post;
+        private final List<String> postArgs;
 
         public PageTuple(PathMatcher matcher, RenderableWidget pageWidget, Class<?> clazz, Injector injector) {
             this.matcher = matcher;
@@ -126,7 +130,42 @@ class PageBookImpl implements PageBook {
             this.injector = injector;
 
             this.get = reflect(Get.class);
+            if (null != get)
+                this.getArgs = reflect(get);
+            else
+                this.getArgs = null;
+
             this.post = reflect(Post.class);
+            if (null != post)
+                this.postArgs = reflect(post);
+            else
+                this.postArgs = null;
+        }
+
+        private List<String> reflect(Method method) {
+            final Annotation[][] annotationsGrid = method.getParameterAnnotations();
+            if (null == annotationsGrid)
+                return Collections.emptyList();
+
+            List<String> args = new ArrayList<String>();
+            for (Annotation[] annotations : annotationsGrid) {
+                boolean namedFound = false;
+                for (Annotation annotation : annotations) {
+                    if (Named.class.isInstance(annotation)) {
+                        Named named = (Named) annotation;
+
+                        args.add(named.value());
+                        namedFound = true;
+
+                        break;
+                    }
+                }
+
+                if (!namedFound)
+                    throw new InvalidEventHandlerException("Encountered an argument not annotated with @Named in event handler method: " + method);
+            }
+
+            return Collections.unmodifiableList(args);
         }
 
         private Method reflect(Class<? extends Annotation> annotation) {
@@ -159,18 +198,40 @@ class PageBookImpl implements PageBook {
             return injector.getInstance(clazz);
         }
 
-        public void doGet(Object page) {
-            call(page, get);
+        public void doGet(Object page, String pathInfo) {
+            //nothing to fire
+            if (null == get)
+                return;
+
+            final Map<String, String> map = matcher.findMatches(pathInfo);
+
+            List<String> arguments = new ArrayList<String>();
+            for (String argName : getArgs) {
+                arguments.add(map.get(argName));
+            }
+
+            call(page, get, arguments.toArray());
         }
 
-        public void doPost(Object page) {
-            call(page, post);
+        public void doPost(Object page, String pathInfo) {
+            //nothing to fire
+            if (null == post)
+                return;
+
+            final Map<String, String> map = matcher.findMatches(pathInfo);
+
+            List<String> arguments = new ArrayList<String>();
+            for (String argName : postArgs) {
+                arguments.add(map.get(argName));
+            }
+
+            call(page, post, arguments.toArray());
         }
 
-        private void call(Object page, final Method method) {
+        private void call(Object page, final Method method, Object[] args) {
             if (null != method)
                 try {
-                    method.invoke(page);
+                    method.invoke(page, args);
                 } catch (IllegalAccessException e) {
                     throw new EventDispatchException("Could not access event method: " + method, e);
                 } catch (InvocationTargetException e) {

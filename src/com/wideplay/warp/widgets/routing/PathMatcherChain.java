@@ -1,13 +1,15 @@
 package com.wideplay.warp.widgets.routing;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.*;
+
+import net.jcip.annotations.Immutable;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
+@Immutable
 class PathMatcherChain implements PathMatcher {
     private final List<PathMatcher> path;
     private static final String PATH_SEPARATOR = "/";
@@ -25,7 +27,7 @@ class PathMatcherChain implements PathMatcher {
             matchers.add((piece.startsWith(":")) ? new GreedyPathMatcher(piece) : new SimplePathMatcher(piece));
         }
 
-        return matchers;
+        return Collections.unmodifiableList(matchers);
     }
 
     public String name() {
@@ -70,8 +72,9 @@ class PathMatcherChain implements PathMatcher {
         return (i == pieces.length) ? values : null;
     }
 
+    @Immutable
     static class SimplePathMatcher implements PathMatcher {
-        private String path;
+        private final String path;
 
         SimplePathMatcher(String path) {
             this.path = path;
@@ -81,12 +84,19 @@ class PathMatcherChain implements PathMatcher {
             return path.equals(incoming);
         }
 
+        //TODO this whole path matching algorithm is in linear time, could easily be constant time
+        @NotNull
+        public Map<String, String> findMatches(String incoming) {
+            return Collections.emptyMap();
+        }
+
         public String name() {
             return null;
         }
     }
 
     //matches anything, i.e. a variable :blah inside a path template
+    @Immutable
     static class GreedyPathMatcher implements PathMatcher {
         private final String variable;
 
@@ -96,6 +106,12 @@ class PathMatcherChain implements PathMatcher {
 
         public boolean matches(String incoming) {
             return true;
+        }
+
+        //TODO this whole path matching algorithm is in linear time, could easily be constant time
+        @NotNull
+        public Map<String, String> findMatches(String incoming) {
+            return Collections.emptyMap();
         }
 
         public String name() {

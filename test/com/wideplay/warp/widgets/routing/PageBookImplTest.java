@@ -2,6 +2,7 @@ package com.wideplay.warp.widgets.routing;
 
 import com.wideplay.warp.widgets.*;
 import com.wideplay.warp.widgets.rendering.EmbedAs;
+import com.google.inject.name.Named;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -45,10 +46,67 @@ public class PageBookImplTest {
 
         PageBook.Page page = pageBook.get("/wiki");
         final MyPage bound = new MyPage();
-        page.doGet(bound);
+        page.doGet(bound, "/wiki");
 
         assert page.widget().equals(mock);
         assert bound.getted : "@Get method was not fired, on doGet()"; 
+    }
+
+    @Test
+    public final void fireGetMethodWithArgsOnPage() {
+        RenderableWidget mock = new RenderableWidget() {
+            public void render(Object bound, Respond respond) {
+
+            }
+        };
+
+        final PageBook pageBook = new PageBookImpl(null);
+        pageBook.at("/wiki/:title", mock, MyPageWithTemplate.class);
+
+        PageBook.Page page = pageBook.get("/wiki/IMAX");
+        final MyPageWithTemplate bound = new MyPageWithTemplate();
+        page.doGet(bound, "/wiki/IMAX");
+
+        assert page.widget().equals(mock);
+        assert "IMAX".equals(bound.title) : "@Get method was not fired, on doGet() with the right arg, instead: " + bound.title; 
+    }
+
+    @Test
+    public final void firePostMethodWithArgsOnPage() {
+        RenderableWidget mock = new RenderableWidget() {
+            public void render(Object bound, Respond respond) {
+
+            }
+        };
+
+        final PageBook pageBook = new PageBookImpl(null);
+        pageBook.at("/wiki/:title/cat/:id", mock, MyPageWithTemplate.class);
+
+        PageBook.Page page = pageBook.get("/wiki/IMAX_P/cat/12");
+        final MyPageWithTemplate bound = new MyPageWithTemplate();
+        page.doPost(bound, "/wiki/IMAX_P/cat/12");
+
+        assert page.widget().equals(mock);
+        assert "IMAX_P".equals(bound.post) && "12".equals(bound.id) 
+                : "@Post method was not fired, on doPost() with the right arg, instead: " + bound.post;
+    }
+
+    @Test(expectedExceptions = InvalidEventHandlerException.class)
+    public final void errorOnPostMethodWithUnnamedArgs() {
+        RenderableWidget mock = new RenderableWidget() {
+            public void render(Object bound, Respond respond) {
+
+            }
+        };
+
+        final PageBook pageBook = new PageBookImpl(null);
+        pageBook.at("/wiki/:title/cat/:id", mock, MyBrokenPageWithTemplate.class);
+
+        PageBook.Page page = pageBook.get("/wiki/IMAX_P/cat/12");
+        final MyBrokenPageWithTemplate bound = new MyBrokenPageWithTemplate();
+        page.doPost(bound, "/wiki/IMAX_P/cat/12");
+
+        assert page.widget().equals(mock);
     }
 
     @Test
@@ -64,7 +122,7 @@ public class PageBookImplTest {
 
         PageBook.Page page = pageBook.get("/wiki");
         final MyPage bound = new MyPage();
-        page.doPost(bound);
+        page.doPost(bound, "/wiki");
 
         assert page.widget().equals(mock);
         assert bound.posted : "@Post method was not fired, on doPost()";
@@ -142,6 +200,36 @@ public class PageBookImplTest {
         @Post
         public void post() {
             posted = true;
+        }
+
+    }
+
+    @At("/wiki/:title/cat/:id")
+    @EmbedAs("Hi")
+    public static class MyPageWithTemplate {
+        private String title;
+        private boolean posted;
+        private String post;
+        private String id;
+
+        @Get
+        public void get(@Named("title") String title) {
+            this.title = title;
+        }
+
+        @Post
+        public void post(@Named("title") String title, @Named("id") String id) {
+            this.post = title;
+            this.id = id;
+        }
+
+    }
+    @At("/wiki/:title/cat/:id")
+    @EmbedAs("Hi")
+    public static class MyBrokenPageWithTemplate {
+
+        @Post
+        public void post(@Named("title") String title, int x, @Named("id") String id) {
         }
 
     }
