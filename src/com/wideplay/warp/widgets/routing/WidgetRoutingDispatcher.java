@@ -23,6 +23,11 @@ class WidgetRoutingDispatcher implements RoutingDispatcher {
 
     public Respond dispatch(HttpServletRequest request) {
         final PageBook.Page page = book.get(request.getPathInfo());
+
+        //could not dispatch as there was no match
+        if (null == page)
+            return null;
+
         final Respond respond = respondProvider.get();
 
         //bind request

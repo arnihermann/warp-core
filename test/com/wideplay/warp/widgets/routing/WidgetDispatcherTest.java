@@ -19,7 +19,7 @@ import java.io.PrintWriter;
  */
 public class WidgetDispatcherTest {
     @Test
-    public final void dispatchRequestAndRespond() throws IOException {
+    public final void dispatchRequestAndRespond() {
         final HttpServletRequest request = createMock(HttpServletRequest.class);
         HttpServletResponse mockResponse = createMock(HttpServletResponse.class);
         PageBook pageBook = createMock(PageBook.class);
@@ -72,6 +72,33 @@ public class WidgetDispatcherTest {
         assert out == respond : "Did not respond correctly";
         
         verify(request, page, pageBook, widget, respond);
+
+    }
+
+    @Test
+    public final void dispatchNothingBecuaseOfNoUriMatch() {
+        final HttpServletRequest request = createMock(HttpServletRequest.class);
+        PageBook pageBook = createMock(PageBook.class);
+
+        @SuppressWarnings("unchecked")
+        Provider<Respond> respond = createMock(Provider.class);
+
+        Object pageOb = new Object();
+
+        expect(request.getPathInfo())
+                .andReturn("/not_thing");
+
+        expect(pageBook.get("/not_thing"))
+                .andReturn(null);
+
+        replay(request, pageBook, respond);
+
+        Respond out = new WidgetRoutingDispatcher(pageBook, respond).dispatch(request);
+
+
+        assert out == null : "Did not respond correctly";
+
+        verify(request, pageBook, respond);
 
     }
 }
