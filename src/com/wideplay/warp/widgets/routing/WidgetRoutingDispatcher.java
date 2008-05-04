@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import net.jcip.annotations.Immutable;
 
+import java.util.Map;
+
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
@@ -53,7 +55,8 @@ class WidgetRoutingDispatcher implements RoutingDispatcher {
         final String pathInfo = request.getPathInfo();
         
         if ("GET".equalsIgnoreCase(method))
-            page.doGet(instance, pathInfo);
+            //noinspection unchecked
+            page.doGet(instance, pathInfo, request.getParameterMap());
         else if ("POST".equalsIgnoreCase(method))
             page.doPost(instance, pathInfo);
     }

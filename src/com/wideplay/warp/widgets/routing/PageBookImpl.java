@@ -198,7 +198,7 @@ class PageBookImpl implements PageBook {
             return injector.getInstance(clazz);
         }
 
-        public void doGet(Object page, String pathInfo) {
+        public void doGet(Object page, String pathInfo, Map<String, String[]> params) {
             //nothing to fire
             if (null == get)
                 return;

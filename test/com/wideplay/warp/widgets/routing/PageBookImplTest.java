@@ -6,6 +6,9 @@ import com.google.inject.name.Named;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.util.Map;
+import java.util.HashMap;
+
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
@@ -46,10 +49,58 @@ public class PageBookImplTest {
 
         PageBook.Page page = pageBook.get("/wiki");
         final MyPage bound = new MyPage();
-        page.doGet(bound, "/wiki");
+        page.doGet(bound, "/wiki", new HashMap<String, String[]>());
 
         assert page.widget().equals(mock);
         assert bound.getted : "@Get method was not fired, on doGet()"; 
+    }
+
+    @Test
+    public final void fireGetMethodOnPageToCorrectHandler() {
+        RenderableWidget mock = new RenderableWidget() {
+            public void render(Object bound, Respond respond) {
+
+            }
+        };
+
+        Map<String, String[]> params = new HashMap<String, String[]>() {{
+            put("event", new String[] { "1", "2" });
+        }};
+
+        final PageBook pageBook = new PageBookImpl(null);
+        pageBook.at("/wiki", mock, MyEventSupportingPage.class);
+
+        PageBook.Page page = pageBook.get("/wiki");
+        final MyEventSupportingPage bound = new MyEventSupportingPage();
+        page.doGet(bound, "/wiki", params);
+
+        assert page.widget().equals(mock);
+        assert bound.getted1 : "@Get @On method was not fired, on doGet() for [event=1]";
+        assert bound.getted2 : "@Get @On method was not fired, on doGet() for [event=2]";
+    }
+
+    @Test
+    public final void fireGetMethodOnPageToCorrectHandlerOnlyOnce() {
+        RenderableWidget mock = new RenderableWidget() {
+            public void render(Object bound, Respond respond) {
+
+            }
+        };
+
+        Map<String, String[]> params = new HashMap<String, String[]>() {{
+            put("event", new String[] { "2" });
+        }};
+
+        final PageBook pageBook = new PageBookImpl(null);
+        pageBook.at("/wiki", mock, MyEventSupportingPage.class);
+
+        PageBook.Page page = pageBook.get("/wiki");
+        final MyEventSupportingPage bound = new MyEventSupportingPage();
+        page.doGet(bound, "/wiki", params);
+
+        assert page.widget().equals(mock);
+        assert !bound.getted1 : "@Get @On method was fired, on doGet() for [event=2]";
+        assert bound.getted2 : "@Get @On method was not fired, on doGet() for [event=2]";
     }
 
     @Test
@@ -65,7 +116,7 @@ public class PageBookImplTest {
 
         PageBook.Page page = pageBook.get("/wiki/IMAX");
         final MyPageWithTemplate bound = new MyPageWithTemplate();
-        page.doGet(bound, "/wiki/IMAX");
+        page.doGet(bound, "/wiki/IMAX", new HashMap<String, String[]>());
 
         assert page.widget().equals(mock);
         assert "IMAX".equals(bound.title) : "@Get method was not fired, on doGet() with the right arg, instead: " + bound.title; 
@@ -186,6 +237,28 @@ public class PageBookImplTest {
 
     }
 
+    @At("/oas") @On("event")
+    public static class MyEventSupportingPage {
+        private boolean getted1;
+        private boolean getted2;
+        private boolean posted;
+
+        @Get("1")
+        public void get1() {
+            getted1 = true;
+        }
+
+        @Get("2")
+        public void get2() {
+            getted2 = true;
+        }
+
+        @Post
+        public void post() {
+            posted = true;
+        }
+
+    }
     @At("/oas")
     @EmbedAs("Hi")
     public static class MyPage {
