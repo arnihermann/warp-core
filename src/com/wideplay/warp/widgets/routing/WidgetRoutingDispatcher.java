@@ -58,6 +58,7 @@ class WidgetRoutingDispatcher implements RoutingDispatcher {
             //noinspection unchecked
             page.doGet(instance, pathInfo, request.getParameterMap());
         else if ("POST".equalsIgnoreCase(method))
-            page.doPost(instance, pathInfo);
+            //noinspection unchecked
+            page.doPost(instance, pathInfo, request.getParameterMap());
     }
 }

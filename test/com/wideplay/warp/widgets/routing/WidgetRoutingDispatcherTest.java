@@ -9,6 +9,7 @@ import org.testng.annotations.Test;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
@@ -28,6 +29,9 @@ public class WidgetRoutingDispatcherTest {
         expect(request.getPathInfo())
                 .andReturn("/thing")
                 .anyTimes();
+
+        expect(request.getParameterMap())
+                .andReturn(new HashMap());
 
         expect(pageBook.get("/thing"))
                 .andReturn(page);
@@ -135,6 +139,9 @@ public class WidgetRoutingDispatcherTest {
                 .andReturn("/thing")
                 .anyTimes();
 
+        expect(request.getParameterMap())
+                .andReturn(new HashMap());
+
         expect(pageBook.get("/thing"))
                 .andReturn(page);
 
@@ -150,7 +157,8 @@ public class WidgetRoutingDispatcherTest {
         expect(request.getMethod())
                 .andReturn("POST");
 
-        page.doPost(pageOb, "/thing");
+        //noinspection unchecked
+        page.doPost(eq(pageOb), eq("/thing"), isA(Map.class));
         expectLastCall().once();
 
 

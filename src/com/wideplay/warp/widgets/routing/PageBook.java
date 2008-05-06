@@ -23,6 +23,6 @@ public interface PageBook {
 
         void doGet(Object page, String pathInfo, Map<String, String[]> params);
 
-        void doPost(Object page, String pathInfo);
+        void doPost(Object page, String pathInfo, Map<String, String[]> params);
     }
 }

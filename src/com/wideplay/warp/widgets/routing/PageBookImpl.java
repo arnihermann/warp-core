@@ -7,6 +7,7 @@ import com.google.inject.name.Named;
 import com.wideplay.warp.widgets.Get;
 import com.wideplay.warp.widgets.Post;
 import com.wideplay.warp.widgets.RenderableWidget;
+import com.wideplay.warp.widgets.On;
 import com.wideplay.warp.widgets.rendering.EmbedAs;
 import net.jcip.annotations.ThreadSafe;
 
@@ -111,17 +112,19 @@ class PageBookImpl implements PageBook {
         return pagesByName.get(name);
     }
 
+
+    @On("") //the default on (hacky!!)
     public static class PageTuple implements Page {
         private final PathMatcher matcher;
         private final RenderableWidget pageWidget;
         private final Class<?> clazz;
         private final Injector injector;
 
-        private final Method get;
-        private final List<String> getArgs;
+        private final Map<String, MethodTuple> get;
+        private final Map<String, MethodTuple> post;
 
-        private final Method post;
-        private final List<String> postArgs;
+        //dispatcher switch
+        private final On on;
 
         public PageTuple(PathMatcher matcher, RenderableWidget pageWidget, Class<?> clazz, Injector injector) {
             this.matcher = matcher;
@@ -129,17 +132,157 @@ class PageBookImpl implements PageBook {
             this.clazz = clazz;
             this.injector = injector;
 
-            this.get = reflect(Get.class);
-            if (null != get)
-                this.getArgs = reflect(get);
-            else
-                this.getArgs = null;
+            this.on = reflectOn(clazz);
+            this.get = reflectGet();
+            this.post = reflectPost();
+        }
 
-            this.post = reflect(Post.class);
-            if (null != post)
-                this.postArgs = reflect(post);
+        //the @On request parameter-based event dispatcher
+        private On reflectOn(Class<?> clazz) {
+            final On on = clazz.getAnnotation(On.class);
+            if (null != on)
+                return on;
             else
-                this.postArgs = null;
+                return PageTuple.class.getAnnotation(On.class);
+        }
+
+
+        /**
+         * Returns a map of @Get.value() to @Get-marked methods
+         */
+        @SuppressWarnings({"JavaDoc"})
+        private Map<String, MethodTuple> reflectGet() {
+            final Map<String, MethodTuple> map = new HashMap<String, MethodTuple>();
+
+            //first search class's methods only
+            final Class<Get> get = Get.class;
+            for (Method method : clazz.getDeclaredMethods()) {
+                if (method.isAnnotationPresent(get)) {
+                    if (!method.isAccessible())
+                        method.setAccessible(true); //ugh
+
+                    //remember default value is empty string
+                    map.put(method.getAnnotation(get).value(), new MethodTuple(method));
+                }
+            }
+
+            for (Method method : clazz.getMethods()) {
+                if (method.isAnnotationPresent(get)) {
+                    if (!method.isAccessible())
+                        method.setAccessible(true); //ugh
+
+                    //remember default value is empty string
+                    map.put(method.getAnnotation(get).value(), new MethodTuple(method));
+                }
+            }
+
+            return map;
+        }
+
+
+        /**
+         * Returns a map of @Post.value() to @Post-marked methods
+         */
+        @SuppressWarnings({"JavaDoc"})
+        private Map<String, MethodTuple> reflectPost() {
+            final Map<String, MethodTuple> map = new HashMap<String, MethodTuple>();
+
+            //first search class's methods only
+            final Class<Post> get = Post.class;
+            for (Method method : clazz.getDeclaredMethods()) {
+                if (method.isAnnotationPresent(get)) {
+                    if (!method.isAccessible())
+                        method.setAccessible(true); //ugh
+
+                    //remember default value is empty string
+                    map.put(method.getAnnotation(get).value(), new MethodTuple(method));
+                }
+            }
+
+            for (Method method : clazz.getMethods()) {
+                if (method.isAnnotationPresent(get)) {
+                    if (!method.isAccessible())
+                        method.setAccessible(true); //ugh
+
+                    //remember default value is empty string
+                    map.put(method.getAnnotation(get).value(), new MethodTuple(method));
+                }
+            }
+
+            return map;
+        }
+
+        public RenderableWidget widget() {
+            return pageWidget;
+        }
+
+        public Object instantiate() {
+            return injector.getInstance(clazz);
+        }
+
+        public void doGet(Object page, String pathInfo, Map<String, String[]> params) {
+            //nothing to fire
+            if (get.isEmpty())
+                return;
+
+            final Map<String, String> map = matcher.findMatches(pathInfo);
+
+            //find method to dispatch to
+            final String[] events = params.get(on.value());
+
+            if (null != events)
+                for (String event : events) {
+                    MethodTuple methodTuple = get.get(event);
+
+                    //no event handler registered for this value (so fire to the default)
+                    if (null == methodTuple)
+                        methodTuple = get.get("");
+
+                    //or fire event handler(s)
+                    methodTuple.call(page, map);
+                }
+            else
+                //fire default handler
+                get.get("").call(page, map);
+        }
+
+        public void doPost(Object page, String pathInfo, Map<String, String[]> params) {
+            //nothing to fire
+            if (post.isEmpty())
+                return;
+
+            final Map<String, String> map = matcher.findMatches(pathInfo);
+
+            //find method ot dispatch to
+            final String[] events = params.get(on.value());
+
+            if (null != events)
+                for (String event : events) {
+                    MethodTuple methodTuple = post.get(event);
+
+                    //no event handler registered (so fire to the default)
+                    if (null == methodTuple)
+                        methodTuple = post.get("");
+
+                    //or fire event handler(s)
+                    methodTuple.call(page, map);
+                }
+            else
+                //fire default handler
+                post.get("").call(page, map);
+        }
+
+
+
+    }
+
+    private static class MethodTuple {
+        private final Method method;
+        private final List<String> args;
+
+        private MethodTuple(Method method) {
+            this.method = method;
+            this.args = reflect(method);
         }
 
         private List<String> reflect(Method method) {
@@ -168,76 +311,23 @@ class PageBookImpl implements PageBook {
             return Collections.unmodifiableList(args);
         }
 
-        private Method reflect(Class<? extends Annotation> annotation) {
-            //first search class's methods only
-
-            for (Method method : clazz.getDeclaredMethods()) {
-                if (method.isAnnotationPresent(annotation)) {
-                    if (!method.isAccessible())
-                        method.setAccessible(true); //ugh
-                    return method;
-                }
-            }
-
-            for (Method method : clazz.getMethods()) {
-                if (method.isAnnotationPresent(annotation)) {
-                    if (!method.isAccessible())
-                        method.setAccessible(true); //ugh
-                    return method;
-                }
-            }
-
-            return null;
-        }
-
-        public RenderableWidget widget() {
-            return pageWidget;
-        }
-
-        public Object instantiate() {
-            return injector.getInstance(clazz);
-        }
-
-        public void doGet(Object page, String pathInfo, Map<String, String[]> params) {
-            //nothing to fire
-            if (null == get)
-                return;
-
-            final Map<String, String> map = matcher.findMatches(pathInfo);
-
+        public void call(Object page, Map<String, String> map) {
             List<String> arguments = new ArrayList<String>();
-            for (String argName : getArgs) {
+            for (String argName : args) {
                 arguments.add(map.get(argName));
             }
 
-            call(page, get, arguments.toArray());
+            call(page, method, arguments.toArray());
         }
 
-        public void doPost(Object page, String pathInfo) {
-            //nothing to fire
-            if (null == post)
-                return;
-
-            final Map<String, String> map = matcher.findMatches(pathInfo);
-
-            List<String> arguments = new ArrayList<String>();
-            for (String argName : postArgs) {
-                arguments.add(map.get(argName));
+        private static void call(Object page, final Method method, Object[] args) {
+            try {
+                method.invoke(page, args);
+            } catch (IllegalAccessException e) {
+                throw new EventDispatchException("Could not access event method: " + method, e);
+            } catch (InvocationTargetException e) {
+                throw new EventDispatchException("Event method threw an exception: " + method, e);
             }
-
-            call(page, post, arguments.toArray());
         }
-
-        private void call(Object page, final Method method, Object[] args) {
-            if (null != method)
-                try {
-                    method.invoke(page, args);
-                } catch (IllegalAccessException e) {
-                    throw new EventDispatchException("Could not access event method: " + method, e);
-                } catch (InvocationTargetException e) {
-                    throw new EventDispatchException("Event method threw an exception: " + method, e);
-                }
-        }
-
     }
 }

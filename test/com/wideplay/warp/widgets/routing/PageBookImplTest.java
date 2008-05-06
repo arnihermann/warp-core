@@ -80,6 +80,30 @@ public class PageBookImplTest {
     }
 
     @Test
+    public final void firePostMethodOnPageToCorrectHandler() {
+        RenderableWidget mock = new RenderableWidget() {
+            public void render(Object bound, Respond respond) {
+
+            }
+        };
+
+        Map<String, String[]> params = new HashMap<String, String[]>() {{
+            put("event", new String[] { "1", "2" });
+        }};
+
+        final PageBook pageBook = new PageBookImpl(null);
+        pageBook.at("/wiki", mock, MyEventSupportingPage.class);
+
+        PageBook.Page page = pageBook.get("/wiki");
+        final MyEventSupportingPage bound = new MyEventSupportingPage();
+        page.doPost(bound, "/wiki", params);
+
+        assert page.widget().equals(mock);
+        assert bound.posted1 : "@Post @On method was not fired, on doPost() for [event=1]";
+        assert bound.posted2 : "@Post @On method was not fired, on doPost() for [event=2]";
+    }
+
+    @Test
     public final void fireGetMethodOnPageToCorrectHandlerOnlyOnce() {
         RenderableWidget mock = new RenderableWidget() {
             public void render(Object bound, Respond respond) {
@@ -99,8 +123,87 @@ public class PageBookImplTest {
         page.doGet(bound, "/wiki", params);
 
         assert page.widget().equals(mock);
-        assert !bound.getted1 : "@Get @On method was fired, on doGet() for [event=2]";
+        assert !bound.getted1 : "@Get @On method was fired, on doGet() for [event=1]";
         assert bound.getted2 : "@Get @On method was not fired, on doGet() for [event=2]";
+    }
+
+    @Test
+    public final void firePostMethodOnPageToCorrectHandlerOnlyOnce() {
+        RenderableWidget mock = new RenderableWidget() {
+            public void render(Object bound, Respond respond) {
+
+            }
+        };
+
+        Map<String, String[]> params = new HashMap<String, String[]>() {{
+            put("event", new String[] { "2" });
+        }};
+
+        final PageBook pageBook = new PageBookImpl(null);
+        pageBook.at("/wiki", mock, MyEventSupportingPage.class);
+
+        PageBook.Page page = pageBook.get("/wiki");
+        final MyEventSupportingPage bound = new MyEventSupportingPage();
+        page.doPost(bound, "/wiki", params);
+
+        assert page.widget().equals(mock);
+        assert !bound.posted1 : "@Post @On method was fired, on doGet() for [event=1]";
+        assert bound.posted2 : "@Post @On method was not fired, on doGet() for [event=2]";
+    }
+
+    @Test
+    public final void fireGetMethodOnPageToDefaultHandler() {
+        RenderableWidget mock = new RenderableWidget() {
+            public void render(Object bound, Respond respond) {
+
+            }
+        };
+
+        Map<String, String[]> params = new HashMap<String, String[]>() {{
+            put("event", new String[] { "3" });
+        }};
+
+        final PageBook pageBook = new PageBookImpl(null);
+        pageBook.at("/wiki", mock, MyEventSupportingPage.class);
+
+        PageBook.Page page = pageBook.get("/wiki");
+        final MyEventSupportingPage bound = new MyEventSupportingPage();
+        page.doGet(bound, "/wiki", params);
+
+        assert page.widget().equals(mock);
+        assert !bound.getted1 : "@Get @On method was fired, on doGet() for [event=1]";
+        assert !bound.getted2 : "@Get @On method was fired, on doGet() for [event=2]";
+        assert bound.defaultGet : "@Get @On default method was not fired, on doGet() for [event=...]";
+
+    }
+
+
+    @Test
+    public final void firePostMethodOnPageToDefaultHandler() {
+        RenderableWidget mock = new RenderableWidget() {
+            public void render(Object bound, Respond respond) {
+
+            }
+        };
+
+        Map<String, String[]> params = new HashMap<String, String[]>() {{
+            put("event", new String[] { "3" });
+        }};
+
+        final PageBook pageBook = new PageBookImpl(null);
+        pageBook.at("/wiki", mock, MyEventSupportingPage.class);
+
+        PageBook.Page page = pageBook.get("/wiki");
+        final MyEventSupportingPage bound = new MyEventSupportingPage();
+        page.doPost(bound, "/wiki", params);
+
+        assert page.widget().equals(mock);
+        assert !bound.getted2: "@Get @On method was fired, on doPost() for [event=2]";
+        assert !bound.getted1 : "@Get @On method was fired, on doPost() for [event=1]";
+        assert !bound.posted1 : "@Post @On method was fired, on doPost() for [event=1]";
+        assert !bound.posted2 : "@Post @On method was fired, on doPost() for [event=2]";
+        assert bound.defaultPost : "@Post @On default method was not fired, on doPost() for [event=...]";
+
     }
 
     @Test
@@ -135,7 +238,7 @@ public class PageBookImplTest {
 
         PageBook.Page page = pageBook.get("/wiki/IMAX_P/cat/12");
         final MyPageWithTemplate bound = new MyPageWithTemplate();
-        page.doPost(bound, "/wiki/IMAX_P/cat/12");
+        page.doPost(bound, "/wiki/IMAX_P/cat/12", new HashMap<String, String[]>());
 
         assert page.widget().equals(mock);
         assert "IMAX_P".equals(bound.post) && "12".equals(bound.id) 
@@ -155,7 +258,7 @@ public class PageBookImplTest {
 
         PageBook.Page page = pageBook.get("/wiki/IMAX_P/cat/12");
         final MyBrokenPageWithTemplate bound = new MyBrokenPageWithTemplate();
-        page.doPost(bound, "/wiki/IMAX_P/cat/12");
+        page.doPost(bound, "/wiki/IMAX_P/cat/12", new HashMap<String, String[]>());
 
         assert page.widget().equals(mock);
     }
@@ -173,7 +276,7 @@ public class PageBookImplTest {
 
         PageBook.Page page = pageBook.get("/wiki");
         final MyPage bound = new MyPage();
-        page.doPost(bound, "/wiki");
+        page.doPost(bound, "/wiki", new HashMap<String, String[]>());
 
         assert page.widget().equals(mock);
         assert bound.posted : "@Post method was not fired, on doPost()";
@@ -241,7 +344,10 @@ public class PageBookImplTest {
     public static class MyEventSupportingPage {
         private boolean getted1;
         private boolean getted2;
-        private boolean posted;
+        private boolean posted1;
+        private boolean posted2;
+        private boolean defaultGet;
+        private boolean defaultPost;
 
         @Get("1")
         public void get1() {
@@ -253,9 +359,23 @@ public class PageBookImplTest {
             getted2 = true;
         }
 
+        @Get
+        public void defaultGet() {
+            defaultGet = true;
+        }
+
+        @Post("1")
+        public void post1() {
+            posted1 = true;
+        }
+        @Post("2")
+        public void post2() {
+            posted2 = true;
+        }
+
         @Post
-        public void post() {
-            posted = true;
+        public void defaultPost() {
+            defaultPost = true;
         }
 
     }
