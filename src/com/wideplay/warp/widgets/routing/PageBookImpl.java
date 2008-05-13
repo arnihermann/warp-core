@@ -47,7 +47,7 @@ class PageBookImpl implements PageBook {
 
             //store in alias map if necessary
             if (clazz.isAnnotationPresent(EmbedAs.class)) {
-                pagesByName.put(clazz.getAnnotation(EmbedAs.class).value(), pageTuple);
+                pagesByName.put(clazz.getAnnotation(EmbedAs.class).value().toLowerCase(), pageTuple);
             }
 
             //is universal? (i.e. first element is a variable)
@@ -71,7 +71,7 @@ class PageBookImpl implements PageBook {
     }
 
     private static boolean isFirstElementVariable(String key) {
-        return ':' == key.charAt(0);
+        return key.length() > 0 && ':' == key.charAt(0);
     }
 
     String firstPathElement(String uri) {

@@ -5,6 +5,11 @@ import org.testng.annotations.Test;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.easymock.EasyMock.*;
+import com.wideplay.warp.widgets.routing.PageBook;
+import com.wideplay.warp.widgets.rendering.EmbedAs;
+import com.google.inject.Guice;
+
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
@@ -28,7 +33,7 @@ public class XmlTemplateParserTest {
     @Test
     public final void readShowIfWidgetTrue() {
         final Evaluator evaluator = new MvelEvaluator();
-        final WidgetRegistry registry = new WidgetRegistry(evaluator);
+        final WidgetRegistry registry = new WidgetRegistry(evaluator, createNiceMock(PageBook.class));
         registry.add("showif", ShowIfWidget.class);
 
 
@@ -66,7 +71,7 @@ public class XmlTemplateParserTest {
     @Test
     public final void readShowIfWidgetFalse() {
         final Evaluator evaluator = new MvelEvaluator();
-        final WidgetRegistry registry = new WidgetRegistry(evaluator);
+        final WidgetRegistry registry = new WidgetRegistry(evaluator, createNiceMock(PageBook.class));
         registry.add("showif", ShowIfWidget.class);
 
 
@@ -104,7 +109,7 @@ public class XmlTemplateParserTest {
     @Test
     public final void readTextWidgetValues() {
         final Evaluator evaluator = new MvelEvaluator();
-        final WidgetRegistry registry = new WidgetRegistry(evaluator);
+        final WidgetRegistry registry = new WidgetRegistry(evaluator, createNiceMock(PageBook.class));
         registry.add("showif", ShowIfWidget.class);
 
 
@@ -148,7 +153,7 @@ public class XmlTemplateParserTest {
     @Test
     public final void readXmlWidget() {
         final Evaluator evaluator = new MvelEvaluator();
-        final WidgetRegistry registry = new WidgetRegistry(evaluator);
+        final WidgetRegistry registry = new WidgetRegistry(evaluator, createNiceMock(PageBook.class));
         registry.add("showif", ShowIfWidget.class);
 
 
@@ -194,7 +199,7 @@ public class XmlTemplateParserTest {
     @Test
     public final void readXmlWidgetWithChildren() {
         final Evaluator evaluator = new MvelEvaluator();
-        final WidgetRegistry registry = new WidgetRegistry(evaluator);
+        final WidgetRegistry registry = new WidgetRegistry(evaluator, createNiceMock(PageBook.class));
         registry.add("showif", ShowIfWidget.class);
 
 
@@ -235,5 +240,68 @@ public class XmlTemplateParserTest {
         assert "<xml><div class=\"content\">hello </div></xml>"
                 .equals(s) : "Did not write expected output, instead: " + s;
     }
-    
+
+    @EmbedAs("MyFave")
+    public static class MyEmbeddedPage {
+        private boolean should = true;
+
+        public boolean isShould() {
+            return should;
+        }
+
+        public void setShould(boolean should) {
+            this.should = should;
+        }
+    }
+
+    @Test
+    public final void readEmbedWidget() {
+        final PageBook book = Guice.createInjector()      //hacky, where are you super-packages!
+                .getInstance(PageBook.class);
+
+        book.at("/somewhere", new TerminalWidgetChain(), MyEmbeddedPage.class);
+
+        final Evaluator evaluator = new MvelEvaluator();
+        final WidgetRegistry registry = new WidgetRegistry(evaluator, book);
+        registry.add("myFave", EmbedWidget.class);
+
+
+        RenderableWidget widget =
+                new XmlTemplateParser(evaluator, registry)
+                    .parse("<xml><div class='${clazz}'>hello @MyFave(should=false)<a href='/hi/${id}'>hideme</a></div></xml>");
+
+        assert null != widget : " null ";
+
+        final StringBuilder builder = new StringBuilder();
+        final Respond mockRespond = new StringBuilderRespond() {
+            @Override
+            public void write(String text) {
+                builder.append(text);
+            }
+
+            @Override
+            public void write(char text) {
+                builder.append(text);
+            }
+
+            @Override
+            public void chew() {
+                builder.deleteCharAt(builder.length() - 1);
+            }
+        };
+
+
+        Map<String, String> map = new HashMap<String, String>() {{
+            put("name", "Dhanji");
+            put("clazz", "content");
+            put("id", "12");
+        }};
+
+        widget.render(map, mockRespond);
+
+        final String s = builder.toString();
+        assert "<xml><div class=\"content\">hello </div></xml>"
+                .equals(s) : "Did not write expected output, instead: " + s;
+    }
+
 }

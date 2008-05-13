@@ -86,7 +86,9 @@ public class EmbedWidgetTest {
     }
 
     @Test(dataProvider = PAGES_FOR_EMBEDDING)
-    public final void pageEmbeddingSupressesNormalWidgetChain(final String pageName, final String passOn, final String expression) {
+    public final void pageEmbeddingSupressesNormalWidgetChain(String pageName, final String passOn, final String expression) {
+        //forName expects pageName to be in all-lower case (it's an optimization)
+        pageName = pageName.toLowerCase();
 
         final PageBook pageBook = createMock(PageBook.class);
         final PageBook.Page page = createMock(PageBook.Page.class);
@@ -118,7 +120,7 @@ public class EmbedWidgetTest {
         targetWidgetChain.addWidget(new XmlWidget(new TerminalWidgetChain(), "p", evaluator, Collections.EMPTY_MAP));
         widgetChain.addWidget(new ShowIfWidget(targetWidgetChain, "true", evaluator));
 
-        new EmbedWidget(widgetChain, expression, evaluator, pageBook, pageName)
+        new EmbedWidget(expression, evaluator, pageBook, pageName)
                 .render(new MyParentPage(passOn), respond);
 
         //assert bindings
@@ -134,7 +136,10 @@ public class EmbedWidgetTest {
 
 
     @Test(dataProvider = PAGES_FOR_EMBEDDING)
-    public final void pageEmbeddingChainsToEmbeddedWidget(final String pageName, final String passOn, final String expression) {
+    public final void pageEmbeddingChainsToEmbeddedWidget(String pageName, final String passOn, final String expression) {
+
+        //forName expects pageName to be in all-lower case (it's an optimization)
+        pageName = pageName.toLowerCase();
 
         final PageBook pageBook = createMock(PageBook.class);
         final PageBook.Page page = createMock(PageBook.Page.class);
@@ -168,7 +173,7 @@ public class EmbedWidgetTest {
 
 
 
-        new EmbedWidget(new TerminalWidgetChain(), expression, evaluator, pageBook, pageName)
+        new EmbedWidget(expression, evaluator, pageBook, pageName)
                 .render(new MyParentPage(passOn), respond);
 
         //assert bindings
@@ -183,9 +188,64 @@ public class EmbedWidgetTest {
     }
 
 
+    @Test(dataProvider = PAGES_FOR_EMBEDDING)
+    public final void pageEmbeddingChainsToEmbeddedWidgetBehavior(String pageName, final String passOn, final String expression) {
+
+        //forName expects pageName to be in all-lower case (it's an optimization)
+        pageName = pageName.toLowerCase();
+
+        final PageBook pageBook = createMock(PageBook.class);
+        final PageBook.Page page = createMock(PageBook.Page.class);
+        final Respond respond = new StringBuilderRespond();
+
+
+        final MvelEvaluator evaluator = new MvelEvaluator();
+
+        final WidgetChain widget = new WidgetChain();
+        final WidgetChain targetWidgetChain = new WidgetChain();
+        //noinspection unchecked
+        targetWidgetChain.addWidget(new XmlWidget(new TerminalWidgetChain(), "p", evaluator, new LinkedHashMap<String, String>() {{
+            put("class", "pretty");
+            put("id", "a-p-tag");
+        }}));
+        widget.addWidget(new ShowIfWidget(targetWidgetChain, "false", evaluator));
+
+        expect(pageBook.forName(pageName))
+                .andReturn(page);
+
+
+        //mypage does?
+        final MyEmbeddedPage myEmbeddedPage = new MyEmbeddedPage();
+        expect(page.instantiate())
+                .andReturn(myEmbeddedPage);
+
+        expect(page.widget())
+                .andReturn(widget);
+
+        replay(pageBook, page);
+
+
+
+        new EmbedWidget(expression, evaluator, pageBook, pageName)
+                .render(new MyParentPage(passOn), respond);
+
+        //assert bindings
+        assert myEmbeddedPage.isSet() : "variable not passed on to embedded page";
+        assert passOn.equals(myEmbeddedPage.getMessage()) : "variable not set on embedded page";
+
+        //the render was ok
+        final String resp = respond.toString();
+        assert "".equals(resp) : "widget not embedded correctly : " + resp;
+
+        verify(pageBook, page);
+    }
+
+
 
     @Test(dataProvider = PAGES_FOR_EMBEDDING)
-    public final void pageEmbeddingAndBinding(final String pageName, final String passOn, final String expression) {
+    public final void pageEmbeddingAndBinding(String pageName, final String passOn, final String expression) {
+        //forName expects pageName to be in all-lower case (it's an optimization)
+        pageName = pageName.toLowerCase();
 
         final PageBook pageBook = createMock(PageBook.class);
         final PageBook.Page page = createMock(PageBook.Page.class);
@@ -209,7 +269,7 @@ public class EmbedWidgetTest {
 
         replay(pageBook, page, mockRespond, widget);
 
-        new EmbedWidget(new WidgetChain(), expression, new MvelEvaluator(), pageBook, pageName)
+        new EmbedWidget(expression, new MvelEvaluator(), pageBook, pageName)
                 .render(new MyParentPage(passOn), mockRespond);
 
 
@@ -220,7 +280,9 @@ public class EmbedWidgetTest {
     }
 
     @Test(dataProvider = PAGES_FOR_EMBEDDING_BROKEN_EXCEPTION, expectedExceptions = IllegalArgumentException.class)
-    public final void failedPageEmbeddingThrowing(final String pageName, final String passOn, final String expression) {
+    public final void failedPageEmbeddingThrowing(String pageName, final String passOn, final String expression) {
+        //forName expects pageName to be in all-lower case (it's an optimization)
+        pageName = pageName.toLowerCase();
 
         final PageBook pageBook = createMock(PageBook.class);
         final PageBook.Page page = createMock(PageBook.Page.class);
@@ -244,7 +306,7 @@ public class EmbedWidgetTest {
 
         replay(pageBook, page, mockRespond, widget);
 
-        new EmbedWidget(new WidgetChain(), expression, new MvelEvaluator(), pageBook, pageName)
+        new EmbedWidget(expression, new MvelEvaluator(), pageBook, pageName)
                 .render(new MyParentPage(passOn), mockRespond);
 
 
@@ -254,7 +316,9 @@ public class EmbedWidgetTest {
     }
 
     @Test(dataProvider = PAGES_FOR_EMBEDDING_BROKEN)
-    public final void failedPageEmbedding(final String pageName, final String passOn, final String expression) {
+    public final void failedPageEmbedding(String pageName, final String passOn, final String expression) {
+        //forName expects pageName to be in all-lower case (it's an optimization)
+        pageName = pageName.toLowerCase();
 
         final PageBook pageBook = createMock(PageBook.class);
         final PageBook.Page page = createMock(PageBook.Page.class);
@@ -278,7 +342,7 @@ public class EmbedWidgetTest {
 
         replay(pageBook, page, mockRespond, widget);
 
-        new EmbedWidget(new WidgetChain(), expression, new MvelEvaluator(), pageBook, pageName)
+        new EmbedWidget(expression, new MvelEvaluator(), pageBook, pageName)
                 .render(new MyParentPage(passOn), mockRespond);
 
 

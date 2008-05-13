@@ -16,19 +16,16 @@ import net.jcip.annotations.Immutable;
  */
 @Immutable @Singleton
 class EmbedWidget implements RenderableWidget {
-    private final WidgetChain widgetChain;
     private final Map<String, String> bindExpressions;
     private final Evaluator evaluator;
     private final PageBook pageBook;
     private final String targetPage;
 
-    public EmbedWidget(WidgetChain widgetChain, String expression, Evaluator evaluator,
-                       PageBook pageBook, String targetPage) {
+    public EmbedWidget(String expression, Evaluator evaluator, PageBook pageBook, String targetPage) {
 
-        this.widgetChain = widgetChain;
         this.evaluator = evaluator;
         this.pageBook = pageBook;
-        this.targetPage = targetPage;
+        this.targetPage = targetPage.toLowerCase();
 
         //parse expression list
         this.bindExpressions = toBindMap(expression);
