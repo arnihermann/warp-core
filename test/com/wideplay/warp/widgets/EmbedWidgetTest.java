@@ -5,6 +5,10 @@ import org.testng.annotations.DataProvider;
 import com.wideplay.warp.widgets.routing.PageBook;
 import static org.easymock.EasyMock.*;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
@@ -82,7 +86,106 @@ public class EmbedWidgetTest {
     }
 
     @Test(dataProvider = PAGES_FOR_EMBEDDING)
-    public final void pageEmbedding(final String pageName, final String passOn, final String expression) {
+    public final void pageEmbeddingSupressesNormalWidgetChain(final String pageName, final String passOn, final String expression) {
+
+        final PageBook pageBook = createMock(PageBook.class);
+        final PageBook.Page page = createMock(PageBook.Page.class);
+        final Respond respond = new StringBuilderRespond();
+        final RenderableWidget widget = createMock(RenderableWidget.class);
+
+        expect(pageBook.forName(pageName))
+                .andReturn(page);
+
+
+        //mypage does?
+        final MyEmbeddedPage myEmbeddedPage = new MyEmbeddedPage();
+        expect(page.instantiate())
+                .andReturn(myEmbeddedPage);
+
+        expect(page.widget())
+                .andReturn(widget);
+
+        widget.render(myEmbeddedPage, respond);
+
+        
+        replay(pageBook, page, widget);
+
+        final MvelEvaluator evaluator = new MvelEvaluator();
+        final WidgetChain widgetChain = new WidgetChain();
+        final WidgetChain targetWidgetChain = new WidgetChain();
+
+        //noinspection unchecked
+        targetWidgetChain.addWidget(new XmlWidget(new TerminalWidgetChain(), "p", evaluator, Collections.EMPTY_MAP));
+        widgetChain.addWidget(new ShowIfWidget(targetWidgetChain, "true", evaluator));
+
+        new EmbedWidget(widgetChain, expression, evaluator, pageBook, pageName)
+                .render(new MyParentPage(passOn), respond);
+
+        //assert bindings
+        assert myEmbeddedPage.isSet() : "variable not passed on to embedded page";
+        assert passOn.equals(myEmbeddedPage.getMessage()) : "variable not set on embedded page";
+
+        //the render was ok
+        final String resp = respond.toString();
+        assert "".equals(resp) : "widget not embedded correctly : " + resp;
+        
+        verify(pageBook, page, widget);
+    }
+
+
+    @Test(dataProvider = PAGES_FOR_EMBEDDING)
+    public final void pageEmbeddingChainsToEmbeddedWidget(final String pageName, final String passOn, final String expression) {
+
+        final PageBook pageBook = createMock(PageBook.class);
+        final PageBook.Page page = createMock(PageBook.Page.class);
+        final Respond respond = new StringBuilderRespond();
+
+
+        final MvelEvaluator evaluator = new MvelEvaluator();
+
+        final WidgetChain widget = new WidgetChain();
+        final WidgetChain targetWidgetChain = new WidgetChain();
+        //noinspection unchecked
+        targetWidgetChain.addWidget(new XmlWidget(new TerminalWidgetChain(), "p", evaluator, new LinkedHashMap<String, String>() {{
+            put("class", "pretty");
+            put("id", "a-p-tag");
+        }}));
+        widget.addWidget(new ShowIfWidget(targetWidgetChain, "true", evaluator));
+
+        expect(pageBook.forName(pageName))
+                .andReturn(page);
+
+
+        //mypage does?
+        final MyEmbeddedPage myEmbeddedPage = new MyEmbeddedPage();
+        expect(page.instantiate())
+                .andReturn(myEmbeddedPage);
+
+        expect(page.widget())
+                .andReturn(widget);
+
+        replay(pageBook, page);
+
+
+
+        new EmbedWidget(new TerminalWidgetChain(), expression, evaluator, pageBook, pageName)
+                .render(new MyParentPage(passOn), respond);
+
+        //assert bindings
+        assert myEmbeddedPage.isSet() : "variable not passed on to embedded page";
+        assert passOn.equals(myEmbeddedPage.getMessage()) : "variable not set on embedded page";
+
+        //the render was ok
+        final String resp = respond.toString();
+        assert "<p class=\"pretty\" id=\"a-p-tag\"/>".equals(resp) : "widget not embedded correctly : " + resp;
+
+        verify(pageBook, page);
+    }
+
+
+
+    @Test(dataProvider = PAGES_FOR_EMBEDDING)
+    public final void pageEmbeddingAndBinding(final String pageName, final String passOn, final String expression) {
 
         final PageBook pageBook = createMock(PageBook.class);
         final PageBook.Page page = createMock(PageBook.Page.class);
@@ -103,7 +206,7 @@ public class EmbedWidgetTest {
 
         widget.render(myEmbeddedPage, mockRespond);
 
-        
+
         replay(pageBook, page, mockRespond, widget);
 
         new EmbedWidget(new WidgetChain(), expression, new MvelEvaluator(), pageBook, pageName)
@@ -112,7 +215,7 @@ public class EmbedWidgetTest {
 
         assert myEmbeddedPage.isSet() : "variable not passed on to embedded page";
         assert passOn.equals(myEmbeddedPage.getMessage()) : "variable not set on embedded page";
-        
+
         verify(pageBook, page, mockRespond, widget);
     }
 

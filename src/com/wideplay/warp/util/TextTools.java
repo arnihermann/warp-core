@@ -1,6 +1,5 @@
 package com.wideplay.warp.util;
 
-import com.wideplay.warp.WarpFilter;
 import com.wideplay.warp.WarpModule;
 
 import javax.servlet.http.HttpServletRequest;
@@ -104,8 +103,8 @@ public class TextTools {
         return request.getRequestURI().substring(request.getContextPath().length());
     }
 
-    public static String extractModuleDirFromFqn(String moduleRootDir, Class<WarpModule> moduleClass) {
-        return moduleRootDir.substring(0, moduleRootDir.length() - (WarpFilter.CLASS_EXT.length() + moduleClass.getSimpleName().length()));
+    static String extractModuleDirFromFqn(String moduleRootDir, Class<WarpModule> moduleClass) {
+        return moduleRootDir.substring(0, moduleRootDir.length() - (".class".length() + moduleClass.getSimpleName().length()));
     }
 
     public static String[] commaSeparatorRegexSplit(String viewports) {

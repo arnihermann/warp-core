@@ -32,7 +32,7 @@ public class ElRequestBinderTest {
         final Evaluator evaluator = Guice.createInjector()
                 .getInstance(Evaluator.class);
 
-        new ElRequestBinder(evaluator)
+        new MvelRequestBinder(evaluator)
                 .bind(request, o);
 
         assert "Dhanji".equals(o.getName());
@@ -66,7 +66,7 @@ public class ElRequestBinderTest {
         final Evaluator evaluator = Guice.createInjector()
                 .getInstance(Evaluator.class);
 
-        new ElRequestBinder(evaluator)
+        new MvelRequestBinder(evaluator)
                 .bind(request, o);
 
         assert "Dhanji".equals(o.getName());
@@ -98,7 +98,7 @@ public class ElRequestBinderTest {
         final Evaluator evaluator = Guice.createInjector()
                 .getInstance(Evaluator.class);
 
-        new ElRequestBinder(evaluator)
+        new MvelRequestBinder(evaluator)
                 .bind(request, o);
 
     }

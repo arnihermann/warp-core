@@ -2,25 +2,25 @@ package com.wideplay.warp.widgets;
 
 import com.google.inject.Inject;
 import com.google.inject.matcher.Matcher;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.wideplay.warp.util.Memo;
+import com.wideplay.warp.util.MemoFactory;
 
 import javax.servlet.ServletContext;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
 class ClassLister {
     private final ServletContext context;
-    
+
     private static final String PREFIX = "/WEB-INF/classes/";
     private static final String CLASS_SUFFIX = ".class";
 
-    private final Logger log = LoggerFactory.getLogger(ClassLister.class);
+    private final Logger log = Logger.getLogger(ClassLister.class.toString());
 
-    @Inject
     public ClassLister(ServletContext context) {
         this.context = context;
     }
@@ -49,7 +49,7 @@ class ClassLister {
                 Class<?> clazz = toClass(path.substring(PREFIX.length()));
 
                 if (matcher.matches(clazz)) {
-                    log.trace(String.format("%s matches criteria %s, adding...", clazz, matcher));
+                    log.fine(String.format("%s matches criteria %s, adding...", clazz, matcher));
                     classes.add(clazz);
                 }
             }
@@ -66,7 +66,7 @@ class ClassLister {
                     .replaceAll("/", ".")
             );
         } catch (ClassNotFoundException e) {
-            log.error("A class discovered by the scanner could not be found by the ClassLoader, something very odd has happened with the classloading (see root cause)", e);
+            log.severe("A class discovered by the scanner could not be found by the ClassLoader, something very odd has happened with the classloading (see root cause) " + e.toString());
             return null;    //something went wrong
         }
     }

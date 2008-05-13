@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
-@ImplementedBy(ElRequestBinder.class)
+@ImplementedBy(MvelRequestBinder.class)
 public interface RequestBinder {
     void bind(HttpServletRequest request, Object o);
 }
