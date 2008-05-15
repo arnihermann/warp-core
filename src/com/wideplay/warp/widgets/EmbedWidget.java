@@ -5,7 +5,6 @@ import com.wideplay.warp.util.Strings;
 import com.google.inject.Singleton;
 
 import java.util.Map;
-import java.util.HashMap;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 
@@ -68,6 +67,114 @@ class EmbedWidget implements RenderableWidget {
         }
 
         //chain to embedded page (widget)
-        page.widget().render(pageObject, respond);
+        final EmbeddedRespond embed = new EmbeddedRespond();
+        page.widget().render(pageObject, embed);
+
+        //extract and write embedded response to enclosing page's respond
+        respond.writeToHead(embed.toHeadString());
+        respond.write(embed.toString());
+    }
+
+    
+    static class EmbeddedRespond extends StringBuilderRespond {
+        private static final String HEAD_BEGIN = "<head";
+        private static final String HEAD_END = "</head>";
+        private static final String BODY_BEGIN = "<body";
+        private static final String BODY_END = "</body>";
+
+        //memo fields
+        private String head;
+        private String body;
+        private static final char NOT_IN_QUOTE = '\0';
+
+        public String toHeadString() {
+            if (null == head) {
+                //extract and store
+                extract(super.toString());
+            }
+
+            return head;
+        }
+
+        @Override
+        public String toString() {
+            if (null == body) {
+                extract(super.toString());
+            }
+
+            return body;
+        }
+
+        //state machine extracts <head> and <body> tag content separately
+        private void extract(String htmlDoc) {
+            int headEnd = extractHead(htmlDoc);
+
+            //now do the body...
+            int bodyStart = htmlDoc.indexOf(BODY_BEGIN, headEnd) + BODY_BEGIN.length();
+
+            //scan for end of the <body> start tag (beginning of body content)
+            char quote = NOT_IN_QUOTE;
+            for (int body = bodyStart; body < htmlDoc.length(); body++) {
+                final char c = htmlDoc.charAt(body);
+                if (isQuoteChar(c)) {
+                    if (quote == NOT_IN_QUOTE)
+                        quote = c;
+                    else if (quote == c)
+                        quote = NOT_IN_QUOTE;
+                }
+
+                if ('>' == c && NOT_IN_QUOTE == quote) {
+                    bodyStart = body + 1;
+                    break;
+                }
+            }
+
+            int bodyEnd = htmlDoc.indexOf(BODY_END, bodyStart);
+            this.body = htmlDoc.substring(bodyStart, bodyEnd);
+        }
+
+
+
+        private static boolean isQuoteChar(char c) {
+            return '"' == c || '\'' == c;
+        }
+
+        private int extractHead(String htmlDoc) {
+            int headStart = htmlDoc.indexOf(HEAD_BEGIN);
+            if (-1 == headStart) {
+                this.head = ""; //no head tag exists
+                return 0;
+            }
+
+            headStart += HEAD_BEGIN.length();
+
+            //scan for end of <head> start tag (beginning of head section)
+            char quote = NOT_IN_QUOTE;
+            for (int head = headStart; head < htmlDoc.length(); head++) {
+                final char c = htmlDoc.charAt(head);
+                if (isQuoteChar(c)) {
+                    if (quote == NOT_IN_QUOTE)
+                        quote = c;
+                    else if (quote == c)
+                        quote = NOT_IN_QUOTE;
+                }
+
+                if ('>' == c && NOT_IN_QUOTE == quote) {
+
+                    //check if this is a self-closing tag
+                    if ('/' == htmlDoc.charAt(head - 1)) {
+                        this.head = "";
+                        return head + 1;
+                    }
+
+                    headStart = head + 1;
+                    break;
+                }
+            }
+
+            int headEnd = htmlDoc.indexOf(HEAD_END, headStart);
+            this.head = htmlDoc.substring(headStart, headEnd);
+            return headEnd + HEAD_END.length();
+        }
     }
 }

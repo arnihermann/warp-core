@@ -17,7 +17,7 @@ class SingleWidgetChain extends WidgetChain {
         widget.render(bound, respond);
     }
 
-    public void addWidget(RenderableWidget renderableWidget) {
+    public WidgetChain addWidget(RenderableWidget renderableWidget) {
         throw new IllegalStateException("Cannot add children to single widget chain");
     }
 }

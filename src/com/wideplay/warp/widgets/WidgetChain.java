@@ -18,7 +18,8 @@ class WidgetChain implements RenderableWidget {
         }
     }
 
-    public void addWidget(RenderableWidget renderableWidget) {
+    public WidgetChain addWidget(RenderableWidget renderableWidget) {
         widgets.add(renderableWidget);
+        return this;
     }
 }

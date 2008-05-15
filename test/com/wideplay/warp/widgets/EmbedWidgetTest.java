@@ -187,6 +187,60 @@ public class EmbedWidgetTest {
         verify(pageBook, page);
     }
 
+    @Test(dataProvider = PAGES_FOR_EMBEDDING)
+    public final void pageEmbeddingChainsToEmbeddedWidgetHeaderWrap(String pageName, final String passOn, final String expression) {
+        //forName expects pageName to be in all-lower case (it's an optimization)
+        pageName = pageName.toLowerCase();
+
+        final PageBook pageBook = createMock(PageBook.class);
+        final PageBook.Page page = createMock(PageBook.Page.class);
+        final Respond respond = new StringBuilderRespond();
+
+        final MvelEvaluator evaluator = new MvelEvaluator();
+        final WidgetChain widget = new WidgetChain();
+        final WidgetChain targetWidgetChain = new WidgetChain();
+
+        //a nested <head><title> tag
+        //noinspection unchecked
+        XmlWidget titleTag = new XmlWidget(new WidgetChain()
+                .addWidget(new TextWidget("Msg: ${message}!", evaluator)), "title", evaluator, Collections.EMPTY_MAP);
+
+        //noinspection unchecked
+        targetWidgetChain.addWidget(new XmlWidget(new WidgetChain().addWidget(titleTag), "head", evaluator, Collections.EMPTY_MAP));
+        widget.addWidget(new ShowIfWidget(targetWidgetChain, "true", evaluator));
+
+        expect(pageBook.forName(pageName))
+                .andReturn(page);
+
+
+        //mypage does?
+        final MyEmbeddedPage myEmbeddedPage = new MyEmbeddedPage();
+        expect(page.instantiate())
+                .andReturn(myEmbeddedPage);
+
+        expect(page.widget())
+                .andReturn(widget);
+
+        replay(pageBook, page);
+
+        new WidgetChain()
+                .addWidget(new HeaderWidget(new TerminalWidgetChain(), "", evaluator))
+                .addWidget(new EmbedWidget(expression, evaluator, pageBook, pageName))
+
+                .render(new MyParentPage(passOn), respond);
+
+        //assert bindings
+        assert myEmbeddedPage.isSet() : "variable not passed on to embedded page";
+        assert passOn.equals(myEmbeddedPage.getMessage()) : "variable not set on embedded page";
+
+        //the render was ok
+        final String resp = respond.toString();
+
+        assert ("<head><title>Msg: " + passOn + "!</title></head>").equals(resp) : "header widget not wrapped correctly: " + resp;
+
+        verify(pageBook, page);
+    }
+
 
     @Test(dataProvider = PAGES_FOR_EMBEDDING)
     public final void pageEmbeddingChainsToEmbeddedWidgetBehavior(String pageName, final String passOn, final String expression) {
