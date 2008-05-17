@@ -67,6 +67,10 @@ class StringBuilderRespond implements Respond {
         out.deleteCharAt(out.length() - 1);
     }
 
+    public String getRedirect() {
+        return redirect;
+    }
+
     @Override
     public String toString() {
         //write requires to header first...

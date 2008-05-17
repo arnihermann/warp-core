@@ -514,6 +514,10 @@ public class PageBookImplTest {
         public void redirect(String to) {
             
         }
+
+        public String getRedirect() {
+            return null;
+        }
     }
 
     @At("/wiki")

@@ -23,6 +23,8 @@ public interface Respond {
 
     void redirect(String to);
 
+    String getRedirect();
+
     public static interface HtmlTagBuilder {
         void textField(String value, String s);
 

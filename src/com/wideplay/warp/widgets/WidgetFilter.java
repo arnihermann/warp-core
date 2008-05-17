@@ -39,8 +39,16 @@ public final class WidgetFilter implements Filter {
         //dispatch
         final Respond respond = dispatcher.dispatch(request);
 
-        if (null != respond)
-            response.getWriter().write(respond.toString());
+        //was there any matching page?
+        if (null != respond) {
+
+            //do we need to redirect or was this a successful render?
+            final String redirect = respond.getRedirect();
+            if (null != redirect)
+                response.sendRedirect(redirect);
+            else
+                response.getWriter().write(respond.toString());
+        }
         else
             //continue down filter-chain
             filterChain.doFilter(request, response);

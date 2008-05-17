@@ -22,6 +22,7 @@ import java.util.HashSet;
  */
 public class WidgetFilterTest {
     private static final String SOME_OUTPUT = "some outputdaoskdasd__" + new Date();
+    private static final String A_REDIRECT_LOCATION = "/a/redirect/location";
 
     @Test
     public final void init() throws ServletException {
@@ -130,6 +131,32 @@ public class WidgetFilterTest {
         verify(dispatcher, request, response, filterChain);
     }
 
+    @Test
+    public final void doFilterRedirects() throws IOException, ServletException {
+        RoutingDispatcher dispatcher = createMock(RoutingDispatcher.class);
+        HttpServletRequest request = createMock(HttpServletRequest.class);
+        HttpServletResponse response = createMock(HttpServletResponse.class);
+        FilterChain filterChain = createMock(FilterChain.class);
+
+        Respond respond = createMock(Respond.class);
+
+        //meaning no dispatch could be performed...
+        expect(dispatcher.dispatch(request))
+                .andReturn(respond);
+
+        expect(respond.getRedirect())
+                .andReturn(A_REDIRECT_LOCATION);
+
+        response.sendRedirect(A_REDIRECT_LOCATION);
+
+        replay(dispatcher, request, response, filterChain, respond);
+
+        new WidgetFilter(dispatcher, null)
+                .doFilter(request, response, filterChain);
+
+        verify(dispatcher, request, response, filterChain, respond);
+    }
+
     private Respond mockRespond() {
         //noinspection OverlyComplexAnonymousInnerClass
         return new Respond() {
@@ -155,6 +182,10 @@ public class WidgetFilterTest {
 
             public void redirect(String to) {
                 
+            }
+
+            public String getRedirect() {
+                return null;
             }
 
             @Override
