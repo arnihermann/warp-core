@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
+import java.util.HashSet;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
@@ -37,10 +38,10 @@ public class WidgetFilterTest {
 
         final boolean ran[] = new boolean[1];
         final PageWidgetBuilder pageWidgetBuilder = new PageWidgetBuilder(pageBook, new TemplateLoader(),
-                new XmlTemplateParser(evaluator, registry)) {
+                new XmlTemplateParser(evaluator, registry), new HashSet<Package>()) {
 
             @Override
-            public void scan(Package target, ServletContext context) {
+            public void scan(ServletContext context) {
                 ran[0] = true;
             }
         };

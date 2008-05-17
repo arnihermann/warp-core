@@ -14,22 +14,30 @@ class PageWidgetBuilder {
     private final PageBook pageBook;
     private final TemplateLoader loader;
     private final XmlTemplateParser parser;
+    private final Set<Package> packages;
 
     @Inject
-    PageWidgetBuilder(PageBook pageBook, TemplateLoader loader, XmlTemplateParser parser) {
+    PageWidgetBuilder(PageBook pageBook, TemplateLoader loader, XmlTemplateParser parser, @Packages Set<Package> packages) {
         this.pageBook = pageBook;
         this.loader = loader;
         this.parser = parser;
+        this.packages = packages;
     }
 
-    public void scan(Package target, ServletContext context) {
-        final Set<Class<?>> set = new ClassLister(context)
-                    .list(target, annotatedWith(At.class));
+    public void scan(ServletContext context) {
 
-        for (Class<?> page : set) {
-            final RenderableWidget widget = parser.parse(loader.load(page));
+        for (Package pack : packages) {
 
-            pageBook.at(page.getAnnotation(At.class).value(), widget, page);
+            //list any classes annotated with @At, @EmbedAs and @Export
+            final Set<Class<?>> set = new ClassLister(context)
+                                        .list(pack, annotatedWith(At.class));
+
+            //now iterate and build widgets and store them (or whatever)
+            for (Class<?> page : set) {
+                final RenderableWidget widget = parser.parse(loader.load(page));
+
+                pageBook.at(page.getAnnotation(At.class).value(), widget, page);
+            }
         }
     }
 }

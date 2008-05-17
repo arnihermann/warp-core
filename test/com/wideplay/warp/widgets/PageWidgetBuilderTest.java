@@ -9,6 +9,7 @@ import org.testng.annotations.Test;
 import javax.servlet.ServletContext;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
@@ -41,10 +42,13 @@ public class PageWidgetBuilderTest {
         registry.add("textfield", TextFieldWidget.class);
         registry.add("meta", HeaderWidget.class);
 
+        Set<Package> packages = new HashSet<Package>();
+        packages.add(target);
+
         new PageWidgetBuilder(book, new TemplateLoader(),
-                new XmlTemplateParser(evaluator, registry))
+                new XmlTemplateParser(evaluator, registry), packages)
                 
-                .scan(target, mock);
+                .scan(mock);
 
         assert null != book.get("/wiki/search");
         assert null != book.get("/wiki/page/bloogity");

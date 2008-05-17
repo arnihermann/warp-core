@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
@@ -17,12 +18,10 @@ class StringBuilderRespond implements Respond {
     private static final String TEXT_TAG_TEMPLATE = "warp-servlet.template.textfield";
     private static final String HEADER_PLACEHOLDER = "__w:w:HEADER_PLACEhOlDeR:NOWRITe::__";
 
-    //do not remove this volatile! This is a static..
-    private static volatile Map<String, String> templates;
+    private static final AtomicReference<Map<String, String>> templates = new AtomicReference<Map<String, String>>();
 
     StringBuilderRespond() {
-        //unsynchronized overwrite (contending overwrites are fine)
-        if (null == templates) {
+        if (null == templates.get()) {
             final Properties properties = new Properties();
             try {
                 properties.load(StringBuilderRespond.class.getResourceAsStream("templates.properties"));
@@ -31,7 +30,7 @@ class StringBuilderRespond implements Respond {
             }
 
             //noinspection unchecked
-            templates = (Map)properties;
+            templates.compareAndSet(null, (Map)properties);
         }
     }
 
@@ -91,7 +90,7 @@ class StringBuilderRespond implements Respond {
     private class HtmlBuilder implements HtmlTagBuilder {
 
         public void textField(String bind, String value) {
-            write(String.format(templates.get(TEXT_TAG_TEMPLATE), bind, value));
+            write(String.format(templates.get().get(TEXT_TAG_TEMPLATE), bind, value));
         }
 
         public void headerPlaceholder() {
