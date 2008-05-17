@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.wideplay.warp.widgets.Respond;
+import com.wideplay.warp.widgets.resources.ResourcesService;
 import com.wideplay.warp.widgets.binding.RequestBinder;
 import net.jcip.annotations.Immutable;
 
@@ -17,24 +18,44 @@ class WidgetRoutingDispatcher implements RoutingDispatcher {
     private final PageBook book;
     private final RequestBinder binder;
     private final Provider<Respond> respondProvider;
+    private final ResourcesService resourcesService;
 
     @Inject
-    public WidgetRoutingDispatcher(PageBook book, RequestBinder binder, Provider<Respond> respondProvider) {
+    public WidgetRoutingDispatcher(PageBook book, RequestBinder binder, Provider<Respond> respondProvider,
+                                   ResourcesService resourcesService) {
         this.book = book;
         this.binder = binder;
         this.respondProvider = respondProvider;
+        this.resourcesService = resourcesService;
     }
 
     public Respond dispatch(HttpServletRequest request) {
-        final PageBook.Page page = book.get(request.getPathInfo());
+        final String uri = request.getPathInfo();
+
+        //first try dispatching as a resource service
+        Respond respond = resourcesService.serve(uri);
+
+        if (null != respond)
+            return respond;
+
+
+        //otherwise try to dispatch as a widget/page
+        final PageBook.Page page = book.get(uri);
 
         //could not dispatch as there was no match
         if (null == page)
             return null;
 
-        final Respond respond = respondProvider.get();
+        respond = respondProvider.get();
         final Object instance = page.instantiate();
 
+        //fire events and render reponders
+        bindAndRespond(request, page, respond, instance);
+
+        return respond;
+    }
+
+    private void bindAndRespond(HttpServletRequest request, PageBook.Page page, Respond respond, Object instance) {
         //bind request
         binder.bind(request, instance);
 
@@ -46,8 +67,6 @@ class WidgetRoutingDispatcher implements RoutingDispatcher {
             respond.redirect((String)redirect);
         else
             page.widget().render(instance, respond);
-
-        return respond;
     }
 
     private Object fireEvent(HttpServletRequest request, PageBook.Page page, Object instance) {

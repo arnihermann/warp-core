@@ -3,6 +3,7 @@ package com.wideplay.warp.widgets.routing;
 import com.google.inject.Provider;
 import com.wideplay.warp.widgets.RenderableWidget;
 import com.wideplay.warp.widgets.Respond;
+import com.wideplay.warp.widgets.resources.ResourcesService;
 import com.wideplay.warp.widgets.binding.RequestBinder;
 import static org.easymock.EasyMock.*;
 import org.testng.annotations.Test;
@@ -17,6 +18,7 @@ import java.util.Map;
 public class WidgetRoutingDispatcherTest {
     private static final String REDIRECTED_POST = "/redirect_post";
     private static final String REDIRECTED_GET = "/redirect_get";
+    private static final String A_STATIC_RESOURCE_URI = "/not_thing";
 
     @Test
     public final void dispatchRequestAndRespondOnGet() {
@@ -66,7 +68,7 @@ public class WidgetRoutingDispatcherTest {
             public Respond get() {
                 return respond;
             }
-        }).dispatch(request);
+        }, createNiceMock(ResourcesService.class)).dispatch(request);
 
 
         assert out == respond : "Did not respond correctly";
@@ -123,7 +125,7 @@ public class WidgetRoutingDispatcherTest {
             public Respond get() {
                 return respond;
             }
-        }).dispatch(request);
+        }, createNiceMock(ResourcesService.class)).dispatch(request);
 
 
         assert out == respond : "Did not respond correctly";
@@ -182,7 +184,7 @@ public class WidgetRoutingDispatcherTest {
             public Respond get() {
                 return respond;
             }
-        }).dispatch(request);
+        }, createNiceMock(ResourcesService.class)).dispatch(request);
 
 
         assert out == respond : "Did not respond correctly";
@@ -241,7 +243,7 @@ public class WidgetRoutingDispatcherTest {
             public Respond get() {
                 return respond;
             }
-        }).dispatch(request);
+        }, createNiceMock(ResourcesService.class)).dispatch(request);
 
 
         assert out == respond : "Did not respond correctly";
@@ -300,7 +302,7 @@ public class WidgetRoutingDispatcherTest {
             public Respond get() {
                 return respond;
             }
-        }).dispatch(request);
+        }, createNiceMock(ResourcesService.class)).dispatch(request);
 
 
         assert out == respond : "Did not respond correctly";
@@ -319,19 +321,48 @@ public class WidgetRoutingDispatcherTest {
         Provider<Respond> respond = createMock(Provider.class);
 
         expect(request.getPathInfo())
-                .andReturn("/not_thing");
+                .andReturn(A_STATIC_RESOURCE_URI);
 
-        expect(pageBook.get("/not_thing"))
+        expect(pageBook.get(A_STATIC_RESOURCE_URI))
                 .andReturn(null);
 
         replay(request, pageBook, respond, binder);
 
-        Respond out = new WidgetRoutingDispatcher(pageBook, binder, respond).dispatch(request);
+        Respond out = new WidgetRoutingDispatcher(pageBook, binder, respond, createNiceMock(ResourcesService.class)).dispatch(request);
 
 
         assert out == null : "Did not respond correctly";
 
         verify(request, pageBook, respond, binder);
+
+    }
+
+    @Test
+    public final void dispatchStaticResource() {
+        final HttpServletRequest request = createMock(HttpServletRequest.class);
+        PageBook pageBook = createMock(PageBook.class);
+        RequestBinder binder = createMock(RequestBinder.class);
+        ResourcesService resourcesService = createMock(ResourcesService.class);
+        Respond mockRespond = createMock(Respond.class);
+
+        @SuppressWarnings("unchecked")
+        Provider<Respond> respond = createMock(Provider.class);
+
+        expect(request.getPathInfo())
+                .andReturn(A_STATIC_RESOURCE_URI);
+
+        expect(resourcesService.serve(A_STATIC_RESOURCE_URI))
+                .andReturn(mockRespond);
+
+        replay(request, pageBook, respond, binder, resourcesService);
+
+        Respond out = new WidgetRoutingDispatcher(pageBook, binder, respond, resourcesService).dispatch(request);
+
+
+        assert out != null : "Did not respond correctly";
+        assert mockRespond.equals(out);
+
+        verify(request, pageBook, respond, binder, resourcesService);
 
     }
 }

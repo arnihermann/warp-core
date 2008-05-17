@@ -1,8 +1,10 @@
 package com.wideplay.warp.widgets;
 
 import com.google.inject.Guice;
+import com.google.inject.Injector;
 import com.wideplay.warp.widgets.example.Wiki;
 import com.wideplay.warp.widgets.routing.PageBook;
+import com.wideplay.warp.widgets.resources.ResourcesService;
 import static org.easymock.EasyMock.*;
 import org.testng.annotations.Test;
 
@@ -20,7 +22,9 @@ public class PageWidgetBuilderTest {
     public final void scanPackageForPagesAndWidgets() {
         final Package target = Wiki.class.getPackage();
 
-        final PageBook book = Guice.createInjector().getInstance(PageBook.class);
+        final Injector injector = Guice.createInjector();
+        final PageBook book = injector.getInstance(PageBook.class);
+        final ResourcesService resourcesService = injector.getInstance(ResourcesService.class);
 
         final ServletContext mock = createMock(ServletContext.class);
 
@@ -46,7 +50,7 @@ public class PageWidgetBuilderTest {
         packages.add(target);
 
         new PageWidgetBuilder(book, new TemplateLoader(),
-                new XmlTemplateParser(evaluator, registry), packages)
+                new XmlTemplateParser(evaluator, registry), packages, resourcesService)
                 
                 .scan(mock);
 
@@ -55,5 +59,7 @@ public class PageWidgetBuilderTest {
         assert null != book.get("/aPage");
         assert null == book.get("/wiki/bloogity");
 
+        assert null != resourcesService.serve("/my.js");
+        assert null != resourcesService.serve("/your.js");
     }
 }

@@ -3,13 +3,14 @@ package com.wideplay.warp.widgets.example;
 import com.wideplay.warp.widgets.At;
 import com.wideplay.warp.widgets.Get;
 import com.wideplay.warp.widgets.On;
+import com.wideplay.warp.widgets.resources.Export;
 
 import java.util.Collection;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
-@At("/wiki/search") @On("event")
+@At("/wiki/search") @On("event") @Export(at = "/my.js", resource = "my.js")
 public class Search {   //defaults to @Show("Search.xhtml"), or @Show("Search.html")
 
     private String query;   //"get" param
