@@ -1,14 +1,13 @@
 package com.wideplay.warp.widgets;
 
+import com.google.inject.Guice;
+import com.wideplay.warp.widgets.rendering.EmbedAs;
+import com.wideplay.warp.widgets.routing.PageBook;
+import static org.easymock.EasyMock.createNiceMock;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.easymock.EasyMock.*;
-import com.wideplay.warp.widgets.routing.PageBook;
-import com.wideplay.warp.widgets.rendering.EmbedAs;
-import com.google.inject.Guice;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
@@ -150,6 +149,46 @@ public class XmlTemplateParserTest {
                 .replaceAll("'", "\"")
                 .equals(value) : "Did not write expected output, instead: " + value;
     }
+
+
+    @Test
+    public final void readAndRenderRequireWidget() {
+        final Evaluator evaluator = new MvelEvaluator();
+        final WidgetRegistry registry = new WidgetRegistry(evaluator, createNiceMock(PageBook.class));
+        registry.add("meta", HeaderWidget.class);
+
+
+        RenderableWidget widget =
+                new XmlTemplateParser(evaluator, registry)
+                    .parse("<html>@Meta <head>" +
+                            "   @Require <script type='text/javascript' src='my.js'> </script>" +
+                            "   @Require <script type='text/javascript' src='my.js'> </script>" +
+                            "</head>" +
+                            "<div class='${clazz}'>hello <a href='/people/${id}'>${name}</a></div></html>");
+
+        assert null != widget : " null ";
+
+        final Respond respond = new StringBuilderRespond();
+
+        Map<String, String> map = new HashMap<String, String>() {{
+            put("name", "Dhanji");
+            put("clazz", "content");
+            put("id", "12");
+        }};
+
+        widget.render(map, respond);
+
+        final String value = respond.toString();
+        assert ("<html><head>" +
+                "      <script type='text/javascript' src='my.js'> </script>" +
+                "</head>" +
+                "<div class='content'>hello <a href='/people/12'>Dhanji</a></div></html>")
+
+                .replaceAll("'", "\"")
+                .equals(value) : "Did not write expected output, instead: " + value;
+    }
+
+
     @Test
     public final void readXmlWidget() {
         final Evaluator evaluator = new MvelEvaluator();

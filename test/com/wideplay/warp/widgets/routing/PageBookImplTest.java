@@ -1,13 +1,13 @@
 package com.wideplay.warp.widgets.routing;
 
+import com.google.inject.name.Named;
 import com.wideplay.warp.widgets.*;
 import com.wideplay.warp.widgets.rendering.EmbedAs;
-import com.google.inject.name.Named;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
@@ -16,6 +16,8 @@ public class PageBookImplTest {
     private static final String FIRST_PATH_ELEMENTS = "firstPathElements";
     private static final String URI_TEMPLATES_AND_MATCHES = "uriTemplatesAndMatches";
     private static final String NOT_URIS_AND_TEMPLATES = "noturisandTemplates";
+    private static final String REDIRECTED_GET = "/redirected_get";
+    private static final String REDIRECTED_POST = "/redirected_post";
 
     @Test
     public final void storeAndRetrievePageInstance() {
@@ -53,6 +55,44 @@ public class PageBookImplTest {
 
         assert page.widget().equals(mock);
         assert bound.getted : "@Get method was not fired, on doGet()"; 
+    }
+
+   @Test
+    public final void fireGetMethodOnPageAndRedirectToURL() {
+        RenderableWidget mock = new RenderableWidget() {
+            public void render(Object bound, Respond respond) {
+
+            }
+        };
+
+        final PageBook pageBook = new PageBookImpl(null);
+        pageBook.at("/wiki", mock, MyRedirectingPage.class);
+
+        PageBook.Page page = pageBook.get("/wiki");
+        final MyRedirectingPage bound = new MyRedirectingPage();
+        Object redirect = page.doGet(bound, "/wiki", new HashMap<String, String[]>());
+
+        assert REDIRECTED_GET.equals(redirect);
+        assert page.widget().equals(mock);
+    }
+
+   @Test
+    public final void firePostMethodOnPageAndRedirectToURL() {
+        RenderableWidget mock = new RenderableWidget() {
+            public void render(Object bound, Respond respond) {
+
+            }
+        };
+
+        final PageBook pageBook = new PageBookImpl(null);
+        pageBook.at("/wiki", mock, MyRedirectingPage.class);
+
+        PageBook.Page page = pageBook.get("/wiki");
+        final MyRedirectingPage bound = new MyRedirectingPage();
+        Object redirect = page.doPost(bound, "/wiki", new HashMap<String, String[]>());
+
+        assert REDIRECTED_POST.equals(redirect);
+        assert page.widget().equals(mock);
     }
 
     @Test
@@ -465,6 +505,28 @@ public class PageBookImplTest {
 
         public void writeToHead(String text) {
             
+        }
+
+        public void require(String requireString) {
+            
+        }
+
+        public void redirect(String to) {
+            
+        }
+    }
+
+    @At("/wiki")
+    private class MyRedirectingPage {
+
+        @Get
+        public String get() {
+            return REDIRECTED_GET;
+        }
+
+        @Post
+        public String post() {
+            return REDIRECTED_POST;
         }
     }
 }

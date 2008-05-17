@@ -25,6 +25,7 @@ class HeaderWidget implements RenderableWidget {
 
         //render children (as necessary)
         widgetChain.render(bound, respond);
+
         respond.withHtml()
                 .headerPlaceholder();
         respond.write("</head>");

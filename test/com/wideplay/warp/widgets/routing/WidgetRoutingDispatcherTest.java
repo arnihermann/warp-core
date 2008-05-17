@@ -15,6 +15,9 @@ import java.util.Map;
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
 public class WidgetRoutingDispatcherTest {
+    private static final String REDIRECTED_POST = "/redirect_post";
+    private static final String REDIRECTED_GET = "/redirect_get";
+
     @Test
     public final void dispatchRequestAndRespondOnGet() {
         final HttpServletRequest request = createMock(HttpServletRequest.class);
@@ -48,8 +51,9 @@ public class WidgetRoutingDispatcherTest {
         expect(request.getMethod())
                 .andReturn("GET");
 
-        page.doGet(pageOb, "/thing", new HashMap<String, String[]>());
-        expectLastCall().once();
+        expect(page.doGet(pageOb, "/thing", new HashMap<String, String[]>()))
+                .andReturn(null);
+//        expectLastCall().once();
 
 
         widget.render(pageOb, respond);
@@ -70,7 +74,7 @@ public class WidgetRoutingDispatcherTest {
         verify(request, page, pageBook, widget, respond, binder);
 
     }
-//    @Test
+    @Test
     public final void dispatchRequestToCorrectEventHandlerOnGet() {
         final HttpServletRequest request = createMock(HttpServletRequest.class);
         PageBook pageBook = createMock(PageBook.class);
@@ -100,8 +104,13 @@ public class WidgetRoutingDispatcherTest {
         expect(request.getMethod())
                 .andReturn("GET");
 
-        page.doGet(pageOb, "/thing", new HashMap<String, String[]>());
-        expectLastCall().once();
+        final HashMap<String, String[]> parameterMap = new HashMap<String, String[]>();
+        expect(request.getParameterMap())
+                .andReturn(parameterMap);
+
+        expect(page.doGet(pageOb, "/thing", parameterMap))
+                .andReturn(null);
+//        expectLastCall().once();
 
 
         widget.render(pageOb, respond);
@@ -158,12 +167,131 @@ public class WidgetRoutingDispatcherTest {
                 .andReturn("POST");
 
         //noinspection unchecked
-        page.doPost(eq(pageOb), eq("/thing"), isA(Map.class));
-        expectLastCall().once();
+        expect(page.doPost(eq(pageOb), eq("/thing"), isA(Map.class)))
+                .andReturn(null);
+//        expectLastCall().once();
 
 
         widget.render(pageOb, respond);
         expectLastCall().once();
+
+
+        replay(request, page, pageBook, widget, respond, binder);
+
+        Respond out = new WidgetRoutingDispatcher(pageBook, binder, new Provider<Respond>() {
+            public Respond get() {
+                return respond;
+            }
+        }).dispatch(request);
+
+
+        assert out == respond : "Did not respond correctly";
+
+        verify(request, page, pageBook, widget, respond, binder);
+
+    }
+
+    @Test
+    public final void dispatchRequestAndRedirectOnPost() {
+        final HttpServletRequest request = createMock(HttpServletRequest.class);
+        PageBook pageBook = createMock(PageBook.class);
+        PageBook.Page page = createMock(PageBook.Page.class);
+        RenderableWidget widget = createMock(RenderableWidget.class);
+        final Respond respond = createMock(Respond.class);
+        RequestBinder binder = createMock(RequestBinder.class);
+
+        Object pageOb = new Object() ;
+
+        expect(request.getPathInfo())
+                .andReturn("/thing")
+                .anyTimes();
+
+        expect(request.getParameterMap())
+                .andReturn(new HashMap());
+
+        expect(pageBook.get("/thing"))
+                .andReturn(page);
+
+        binder.bind(request, pageOb);
+        expectLastCall().once();
+
+//        expect(page.widget())
+//                .andReturn(widget);
+
+        expect(page.instantiate())
+                .andReturn(pageOb);
+
+        expect(request.getMethod())
+                .andReturn("POST");
+
+        respond.redirect(REDIRECTED_POST);
+
+        //noinspection unchecked
+        expect(page.doPost(eq(pageOb), eq("/thing"), isA(Map.class)))
+                .andReturn(REDIRECTED_POST);
+
+
+//        widget.render(pageOb, respond);
+//        expectLastCall().once();
+
+
+        replay(request, page, pageBook, widget, respond, binder);
+
+        Respond out = new WidgetRoutingDispatcher(pageBook, binder, new Provider<Respond>() {
+            public Respond get() {
+                return respond;
+            }
+        }).dispatch(request);
+
+
+        assert out == respond : "Did not respond correctly";
+
+        verify(request, page, pageBook, widget, respond, binder);
+
+    }
+
+    @Test
+    public final void dispatchRequestAndRedirectOnGet() {
+        final HttpServletRequest request = createMock(HttpServletRequest.class);
+        PageBook pageBook = createMock(PageBook.class);
+        PageBook.Page page = createMock(PageBook.Page.class);
+        RenderableWidget widget = createMock(RenderableWidget.class);
+        final Respond respond = createMock(Respond.class);
+        RequestBinder binder = createMock(RequestBinder.class);
+
+        Object pageOb = new Object() ;
+
+        expect(request.getPathInfo())
+                .andReturn("/thing")
+                .anyTimes();
+
+        expect(request.getParameterMap())
+                .andReturn(new HashMap());
+
+        expect(pageBook.get("/thing"))
+                .andReturn(page);
+
+        binder.bind(request, pageOb);
+        expectLastCall().once();
+
+//        expect(page.widget())
+//                .andReturn(widget);
+
+        expect(page.instantiate())
+                .andReturn(pageOb);
+
+        expect(request.getMethod())
+                .andReturn("GET");
+
+        respond.redirect(REDIRECTED_GET);
+
+        //noinspection unchecked
+        expect(page.doGet(eq(pageOb), eq("/thing"), isA(Map.class)))
+                .andReturn(REDIRECTED_GET);
+
+
+//        widget.render(pageOb, respond);
+//        expectLastCall().once();
 
 
         replay(request, page, pageBook, widget, respond, binder);

@@ -19,6 +19,7 @@ class XmlTemplateParser {
     private final Evaluator evaluator;
     private final WidgetRegistry registry;
     public static final Pattern WIDGET_ANNOTATION_REGEX = Pattern.compile("(@\\w\\w*(\\([\\w,=\" ]*\\))?[ \n\r\t]*)$");
+    private static final String REQUIRE_WIDGET = "@require";
 //    public static final Pattern WIDGET_ANNOTATION_REGEX = Pattern.compile("@\\w\\w*(\\([\\w,=\" ]*\\))?");
 
     @Inject
@@ -110,9 +111,15 @@ class XmlTemplateParser {
             
         }
 
+
         //if there is no annotation, treat as a raw xml-widget (i.e. tag)
         if (null == annotation)
             return new XmlWidget(childsChildren, element.getName(), evaluator, parseAttribs(element.attributes()));
+
+        //special case: is this a "require" widget? (used for exporting/interning header tags into embedding pages)
+        if (REQUIRE_WIDGET.equalsIgnoreCase(annotation.trim()))
+            return new RequireWidget(stripAnnotation(element.asXML()), evaluator);
+
 
         //process as "normal" widget
         String[] extract = extractKeyAndContent(annotation);

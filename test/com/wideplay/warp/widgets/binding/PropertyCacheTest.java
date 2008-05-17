@@ -10,12 +10,12 @@ public class PropertyCacheTest {
     @Test
     public final void doesPropertyExist() {
         assert new ConcurrentPropertyCache()
-                .exists("name", ElRequestBinderTest.AnObject.class);
+                .exists("name", MvelRequestBinderTest.AnObject.class);
 
         assert new ConcurrentPropertyCache()
-                .exists("name", ElRequestBinderTest.AnObject.class);
+                .exists("name", MvelRequestBinderTest.AnObject.class);
 
         assert !new ConcurrentPropertyCache()
-                .exists("notExists", ElRequestBinderTest.AnObject.class);
+                .exists("notExists", MvelRequestBinderTest.AnObject.class);
     }
 }

@@ -1,9 +1,6 @@
 package com.wideplay.warp.widgets;
 
-import com.google.inject.Inject;
 import com.google.inject.matcher.Matcher;
-import com.wideplay.warp.util.Memo;
-import com.wideplay.warp.util.MemoFactory;
 
 import javax.servlet.ServletContext;
 import java.util.HashSet;

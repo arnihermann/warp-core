@@ -1,17 +1,23 @@
 package com.wideplay.warp.widgets;
 
+import net.jcip.annotations.NotThreadSafe;
+
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
+@NotThreadSafe
 class StringBuilderRespond implements Respond {
 
     private static final String TEXT_TAG_TEMPLATE = "warp-servlet.template.textfield";
     private static final String HEADER_PLACEHOLDER = "__w:w:HEADER_PLACEhOlDeR:NOWRITe::__";
 
+    //do not remove this volatile! This is a static..
     private static volatile Map<String, String> templates;
 
     StringBuilderRespond() {
@@ -31,6 +37,8 @@ class StringBuilderRespond implements Respond {
 
     private final StringBuilder out = new StringBuilder();
     private final StringBuilder head = new StringBuilder();
+    private final Set<String> requires = new HashSet<String>();
+    private String redirect;
 
     public void write(String text) {
         out.append(text);
@@ -44,6 +52,14 @@ class StringBuilderRespond implements Respond {
         out.append(c);
     }
 
+    public void require(String require) {
+        requires.add(require);
+    }
+
+    public void redirect(String to) {
+        this.redirect = to;
+    }
+
     public void writeToHead(String text) {
         head.append(text);
     }
@@ -54,7 +70,13 @@ class StringBuilderRespond implements Respond {
 
     @Override
     public String toString() {
-        int index = out.indexOf(HEADER_PLACEHOLDER);        //TODO optimize by scanning upto <body> only
+        //write requires to header first...
+        for (String require : requires) {
+            writeToHead(require);
+        }
+
+        //write header to placeholder...
+        int index = out.indexOf(HEADER_PLACEHOLDER);        //TODO optimize by scanning upto <body> only (if no head)
 
         String output = out.toString();
 
@@ -65,7 +87,7 @@ class StringBuilderRespond implements Respond {
         return output;
     }
 
-    //do NOT make this a static inner class!
+    //do NOT make this a static inner class!  TODO: absorb into enclosing class (Saves on memory allocation)
     private class HtmlBuilder implements HtmlTagBuilder {
 
         public void textField(String bind, String value) {

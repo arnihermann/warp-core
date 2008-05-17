@@ -9,5 +9,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @ImplementedBy(MvelRequestBinder.class)
 public interface RequestBinder {
+    String COLLECTION_BIND_PREFIX = "[C/";
+
     void bind(HttpServletRequest request, Object o);
 }

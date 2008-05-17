@@ -41,10 +41,10 @@ public class PageWidgetBuilderTest {
         registry.add("textfield", TextFieldWidget.class);
         registry.add("meta", HeaderWidget.class);
 
-        new PageWidgetBuilder(new ClassLister(mock), book, new TemplateLoader(),
+        new PageWidgetBuilder(book, new TemplateLoader(),
                 new XmlTemplateParser(evaluator, registry))
                 
-                .scan(target);
+                .scan(target, mock);
 
         assert null != book.get("/wiki/search");
         assert null != book.get("/wiki/page/bloogity");

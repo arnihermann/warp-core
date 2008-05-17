@@ -1,17 +1,19 @@
 package com.wideplay.warp.widgets.binding;
 
 import com.google.inject.Guice;
+import com.google.inject.Provider;
 import com.wideplay.warp.widgets.Evaluator;
 import static org.easymock.EasyMock.*;
 import org.testng.annotations.Test;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
-public class ElRequestBinderTest {
+public class MvelRequestBinderTest {
     @Test
     public final void bindRequestToPrimitives() {
         final HttpServletRequest request = createMock(HttpServletRequest.class);
@@ -32,7 +34,11 @@ public class ElRequestBinderTest {
         final Evaluator evaluator = Guice.createInjector()
                 .getInstance(Evaluator.class);
 
-        new MvelRequestBinder(evaluator)
+        new MvelRequestBinder(evaluator, new Provider<FlashCache>() {
+            public FlashCache get() {
+                return new BindingFlashCache();
+            }
+        })
                 .bind(request, o);
 
         assert "Dhanji".equals(o.getName());
@@ -41,6 +47,38 @@ public class ElRequestBinderTest {
         assert 6.0 == (o.getHeight());
         assert (o.isAlive());
 
+        verify(request);
+    }
+
+    @Test
+    public final void bindRequestToCollections() {
+        final HttpServletRequest request = createMock(HttpServletRequest.class);
+        final String choice = "AChoice";
+
+        //setup preliminary request
+        final BindingFlashCache cache = new BindingFlashCache();
+        cache.put("names", Arrays.asList("First", choice, "BobLee", "JasonLee", "Mowglee"));
+
+        expect(request.getParameterMap())
+                .andReturn(new HashMap<String, String[]>() {{
+                    put("select", new String[] { RequestBinder.COLLECTION_BIND_PREFIX + "names/" + choice.hashCode() });
+                }});
+
+        replay(request);
+
+        final AnObject o = new AnObject();
+
+        final Evaluator evaluator = Guice.createInjector()
+                .getInstance(Evaluator.class);
+
+        new MvelRequestBinder(evaluator, new Provider<FlashCache>() {
+            public FlashCache get() {
+                return cache;
+            }
+        })
+                .bind(request, o);
+
+        assert choice.equals(o.getSelect()) : "Collection selectee was not bound: " + o.getSelect();
         verify(request);
     }
 
@@ -66,7 +104,11 @@ public class ElRequestBinderTest {
         final Evaluator evaluator = Guice.createInjector()
                 .getInstance(Evaluator.class);
 
-        new MvelRequestBinder(evaluator)
+        new MvelRequestBinder(evaluator, new Provider<FlashCache>() {
+            public FlashCache get() {
+                return new BindingFlashCache();
+            }
+        })
                 .bind(request, o);
 
         assert "Dhanji".equals(o.getName());
@@ -98,7 +140,11 @@ public class ElRequestBinderTest {
         final Evaluator evaluator = Guice.createInjector()
                 .getInstance(Evaluator.class);
 
-        new MvelRequestBinder(evaluator)
+        new MvelRequestBinder(evaluator, new Provider<FlashCache>() {
+            public FlashCache get() {
+                return new BindingFlashCache();
+            }
+        })
                 .bind(request, o);
 
     }
@@ -109,6 +155,15 @@ public class ElRequestBinderTest {
         private boolean alive;
         private Long id;
         private double height;
+        private String select;
+
+        public String getSelect() {
+            return select;
+        }
+
+        public void setSelect(String select) {
+            this.select = select;
+        }
 
         public double getHeight() {
             return height;

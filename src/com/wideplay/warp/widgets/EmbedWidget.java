@@ -1,14 +1,11 @@
 package com.wideplay.warp.widgets;
 
-import com.wideplay.warp.widgets.routing.PageBook;
-import com.wideplay.warp.util.Strings;
 import com.google.inject.Singleton;
+import com.wideplay.warp.util.TextTools;
+import com.wideplay.warp.widgets.routing.PageBook;
+import net.jcip.annotations.Immutable;
 
 import java.util.Map;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-
-import net.jcip.annotations.Immutable;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
@@ -27,33 +24,10 @@ class EmbedWidget implements RenderableWidget {
         this.targetPage = targetPage.toLowerCase();
 
         //parse expression list
-        this.bindExpressions = toBindMap(expression);
+        this.bindExpressions = TextTools.toBindMap(expression);
     }
 
-    //converts comma-separated name/value pairs into expression/variable bindings
-    private static Map<String, String> toBindMap(String expression) {
-        if (Strings.empty(expression))
-            return Collections.emptyMap();
 
-        String[] pairs = expression.split(",");
-
-        //nice to preserve insertion order
-        final Map<String, String> map = new LinkedHashMap<String, String>();
-        for (String pair : pairs) {
-            final String[] nameAndValue = pair.split("=");
-
-            //do some validation
-            if (nameAndValue.length != 2)
-                throw new IllegalArgumentException("Invalid parameter binding format: " + pair);
-
-            Strings.nonEmpty(nameAndValue[0], "Cannot have an empty left hand side target parameter: " + pair);
-            Strings.nonEmpty(nameAndValue[1], "Must provide a non-empty right hand side expression" + pair);
-
-            map.put(nameAndValue[0].trim(), nameAndValue[1].trim());
-        }
-
-        return Collections.unmodifiableMap(map);
-    }
 
     public void render(Object bound, Respond respond) {
         final PageBook.Page page = pageBook.forName(targetPage);
@@ -71,7 +45,7 @@ class EmbedWidget implements RenderableWidget {
         page.widget().render(pageObject, embed);
 
         //extract and write embedded response to enclosing page's respond
-        respond.writeToHead(embed.toHeadString());
+//        respond.writeToHead(embed.toHeadString()); TODO only write @Require tags
         respond.write(embed.toString());
     }
 
@@ -130,7 +104,18 @@ class EmbedWidget implements RenderableWidget {
             }
 
             int bodyEnd = htmlDoc.indexOf(BODY_END, bodyStart);
-            this.body = htmlDoc.substring(bodyStart, bodyEnd);
+
+            //if there was no body tag, just embed whatever was rendered directly
+            if (-1 == bodyEnd) {
+
+                //if there was no <head> tag then directly embed, otherwise suppress the body (since it was empty)
+                if ("".equals(this.head))
+                    this.body = htmlDoc;
+                else
+                    this.body = "";
+            }
+            else
+                this.body = htmlDoc.substring(bodyStart, bodyEnd);
         }
 
 

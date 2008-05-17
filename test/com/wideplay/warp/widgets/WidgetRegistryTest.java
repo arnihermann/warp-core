@@ -1,9 +1,9 @@
 package com.wideplay.warp.widgets;
 
+import com.wideplay.warp.widgets.routing.PageBook;
+import static org.easymock.EasyMock.createNiceMock;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import static org.easymock.EasyMock.*;
-import com.wideplay.warp.widgets.routing.PageBook;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
@@ -25,7 +25,7 @@ public class WidgetRegistryTest {
         final WidgetRegistry registry = new WidgetRegistry(new MvelEvaluator(), createNiceMock(PageBook.class));
         registry.add(key, expected);
 
-        RenderableWidget widget = registry.newWidget(key, "some.expression", new WidgetChain());
+        RenderableWidget widget = registry.newWidget(key, "some=expression", new WidgetChain());
 
         assert expected.isInstance(widget) : "Wrong widget returned";
     }

@@ -19,6 +19,10 @@ public interface Respond {
 
     void writeToHead(String text);
 
+    void require(String requireString);
+
+    void redirect(String to);
+
     public static interface HtmlTagBuilder {
         void textField(String value, String s);
 

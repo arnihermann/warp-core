@@ -1,11 +1,8 @@
 package com.wideplay.warp.util;
 
-import com.wideplay.warp.WarpModule;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -23,6 +20,31 @@ public class TextTools {
 
 
     private TextTools() {
+    }
+
+    //converts comma-separated name/value pairs into expression/variable bindings    
+    public static Map<String, String> toBindMap(String expression) {
+        if (Strings.empty(expression))
+            return Collections.emptyMap();
+
+        String[] pairs = expression.split(",");
+
+        //nice to preserve insertion order
+        final Map<String, String> map = new LinkedHashMap<String, String>();
+        for (String pair : pairs) {
+            final String[] nameAndValue = pair.split("=");
+
+            //do some validation
+            if (nameAndValue.length != 2)
+                throw new IllegalArgumentException("Invalid parameter binding format: " + pair);
+
+            Strings.nonEmpty(nameAndValue[0], "Cannot have an empty left hand side target parameter: " + pair);
+            Strings.nonEmpty(nameAndValue[1], "Must provide a non-empty right hand side expression" + pair);
+
+            map.put(nameAndValue[0].trim(), nameAndValue[1].trim());
+        }
+
+        return Collections.unmodifiableMap(map);
     }
 
     //tokenizes text into raw text chunks interspersed with expression chunks
@@ -101,10 +123,6 @@ public class TextTools {
 
     public static String extractContextualUri(HttpServletRequest request) {
         return request.getRequestURI().substring(request.getContextPath().length());
-    }
-
-    static String extractModuleDirFromFqn(String moduleRootDir, Class<WarpModule> moduleClass) {
-        return moduleRootDir.substring(0, moduleRootDir.length() - (".class".length() + moduleClass.getSimpleName().length()));
     }
 
     public static String[] commaSeparatorRegexSplit(String viewports) {

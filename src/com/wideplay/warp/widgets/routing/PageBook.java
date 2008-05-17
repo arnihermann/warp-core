@@ -21,8 +21,8 @@ public interface PageBook {
 
         Object instantiate();
 
-        void doGet(Object page, String pathInfo, Map<String, String[]> params);
+        Object doGet(Object page, String pathInfo, Map<String, String[]> params);
 
-        void doPost(Object page, String pathInfo, Map<String, String[]> params);
+        Object doPost(Object page, String pathInfo, Map<String, String[]> params);
     }
 }

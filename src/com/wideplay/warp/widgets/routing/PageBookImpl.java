@@ -5,18 +5,17 @@ import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.wideplay.warp.widgets.Get;
+import com.wideplay.warp.widgets.On;
 import com.wideplay.warp.widgets.Post;
 import com.wideplay.warp.widgets.RenderableWidget;
-import com.wideplay.warp.widgets.On;
 import com.wideplay.warp.widgets.rendering.EmbedAs;
 import net.jcip.annotations.ThreadSafe;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
-
-import org.jetbrains.annotations.Nullable;
 
 /**
  * contains active uri/widget mappings
@@ -220,10 +219,10 @@ class PageBookImpl implements PageBook {
             return injector.getInstance(clazz);
         }
 
-        public void doGet(Object page, String pathInfo, Map<String, String[]> params) {
+        public Object doGet(Object page, String pathInfo, Map<String, String[]> params) {
             //nothing to fire
             if (get.isEmpty())
-                return;
+                return null;
 
             final Map<String, String> map = matcher.findMatches(pathInfo);
 
@@ -239,17 +238,24 @@ class PageBookImpl implements PageBook {
                         methodTuple = get.get("");
 
                     //or fire event handler(s)
-                    methodTuple.call(page, map);
+                    Object redirect = methodTuple.call(page, map);
+
+                    //redirects interrupt the event dispatch sequence
+                    if (null != redirect)
+                        return redirect;
                 }
             else
                 //fire default handler
-                get.get("").call(page, map);
+                return get.get("").call(page, map);
+
+            //no redirects, render normally
+            return null;
         }
 
-        public void doPost(Object page, String pathInfo, Map<String, String[]> params) {
+        public Object doPost(Object page, String pathInfo, Map<String, String[]> params) {
             //nothing to fire
             if (post.isEmpty())
-                return;
+                return null;
 
             final Map<String, String> map = matcher.findMatches(pathInfo);
 
@@ -265,16 +271,21 @@ class PageBookImpl implements PageBook {
                         methodTuple = post.get("");
 
                     //or fire event handler(s)
-                    methodTuple.call(page, map);
+                    Object redirect = methodTuple.call(page, map);
+
+                    //redirects interrupt the event dispatch sequence
+                    if (null != redirect)
+                        return redirect;
                 }
             else
                 //fire default handler
-                post.get("").call(page, map);
+                return post.get("").call(page, map);
+
+            //no redirects, render normally
+            return null;  
         }
-
-
-
     }
+    
 
     private static class MethodTuple {
         private final Method method;
@@ -311,18 +322,18 @@ class PageBookImpl implements PageBook {
             return Collections.unmodifiableList(args);
         }
 
-        public void call(Object page, Map<String, String> map) {
+        public Object call(Object page, Map<String, String> map) {
             List<String> arguments = new ArrayList<String>();
             for (String argName : args) {
                 arguments.add(map.get(argName));
             }
 
-            call(page, method, arguments.toArray());
+            return call(page, method, arguments.toArray());
         }
 
-        private static void call(Object page, final Method method, Object[] args) {
+        private static Object call(Object page, final Method method, Object[] args) {
             try {
-                method.invoke(page, args);
+                return method.invoke(page, args);
             } catch (IllegalAccessException e) {
                 throw new EventDispatchException("Could not access event method: " + method, e);
             } catch (InvocationTargetException e) {
