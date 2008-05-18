@@ -55,6 +55,7 @@ class PageWidgetBuilder {
                     
                 } else if (page.isAnnotationPresent(EmbedAs.class)) {
                     //...add as an unbound (to URI) widget
+                    pageBook.embedAs(parser.parse(loader.load(page)), page);
                 }
 
                 if (page.isAnnotationPresent(Export.class)) {

@@ -58,6 +58,11 @@ class PageBookImpl implements PageBook {
         }
     }
 
+    public void embedAs(RenderableWidget renderableWidget, Class<?> page) {
+        pagesByName.put(page.getAnnotation(EmbedAs.class).value().toLowerCase(),
+                new PageTuple(PathMatcherChain.ignoring(), renderableWidget, page, injector));
+    }
+
     private static void multiput(Map<String, List<PageTuple>> pages, String key, PageTuple page) {
         List<PageTuple> list = pages.get(key);
 

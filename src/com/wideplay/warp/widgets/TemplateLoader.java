@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 
+import org.apache.commons.io.FileUtils;
+
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
@@ -25,9 +27,16 @@ class TemplateLoader {
 
         String text;
         try {
-            text = read(pageClass.getResourceAsStream(template));
+            final InputStream stream = pageClass.getResourceAsStream(template);
+
+            //look on the webapp resource path if not in classpath
+            if (null == stream) {
+                throw new MissingTemplateException("Could not find template for: " + pageClass);
+            }
+
+            text = read(stream);
         } catch (IOException e) {
-            throw new TemplateLoadingException("Could not load text for (i/o error): " + pageClass, e);
+            throw new TemplateLoadingException("Could not load template for (i/o error): " + pageClass, e);
         }
 
         return text;

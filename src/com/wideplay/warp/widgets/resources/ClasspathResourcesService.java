@@ -3,10 +3,8 @@ package com.wideplay.warp.widgets.resources;
 import com.wideplay.warp.widgets.Respond;
 import com.google.inject.Singleton;
 
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.List;
 import java.io.IOException;
 import java.io.InputStream;

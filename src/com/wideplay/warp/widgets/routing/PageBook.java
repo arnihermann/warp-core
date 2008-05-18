@@ -16,6 +16,8 @@ public interface PageBook {
 
     Page forName(String name);
 
+    void embedAs(RenderableWidget renderableWidget, Class<?> page);
+
     public static interface Page {
         RenderableWidget widget();
 

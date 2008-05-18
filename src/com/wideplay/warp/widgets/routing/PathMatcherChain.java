@@ -108,7 +108,6 @@ class PathMatcherChain implements PathMatcher {
             return true;
         }
 
-        //TODO this whole path matching algorithm is in linear time, could easily be constant time
         @NotNull
         public Map<String, String> findMatches(String incoming) {
             return Collections.emptyMap();
@@ -117,6 +116,27 @@ class PathMatcherChain implements PathMatcher {
         public String name() {
             return variable;
         }
+    }
+
+    //matches nothing, i.e. always returns false (used for blocking widgets)
+    @Immutable
+    static class IgnoringPathMatcher implements PathMatcher {
+        public boolean matches(String incoming) {
+            return false;
+        }
+
+        @NotNull
+        public Map<String, String> findMatches(String incoming) {
+            return Collections.emptyMap();
+        }
+
+        public String name() {
+            return "";
+        }
+    }
+
+    static PathMatcher ignoring() {
+        return new IgnoringPathMatcher();
     }
 
 }
