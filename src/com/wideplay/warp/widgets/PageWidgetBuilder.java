@@ -22,18 +22,23 @@ class PageWidgetBuilder {
     private final Set<Package> packages;
     private final ResourcesService resourcesService;
     private final Provider<ServletContext> context;
+    private final WidgetRegistry registry;
 
     @Inject
-    PageWidgetBuilder(PageBook pageBook, TemplateLoader loader, XmlTemplateParser parser,
+    PageWidgetBuilder(PageBook pageBook, TemplateLoader loader,
+                      XmlTemplateParser parser,
                       @Packages Set<Package> packages,
-                      ResourcesService resourcesService, Provider<ServletContext> servletContextProvider) {
+                      ResourcesService resourcesService,
+                      Provider<ServletContext> servletContextProvider,
+                      WidgetRegistry registry) {
 
         this.pageBook = pageBook;
         this.loader = loader;
         this.parser = parser;
         this.packages = packages;
         this.resourcesService = resourcesService;
-        context = servletContextProvider;
+        this.context = servletContextProvider;
+        this.registry = registry;
     }
 
     public void scan() {
@@ -50,16 +55,23 @@ class PageWidgetBuilder {
                                                         
                                                 ));
 
+            //we need to store the embeds first (do not collapse into the next loop)
+            for (Class<?> page : set) {
+                if (page.isAnnotationPresent(EmbedAs.class)) {
+                    //store custom page wrapped as an embed widget
+                    registry.add(page.getAnnotation(EmbedAs.class).value(), EmbedWidget.class);
+
+                    //...add as an unbound (to URI) widget
+                    pageBook.embedAs(parser.parse(loader.load(page)), page);
+                }
+            }
+
             //now iterate and build widgets and store them (or whatever)
             for (Class<?> page : set) {
 
                 if (page.isAnnotationPresent(At.class)) {
                     final RenderableWidget widget = parser.parse(loader.load(page));
                     pageBook.at(page.getAnnotation(At.class).value(), widget, page);
-                    
-                } else if (page.isAnnotationPresent(EmbedAs.class)) {
-                    //...add as an unbound (to URI) widget
-                    pageBook.embedAs(parser.parse(loader.load(page)), page);
                 }
 
                 if (page.isAnnotationPresent(Export.class)) {

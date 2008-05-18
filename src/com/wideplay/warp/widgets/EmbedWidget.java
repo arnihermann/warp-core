@@ -6,6 +6,8 @@ import com.wideplay.warp.widgets.routing.PageBook;
 import net.jcip.annotations.Immutable;
 
 import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
@@ -45,7 +47,7 @@ class EmbedWidget implements RenderableWidget {
         page.widget().render(pageObject, embed);
 
         //extract and write embedded response to enclosing page's respond
-//        respond.writeToHead(embed.toHeadString()); TODO only write @Require tags
+        respond.writeToHead(embed.toHeadString()); //TODO only write @Require tags
         respond.write(embed.toString());
     }
 
@@ -61,13 +63,16 @@ class EmbedWidget implements RenderableWidget {
         private String body;
         private static final char NOT_IN_QUOTE = '\0';
 
+
         public String toHeadString() {
             if (null == head) {
                 //extract and store
                 extract(super.toString());
             }
 
-            return head;
+            //we discard the <head> tag rendered in the child page and
+            //instead return only what was directly rendered with writeToHead()
+            return getHead();
         }
 
         @Override

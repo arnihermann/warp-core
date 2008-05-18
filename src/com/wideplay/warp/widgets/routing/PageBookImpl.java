@@ -45,9 +45,9 @@ class PageBookImpl implements PageBook {
             final PageTuple pageTuple = new PageTuple(new PathMatcherChain(uri), page, clazz, injector);
 
             //store in alias map if necessary
-            if (clazz.isAnnotationPresent(EmbedAs.class)) {
-                pagesByName.put(clazz.getAnnotation(EmbedAs.class).value().toLowerCase(), pageTuple);
-            }
+//            if (clazz.isAnnotationPresent(EmbedAs.class)) {
+//                pagesByName.put(clazz.getAnnotation(EmbedAs.class).value().toLowerCase(), pageTuple);
+//            }
 
             //is universal? (i.e. first element is a variable)
             if (isFirstElementVariable(key))

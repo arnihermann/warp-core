@@ -40,6 +40,10 @@ class StringBuilderRespond implements Respond {
     private final Set<String> requires = new HashSet<String>();
     private String redirect;
 
+    protected String getHead() {
+        return head.toString();
+    }
+
     public void write(String text) {
         out.append(text);
     }

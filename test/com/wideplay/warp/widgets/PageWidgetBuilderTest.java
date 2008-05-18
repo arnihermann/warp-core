@@ -55,7 +55,7 @@ public class PageWidgetBuilderTest {
             public ServletContext get() {
                 return mock;
             }
-        })
+        }, registry)
                 
                 .scan();
 
