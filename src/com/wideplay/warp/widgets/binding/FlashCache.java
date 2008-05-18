@@ -1,8 +1,11 @@
 package com.wideplay.warp.widgets.binding;
 
+import com.google.inject.ImplementedBy;
+
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
+@ImplementedBy(BindingFlashCache.class)
 public interface FlashCache {
     <T> T get(String key);
 

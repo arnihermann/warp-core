@@ -1,6 +1,7 @@
 package com.wideplay.warp.widgets;
 
 import com.google.inject.Singleton;
+import com.google.inject.Inject;
 import com.wideplay.warp.widgets.rendering.SelfRendering;
 import com.wideplay.warp.widgets.routing.PageBook;
 import net.jcip.annotations.ThreadSafe;
@@ -21,6 +22,7 @@ class WidgetRegistry {
     private final PageBook pageBook;
     private final ConcurrentMap<String, WidgetWrapper> widgets = new ConcurrentHashMap<String, WidgetWrapper>();
 
+    @Inject
     public WidgetRegistry(Evaluator evaluator, PageBook pageBook) {
         this.evaluator = evaluator;
         this.pageBook = pageBook;

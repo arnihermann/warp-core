@@ -40,11 +40,11 @@ public class WidgetFilterTest {
         };
 
         final boolean ran[] = new boolean[1];
-        final PageWidgetBuilder pageWidgetBuilder = new PageWidgetBuilder(pageBook, new TemplateLoader(),
-                new XmlTemplateParser(evaluator, registry), new HashSet<Package>(), createNiceMock(ResourcesService.class)) {
+        final PageWidgetBuilder pageWidgetBuilder = new PageWidgetBuilder(pageBook, new TemplateLoader(null),
+                new XmlTemplateParser(evaluator, registry), new HashSet<Package>(), createNiceMock(ResourcesService.class), null) {
 
             @Override
-            public void scan(ServletContext context) {
+            public void scan() {
                 ran[0] = true;
             }
         };

@@ -1,15 +1,19 @@
 package com.wideplay.warp.widgets;
 
 import com.google.inject.matcher.Matcher;
+import com.google.inject.Provider;
 
 import javax.servlet.ServletContext;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import net.jcip.annotations.NotThreadSafe;
+
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
+@NotThreadSafe
 class ClassLister {
     private final ServletContext context;
 

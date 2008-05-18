@@ -34,6 +34,8 @@ public final class Widgets {
                         bind(new TypeLiteral<Set<Package>>() {})
                                 .annotatedWith(Packages.class)
                                 .toInstance(Collections.unmodifiableSet(packages));
+
+                        bind(ContextInitializer.class);
                     }
                 };
             }

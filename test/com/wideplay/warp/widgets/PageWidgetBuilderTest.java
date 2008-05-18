@@ -2,6 +2,7 @@ package com.wideplay.warp.widgets;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Provider;
 import com.wideplay.warp.widgets.example.Wiki;
 import com.wideplay.warp.widgets.routing.PageBook;
 import com.wideplay.warp.widgets.resources.ResourcesService;
@@ -49,10 +50,14 @@ public class PageWidgetBuilderTest {
         Set<Package> packages = new HashSet<Package>();
         packages.add(target);
 
-        new PageWidgetBuilder(book, new TemplateLoader(),
-                new XmlTemplateParser(evaluator, registry), packages, resourcesService)
+        new PageWidgetBuilder(book, new TemplateLoader(null),
+                new XmlTemplateParser(evaluator, registry), packages, resourcesService, new Provider<ServletContext>() {
+            public ServletContext get() {
+                return mock;
+            }
+        })
                 
-                .scan(mock);
+                .scan();
 
         assert null != book.get("/wiki/search");
         assert null != book.get("/wiki/page/bloogity");

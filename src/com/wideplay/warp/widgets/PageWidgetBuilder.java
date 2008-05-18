@@ -1,6 +1,7 @@
 package com.wideplay.warp.widgets;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import static com.google.inject.matcher.Matchers.*;
 import com.wideplay.warp.widgets.routing.PageBook;
 import com.wideplay.warp.widgets.resources.ResourcesService;
@@ -20,24 +21,27 @@ class PageWidgetBuilder {
     private final XmlTemplateParser parser;
     private final Set<Package> packages;
     private final ResourcesService resourcesService;
+    private final Provider<ServletContext> context;
 
     @Inject
-    PageWidgetBuilder(PageBook pageBook, TemplateLoader loader, XmlTemplateParser parser, @Packages Set<Package> packages,
-                      ResourcesService resourcesService) {
+    PageWidgetBuilder(PageBook pageBook, TemplateLoader loader, XmlTemplateParser parser,
+                      @Packages Set<Package> packages,
+                      ResourcesService resourcesService, Provider<ServletContext> servletContextProvider) {
 
         this.pageBook = pageBook;
         this.loader = loader;
         this.parser = parser;
         this.packages = packages;
         this.resourcesService = resourcesService;
+        context = servletContextProvider;
     }
 
-    public void scan(ServletContext context) {
+    public void scan() {
 
         for (Package pack : packages) {
 
             //list any classes annotated with @At, @EmbedAs and @Export
-            final Set<Class<?>> set = new ClassLister(context)
+            final Set<Class<?>> set = new ClassLister(context.get())
                                         .list(pack,
                                                 annotatedWith(At.class)
                                                 .or(annotatedWith(EmbedAs.class)

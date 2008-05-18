@@ -30,7 +30,11 @@ class WidgetRoutingDispatcher implements RoutingDispatcher {
     }
 
     public Respond dispatch(HttpServletRequest request) {
-        final String uri = request.getPathInfo();
+        String uri = request.getPathInfo();
+
+        //normalize to home
+        if (null == uri)
+            uri = "/";
 
         //first try dispatching as a resource service
         Respond respond = resourcesService.serve(uri);

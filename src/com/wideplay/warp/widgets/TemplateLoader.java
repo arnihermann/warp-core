@@ -10,11 +10,23 @@ import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
 
+import javax.servlet.ServletContext;
+
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
 @Immutable
 class TemplateLoader {
+    private final Provider<ServletContext> context;
+
+    @Inject
+    public TemplateLoader(Provider<ServletContext> context) {
+        this.context = context;
+    }
+
     public String load(Class<?> pageClass) {
         Show show = pageClass.getAnnotation(Show.class);
         String template;
@@ -27,11 +39,15 @@ class TemplateLoader {
 
         String text;
         try {
-            final InputStream stream = pageClass.getResourceAsStream(template);
+            InputStream stream = pageClass.getResourceAsStream(template);
 
             //look on the webapp resource path if not in classpath
             if (null == stream) {
-                throw new MissingTemplateException("Could not find template for: " + pageClass);
+                stream = context.get().getResourceAsStream(template);
+
+                //if there's still no template, then error out
+                if (null == stream)
+                    throw new MissingTemplateException("Could not find template for: " + pageClass);
             }
 
             text = read(stream);

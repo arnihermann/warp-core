@@ -21,7 +21,7 @@ public class TemplateLoaderTest {
 
     @Test(dataProvider = CLASSES_AND_TEMPLATES)
     public final void loadExplicitXmlTemplate(final Class<MyXmlPage> pageClass) {
-        String template = new TemplateLoader()
+        String template = new TemplateLoader(null)
                     .load(pageClass);
 
         assert null != template : "no template found!";

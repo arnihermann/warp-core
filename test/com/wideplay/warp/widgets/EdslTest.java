@@ -1,11 +1,10 @@
 package com.wideplay.warp.widgets;
 
 import org.testng.annotations.Test;
-import com.google.inject.Module;
-import com.google.inject.Guice;
-import com.google.inject.Key;
-import com.google.inject.TypeLiteral;
+import com.google.inject.*;
+import static org.easymock.EasyMock.*;
 
+import javax.servlet.ServletContext;
 import java.util.Set;
 
 /**
@@ -26,7 +25,11 @@ public class EdslTest {
 
         assert null != module : "nothing built out of config";
 
-        final Set<Package> packages = Guice.createInjector(module)
+        final Set<Package> packages = Guice.createInjector(module, new AbstractModule() {
+            protected void configure() {
+                bind(ServletContext.class).toInstance(createNiceMock(ServletContext.class));
+            }
+        })
                 .getInstance(Key.get(new TypeLiteral<Set<Package>>() {}, Packages.class));
 
         assert null != packages;

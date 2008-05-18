@@ -4,6 +4,8 @@ import net.jcip.annotations.NotThreadSafe;
 
 import javax.servlet.ServletContext;
 
+import com.google.inject.Inject;
+
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
@@ -12,13 +14,13 @@ class ContextInitializer {
     private final PageWidgetBuilder builder;
     private final WidgetRegistry registry;
 
-    ContextInitializer(PageWidgetBuilder builder, WidgetRegistry registry) {
+    @Inject
+    public ContextInitializer(PageWidgetBuilder builder, WidgetRegistry registry) {
         this.builder = builder;
         this.registry = registry;
     }
 
     public void init(ServletContext servletContext) {
-//        builder.scan();
 
         //register core widgets
         registry.add("textfield", TextFieldWidget.class);
@@ -26,5 +28,9 @@ class ContextInitializer {
         registry.add("showif", ShowIfWidget.class);
         registry.add("meta", HeaderWidget.class);
         registry.add("choose", ChooseWidget.class);
+
+        //scan and add pages/widgets
+        builder.scan();
+
     }
 }
