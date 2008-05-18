@@ -30,11 +30,11 @@ class WidgetRoutingDispatcher implements RoutingDispatcher {
     }
 
     public Respond dispatch(HttpServletRequest request) {
-        String uri = request.getPathInfo();
+        String uri = getPathInfo(request);
 
         //normalize to home
-        if (null == uri)
-            uri = "/";
+//        if (null == uri)
+//            uri = "/";
 
         //first try dispatching as a resource service
         Respond respond = resourcesService.serve(uri);
@@ -59,6 +59,10 @@ class WidgetRoutingDispatcher implements RoutingDispatcher {
         return respond;
     }
 
+    private String getPathInfo(HttpServletRequest request) {
+        return request.getRequestURI().substring(request.getContextPath().length());
+    }
+
     private void bindAndRespond(HttpServletRequest request, PageBook.Page page, Respond respond, Object instance) {
         //bind request
         binder.bind(request, instance);
@@ -75,7 +79,7 @@ class WidgetRoutingDispatcher implements RoutingDispatcher {
 
     private Object fireEvent(HttpServletRequest request, PageBook.Page page, Object instance) {
         final String method = request.getMethod();
-        final String pathInfo = request.getPathInfo();
+        final String pathInfo = getPathInfo(request);
 
         Object redirect = null;
         if ("GET".equalsIgnoreCase(method))

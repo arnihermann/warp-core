@@ -1,6 +1,7 @@
 package com.wideplay.warp.widgets;
 
 import com.google.inject.Provider;
+import com.google.inject.Injector;
 import com.wideplay.warp.widgets.routing.PageBook;
 import com.wideplay.warp.widgets.routing.RoutingDispatcher;
 import com.wideplay.warp.widgets.resources.ResourcesService;
@@ -32,7 +33,7 @@ public class WidgetFilterTest {
         final Evaluator evaluator = createNiceMock(Evaluator.class);
 
         final int[] adds = new int[1];
-        final WidgetRegistry registry = new WidgetRegistry(evaluator, pageBook) {
+        final WidgetRegistry registry = new WidgetRegistry(evaluator, pageBook, createNiceMock(Injector.class)) {
             @Override
             public void add(String key, Class<? extends RenderableWidget> widget) {
                 adds[0]++;

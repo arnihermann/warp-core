@@ -39,15 +39,26 @@ class TemplateLoader {
 
         String text;
         try {
-            InputStream stream = pageClass.getResourceAsStream(template);
+            InputStream stream = null;
+            //first look in class neighborhood for template
+            if (null != template)
+                stream = pageClass.getResourceAsStream(template);
 
             //look on the webapp resource path if not in classpath
             if (null == stream) {
-                stream = context.get().getResourceAsStream(template);
+                final ServletContext servletContext = context.get();
+                stream = servletContext.getResourceAsStream(template);
+
+                //resolve again, but this time on the webapp resource path
+                if (null == stream)
+                    stream = resolve(pageClass, servletContext);
 
                 //if there's still no template, then error out
                 if (null == stream)
-                    throw new MissingTemplateException("Could not find template for: " + pageClass);
+                    throw new MissingTemplateException(String.format("Could not find a suitable template for %s, did you remember to place " +
+                            "an @Show? None of [%s.html, %s.xhtml or %s.xml] could be found in either " +
+                            "package [%s] OR in the root of the resource dir.", pageClass.getName(), pageClass.getSimpleName(),
+                            pageClass.getSimpleName(), pageClass.getSimpleName(), pageClass.getPackage().getName()));
             }
 
             text = read(stream);
@@ -56,6 +67,24 @@ class TemplateLoader {
         }
 
         return text;
+    }
+
+    private InputStream resolve(Class<?> pageClass, ServletContext context) {
+        InputStream resource = context.getResourceAsStream(String.format("%s.html", pageClass.getSimpleName()));
+
+        if (null == resource) {
+            resource = context.getResourceAsStream(String.format("%s.xhtml", pageClass.getSimpleName()));
+        } else
+            return resource;
+
+        if (null == resource) {
+            resource = context.getResourceAsStream(String.format("%s.xml", pageClass.getSimpleName()));
+        }
+
+        if (null != resource)
+            return resource;
+
+        return null;
     }
 
     //resolves a location for this page class's template (assuming @Show is not present)
@@ -73,16 +102,12 @@ class TemplateLoader {
         if (null == resource) {
             name = String.format("%s.xml", pageClass.getSimpleName());
             resource = pageClass.getResource(name);
-        } else
+        }
+
+        if (null != resource)
             return name;
 
-        if (null == resource)
-            throw new TemplateLoadingException(String.format("Could not find a suitable template for %s, did you remember to place " +
-                    "an @Show? None of [%s.html, %s.xhtml or %s.xml] could be found in either " +
-                    "package [%s] OR in the root of the resource dir.", pageClass.getName(), pageClass.getSimpleName(),
-                    pageClass.getSimpleName(), pageClass.getSimpleName(), pageClass.getPackage().getName()));
-
-        return name;
+        return null;
     }
 
     private static String read(InputStream stream) throws IOException {

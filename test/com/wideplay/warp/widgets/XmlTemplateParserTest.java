@@ -1,6 +1,7 @@
 package com.wideplay.warp.widgets;
 
 import com.google.inject.Guice;
+import com.google.inject.Injector;
 import com.wideplay.warp.widgets.rendering.EmbedAs;
 import com.wideplay.warp.widgets.routing.PageBook;
 import static org.easymock.EasyMock.createNiceMock;
@@ -32,7 +33,7 @@ public class XmlTemplateParserTest {
     @Test
     public final void readShowIfWidgetTrue() {
         final Evaluator evaluator = new MvelEvaluator();
-        final WidgetRegistry registry = new WidgetRegistry(evaluator, createNiceMock(PageBook.class));
+        final WidgetRegistry registry = new WidgetRegistry(evaluator, createNiceMock(PageBook.class), createNiceMock(Injector.class));
         registry.add("showif", ShowIfWidget.class);
 
 
@@ -70,7 +71,7 @@ public class XmlTemplateParserTest {
     @Test
     public final void readShowIfWidgetFalse() {
         final Evaluator evaluator = new MvelEvaluator();
-        final WidgetRegistry registry = new WidgetRegistry(evaluator, createNiceMock(PageBook.class));
+        final WidgetRegistry registry = new WidgetRegistry(evaluator, createNiceMock(PageBook.class), createNiceMock(Injector.class));
         registry.add("showif", ShowIfWidget.class);
 
 
@@ -108,7 +109,7 @@ public class XmlTemplateParserTest {
     @Test
     public final void readTextWidgetValues() {
         final Evaluator evaluator = new MvelEvaluator();
-        final WidgetRegistry registry = new WidgetRegistry(evaluator, createNiceMock(PageBook.class));
+        final WidgetRegistry registry = new WidgetRegistry(evaluator, createNiceMock(PageBook.class), createNiceMock(Injector.class));
         registry.add("showif", ShowIfWidget.class);
 
 
@@ -154,7 +155,7 @@ public class XmlTemplateParserTest {
     @Test
     public final void readAndRenderRequireWidget() {
         final Evaluator evaluator = new MvelEvaluator();
-        final WidgetRegistry registry = new WidgetRegistry(evaluator, createNiceMock(PageBook.class));
+        final WidgetRegistry registry = new WidgetRegistry(evaluator, createNiceMock(PageBook.class), createNiceMock(Injector.class));
         registry.add("meta", HeaderWidget.class);
 
 
@@ -192,7 +193,7 @@ public class XmlTemplateParserTest {
     @Test
     public final void readXmlWidget() {
         final Evaluator evaluator = new MvelEvaluator();
-        final WidgetRegistry registry = new WidgetRegistry(evaluator, createNiceMock(PageBook.class));
+        final WidgetRegistry registry = new WidgetRegistry(evaluator, createNiceMock(PageBook.class), createNiceMock(Injector.class));
         registry.add("showif", ShowIfWidget.class);
 
 
@@ -238,7 +239,7 @@ public class XmlTemplateParserTest {
     @Test
     public final void readXmlWidgetWithChildren() {
         final Evaluator evaluator = new MvelEvaluator();
-        final WidgetRegistry registry = new WidgetRegistry(evaluator, createNiceMock(PageBook.class));
+        final WidgetRegistry registry = new WidgetRegistry(evaluator, createNiceMock(PageBook.class), createNiceMock(Injector.class));
         registry.add("showif", ShowIfWidget.class);
 
 
@@ -301,7 +302,7 @@ public class XmlTemplateParserTest {
         book.at("/somewhere", new TerminalWidgetChain(), MyEmbeddedPage.class);
 
         final Evaluator evaluator = new MvelEvaluator();
-        final WidgetRegistry registry = new WidgetRegistry(evaluator, book);
+        final WidgetRegistry registry = new WidgetRegistry(evaluator, book, createNiceMock(Injector.class));
         registry.add("myFave", EmbedWidget.class);
 
 

@@ -2,6 +2,7 @@ package com.wideplay.warp.widgets;
 
 import com.google.inject.Singleton;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.wideplay.warp.widgets.rendering.SelfRendering;
 import com.wideplay.warp.widgets.routing.PageBook;
 import net.jcip.annotations.ThreadSafe;
@@ -18,14 +19,16 @@ import java.util.concurrent.ConcurrentMap;
 class WidgetRegistry {
     public static final String TEXT_WIDGET = "__w:wRawText_Widget"; 
 
+    private final Injector injector;
     private final Evaluator evaluator;
     private final PageBook pageBook;
     private final ConcurrentMap<String, WidgetWrapper> widgets = new ConcurrentHashMap<String, WidgetWrapper>();
 
     @Inject
-    public WidgetRegistry(Evaluator evaluator, PageBook pageBook) {
+    public WidgetRegistry(Evaluator evaluator, PageBook pageBook, Injector injector) {
         this.evaluator = evaluator;
         this.pageBook = pageBook;
+        this.injector = injector;
     }
 
     public void add(String key, Class<? extends RenderableWidget> widget) {
@@ -45,9 +48,14 @@ class WidgetRegistry {
 
         //otherwise construct via reflection (all widgets MUST have
         // a constructor with: widgetchain, expression, evaluator; in that order)
-        return widgets
+        final RenderableWidget widget = widgets
                 .get(key)
                 .newWidget(widgetChain, expression, evaluator, pageBook);
+
+        //add some injection (some widgets require it). It's a bit hacky, maybe we can reimplement some stuff later with @AssistedInject
+        injector.injectMembers(widget);
+
+        return widget;
     }
 
     private static class WidgetWrapper {
@@ -77,13 +85,13 @@ class WidgetRegistry {
                     constructor
                         .newInstance(expression, evaluator, pageBook, key);
 
-        } catch (IllegalAccessException e) {
-            throw new IllegalStateException("Malformed Widget (this should never happen): " + clazz);
-        } catch (InvocationTargetException e) {
-            throw new IllegalStateException("Could not construct an instance of " + clazz, e);
-        } catch (InstantiationException e) {
-            throw new IllegalStateException("Could not construct an instance of : " + clazz, e);
-        }
+            } catch (IllegalAccessException e) {
+                throw new IllegalStateException("Malformed Widget (this should never happen): " + clazz);
+            } catch (InvocationTargetException e) {
+                throw new IllegalStateException("Could not construct an instance of " + clazz, e);
+            } catch (InstantiationException e) {
+                throw new IllegalStateException("Could not construct an instance of : " + clazz, e);
+            }
         }
 
         public static WidgetWrapper forWidget(String key, Class<? extends RenderableWidget> widgetClass) {

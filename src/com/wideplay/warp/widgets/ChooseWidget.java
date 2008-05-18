@@ -49,6 +49,9 @@ class ChooseWidget implements RenderableWidget {
             respond.write('/');
             respond.write(Integer.toString(obj.hashCode()));
             respond.write("\">");
+
+            widgetChain.render(obj, respond);
+            respond.write("</option>");
         }
 
         respond.write("</select>");

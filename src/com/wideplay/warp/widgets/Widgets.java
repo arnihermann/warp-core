@@ -3,6 +3,7 @@ package com.wideplay.warp.widgets;
 import com.google.inject.Module;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
+import com.wideplay.warp.servlet.Servlets;
 
 import java.util.*;
 
@@ -36,6 +37,8 @@ public final class Widgets {
                                 .toInstance(Collections.unmodifiableSet(packages));
 
                         bind(ContextInitializer.class);
+
+                        Servlets.bindScopes(binder());
                     }
                 };
             }

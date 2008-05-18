@@ -39,7 +39,7 @@ public class PageWidgetBuilderTest {
         replay(mock);
 
         final MvelEvaluator evaluator = new MvelEvaluator();
-        final WidgetRegistry registry = new WidgetRegistry(evaluator, book);
+        final WidgetRegistry registry = new WidgetRegistry(evaluator, book, injector);
 
         //register core widgets (needed for scanning templates)
         registry.add("showif", ShowIfWidget.class);

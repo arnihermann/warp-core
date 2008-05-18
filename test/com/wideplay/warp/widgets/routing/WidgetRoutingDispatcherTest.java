@@ -31,8 +31,13 @@ public class WidgetRoutingDispatcherTest {
 
         Object pageOb = new Object() ;
 
-        expect(request.getPathInfo())
+
+        expect(request.getRequestURI())
                 .andReturn("/thing")
+                .anyTimes();
+
+        expect(request.getContextPath())
+                .andReturn("")
                 .anyTimes();
 
         expect(request.getParameterMap())
@@ -87,8 +92,13 @@ public class WidgetRoutingDispatcherTest {
 
         Object pageOb = new Object() ;
 
-        expect(request.getPathInfo())
+
+        expect(request.getRequestURI())
                 .andReturn("/thing")
+                .anyTimes();
+
+        expect(request.getContextPath())
+                .andReturn("")
                 .anyTimes();
 
         expect(pageBook.get("/thing"))
@@ -146,8 +156,12 @@ public class WidgetRoutingDispatcherTest {
 
         Object pageOb = new Object() ;
 
-        expect(request.getPathInfo())
+        expect(request.getRequestURI())
                 .andReturn("/thing")
+                .anyTimes();
+
+        expect(request.getContextPath())
+                .andReturn("")
                 .anyTimes();
 
         expect(request.getParameterMap())
@@ -204,8 +218,12 @@ public class WidgetRoutingDispatcherTest {
 
         Object pageOb = new Object() ;
 
-        expect(request.getPathInfo())
+        expect(request.getRequestURI())
                 .andReturn("/thing")
+                .anyTimes();
+
+        expect(request.getContextPath())
+                .andReturn("")
                 .anyTimes();
 
         expect(request.getParameterMap())
@@ -263,8 +281,13 @@ public class WidgetRoutingDispatcherTest {
 
         Object pageOb = new Object() ;
 
-        expect(request.getPathInfo())
+
+        expect(request.getRequestURI())
                 .andReturn("/thing")
+                .anyTimes();
+
+        expect(request.getContextPath())
+                .andReturn("")
                 .anyTimes();
 
         expect(request.getParameterMap())
@@ -320,8 +343,14 @@ public class WidgetRoutingDispatcherTest {
         @SuppressWarnings("unchecked")
         Provider<Respond> respond = createMock(Provider.class);
 
-        expect(request.getPathInfo())
-                .andReturn(A_STATIC_RESOURCE_URI);
+
+        expect(request.getRequestURI())
+                .andReturn(A_STATIC_RESOURCE_URI)
+                .anyTimes();
+
+        expect(request.getContextPath())
+                .andReturn("")
+                .anyTimes();
 
         expect(pageBook.get(A_STATIC_RESOURCE_URI))
                 .andReturn(null);
@@ -348,8 +377,14 @@ public class WidgetRoutingDispatcherTest {
         @SuppressWarnings("unchecked")
         Provider<Respond> respond = createMock(Provider.class);
 
-        expect(request.getPathInfo())
-                .andReturn(A_STATIC_RESOURCE_URI);
+
+        expect(request.getRequestURI())
+                .andReturn(A_STATIC_RESOURCE_URI)
+                .anyTimes();
+
+        expect(request.getContextPath())
+                .andReturn("")
+                .anyTimes();
 
         expect(resourcesService.serve(A_STATIC_RESOURCE_URI))
                 .andReturn(mockRespond);
