@@ -76,12 +76,44 @@
 
     </target>
 
-    <!--<target name="assemble.jar" depends="build" description="Assembles a library jar of Warp core classes (for use in WEB-INF/lib for example)">-->
-        <!--<jar basedir="${build}" destfile="${dir.distribute}/${core.artifact}">-->
-            <!--<exclude name="com/wideplay/warp/example/**"/>-->
-            <!--<exclude name="dist/**"/>-->
-        <!--</jar>-->
-    <!--</target>-->
+    <target name="jar" depends="make" description="Assembles a library jar (for use in WEB-INF/lib for example)">
+        <taskdef name="jarjar" classname="com.tonicsystems.jarjar.JarJarTask" classpath="${lib}/jarjar-1.0rc7.jar"/>
+
+        <jarjar jarfile="${dir.distribute}/warp-widgets-${version}.jar">
+            <fileset dir="${build}">
+                <!-- warp-widgets classes -->
+                <exclude name="com/wideplay/warp/widgets/example/**"/>
+                <exclude name="META-INF/**"/>
+            </fileset>
+
+            <!-- dependencies -->
+            <zipfileset src="${lib}/commons-io.jar">
+                <exclude name="META-INF/*"/>
+            </zipfileset>
+            <zipfileset src="${lib}/dom4j-1.6.1.jar">
+                <exclude name="META-INF/*"/>
+            </zipfileset>
+            <zipfileset src="${lib}/jaxen-1.1-beta-7.jar">
+                <exclude name="META-INF/*"/>
+            </zipfileset>
+            <zipfileset src="${lib}/mvel.jar">
+                <exclude name="META-INF/*"/>
+            </zipfileset>
+            <zipfileset src="${lib}/asm.jar">
+                <exclude name="META-INF/*"/>
+            </zipfileset>
+
+            <!-- repackage into warp-widgets namespace -->
+            <keep pattern="com.wideplay.**"/>
+            <rule pattern="org.objectweb.asm.**" result="com.wideplay.warp.widgets.asm.@1"/>
+            <rule pattern="org.mvel.**" result="com.wideplay.warp.widgets.mvel.@1"/>
+            <rule pattern="org.dom4j.**" result="com.wideplay.warp.widgets.dom4j.@1"/>
+            <rule pattern="org.apache.commons.io.**" result="com.wideplay.warp.widgets.commons.io.@1"/>
+            <rule pattern="org.jaxen.**" result="com.wideplay.warp.widgets.jaxen.@1"/>
+        </jarjar>
+
+        <jar basedir="${src}" destfile="${dir.distribute}/warp-widgets-src-${version}.jar"/>
+    </target>
 
     <!--<target name="assemble.jar.nodeps" depends="build" description="Assembles a drop-in version of Warp (for use in WEB-INF/lib for example) along with all deps built in">-->
         <!--<taskdef name="jarjar" classname="com.tonicsystems.jarjar.JarJarTask" classpath="${lib}/jarjar-1.0rc6.jar"/>-->

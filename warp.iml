@@ -43,18 +43,13 @@
           </containerElement>
           <containerElement type="library" level="module">
             <attribute name="method" value="1" />
-            <attribute name="URI" value="/WEB-INF/lib/commons-logging-1.0.4.jar" />
-            <url>jar://$MODULE_DIR$/lib/commons-logging-1.0.4.jar!/</url>
-          </containerElement>
-          <containerElement type="library" level="module">
-            <attribute name="method" value="1" />
             <attribute name="URI" value="/WEB-INF/lib/dom4j-1.6.1.jar" />
             <url>jar://$MODULE_DIR$/lib/dom4j-1.6.1.jar!/</url>
           </containerElement>
           <containerElement type="library" level="module">
-            <attribute name="method" value="1" />
-            <attribute name="URI" value="/WEB-INF/lib/dwr.jar" />
-            <url>jar://$MODULE_DIR$/lib/dwr.jar!/</url>
+            <attribute name="method" value="0" />
+            <attribute name="URI" value="/WEB-INF/lib" />
+            <url>jar://$MODULE_DIR$/lib/easymock.jar!/</url>
           </containerElement>
           <containerElement type="library" level="module">
             <attribute name="method" value="1" />
@@ -62,9 +57,9 @@
             <url>jar://$MODULE_DIR$/lib/guice-1.0.jar!/</url>
           </containerElement>
           <containerElement type="library" level="module">
-            <attribute name="method" value="1" />
-            <attribute name="URI" value="/WEB-INF/lib/guice-servlet-1.0.jar" />
-            <url>jar://$MODULE_DIR$/lib/guice-servlet-1.0.jar!/</url>
+            <attribute name="method" value="0" />
+            <attribute name="URI" value="/WEB-INF/lib" />
+            <url>jar://$MODULE_DIR$/lib/intellij-annotations.jar!/</url>
           </containerElement>
           <containerElement type="library" level="module">
             <attribute name="method" value="0" />
@@ -77,9 +72,14 @@
             <url>jar://$MODULE_DIR$/lib/jaxen-1.1-beta-7.jar!/</url>
           </containerElement>
           <containerElement type="library" level="module">
-            <attribute name="method" value="1" />
-            <attribute name="URI" value="/WEB-INF/lib/log4j-1.2.14.jar" />
-            <url>jar://$MODULE_DIR$/lib/log4j-1.2.14.jar!/</url>
+            <attribute name="method" value="0" />
+            <attribute name="URI" value="/WEB-INF/lib" />
+            <url>jar://$MODULE_DIR$/lib/jetty-6.1.9.jar!/</url>
+          </containerElement>
+          <containerElement type="library" level="module">
+            <attribute name="method" value="0" />
+            <attribute name="URI" value="/WEB-INF/lib" />
+            <url>jar://$MODULE_DIR$/lib/jetty-util-6.1.9.jar!/</url>
           </containerElement>
           <containerElement type="library" level="module">
             <attribute name="method" value="1" />
@@ -98,8 +98,23 @@
           </containerElement>
           <containerElement type="library" level="module">
             <attribute name="method" value="1" />
-            <attribute name="URI" value="/WEB-INF/lib/xpp3-1.1.4.jar" />
-            <url>jar://$MODULE_DIR$/lib/xpp3-1.1.4.jar!/</url>
+            <attribute name="URI" value="/WEB-INF/lib/warp-servlet-0.9_03.jar" />
+            <url>jar://$MODULE_DIR$/lib/warp-servlet-0.9_03.jar!/</url>
+          </containerElement>
+          <containerElement type="library" level="module">
+            <attribute name="method" value="1" />
+            <attribute name="URI" value="/WEB-INF/lib/dwr.jar" />
+            <url>jar://$MODULE_DIR$/lib/dwr.jar!/</url>
+          </containerElement>
+          <containerElement type="library" level="module">
+            <attribute name="method" value="1" />
+            <attribute name="URI" value="/WEB-INF/lib/guice-servlet-1.0.jar" />
+            <url>jar://$MODULE_DIR$/lib/guice-servlet-1.0.jar!/</url>
+          </containerElement>
+          <containerElement type="library" level="module">
+            <attribute name="method" value="1" />
+            <attribute name="URI" value="/WEB-INF/lib/log4j-1.2.14.jar" />
+            <url>jar://$MODULE_DIR$/lib/log4j-1.2.14.jar!/</url>
           </containerElement>
         </packaging>
       </configuration>
@@ -172,15 +187,6 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/commons-logging-1.0.4.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/javaee.jar!/" />
         </CLASSES>
         <JAVADOC />
@@ -208,34 +214,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/xpp3-1.1.4.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/warp-jcip-annotations.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/jarjar-1.0rc6.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/warp-servlet-0.9_02.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -253,34 +232,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/logback-classic-0.9.8.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/logback-core-0.9.8.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/easymock.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/slf4j-api-1.4.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -299,6 +251,15 @@
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/jetty-util-6.1.9.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/warp-servlet-0.9_03.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
