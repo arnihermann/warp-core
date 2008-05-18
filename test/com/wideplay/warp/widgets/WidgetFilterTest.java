@@ -24,6 +24,7 @@ import java.util.HashSet;
 public class WidgetFilterTest {
     private static final String SOME_OUTPUT = "some outputdaoskdasd__" + new Date();
     private static final String A_REDIRECT_LOCATION = "/a/redirect/location";
+    private static final String TEXT_HTML = "text/html";
 
     @Test
     public final void init() throws ServletException {
@@ -74,13 +75,31 @@ public class WidgetFilterTest {
         HttpServletRequest request = createMock(HttpServletRequest.class);
         HttpServletResponse response = createMock(HttpServletResponse.class);
         FilterChain filterChain = createMock(FilterChain.class);
-        Respond respond = mockRespond();
+        Respond respond = new StringBuilderRespond() {
+            @Override
+            public String toString() {
+                return SOME_OUTPUT;
+            }
+
+            @Override
+            public String getRedirect() {
+                return null;
+            }
+
+            @Override
+            public String getContentType() {
+                return TEXT_HTML;
+            }
+        };
 
         expect(dispatcher.dispatch(request))
                 .andReturn(respond);
 
-//        filterChain.doFilter(request, response);
-//        expectLastCall().once();
+        //nothing set?
+        expect(response.getContentType())
+                .andReturn(null);
+
+        response.setContentType(TEXT_HTML);
 
         final boolean[] outOk = new boolean[2];
         final String[] output = new String[1];
@@ -107,7 +126,6 @@ public class WidgetFilterTest {
         assert SOME_OUTPUT.equals(output[0]) : "Respond output not used";
         verify(dispatcher, request, response, filterChain);
     }
-
 
 
     @Test
@@ -158,41 +176,4 @@ public class WidgetFilterTest {
         verify(dispatcher, request, response, filterChain, respond);
     }
 
-    private Respond mockRespond() {
-        //noinspection OverlyComplexAnonymousInnerClass
-        return new Respond() {
-            public void write(String text) {
-            }
-
-            public HtmlTagBuilder withHtml() {
-                return null;
-            }
-
-            public void write(char c) {
-            }
-
-            public void chew() {
-            }
-
-            public void writeToHead(String text) {
-            }
-
-            public void require(String requireString) {
-                
-            }
-
-            public void redirect(String to) {
-                
-            }
-
-            public String getRedirect() {
-                return null;
-            }
-
-            @Override
-            public String toString() {
-                return SOME_OUTPUT;
-            }
-        };
-    }
 }

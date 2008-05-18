@@ -19,6 +19,7 @@ class StringBuilderRespond implements Respond {
     private static final String HEADER_PLACEHOLDER = "__w:w:HEADER_PLACEhOlDeR:NOWRITe::__";
 
     private static final AtomicReference<Map<String, String>> templates = new AtomicReference<Map<String, String>>();
+    private static final String TEXT_HTML = "text/html";
 
     StringBuilderRespond() {
         if (null == templates.get()) {
@@ -69,6 +70,10 @@ class StringBuilderRespond implements Respond {
 
     public String getRedirect() {
         return redirect;
+    }
+
+    public String getContentType() {
+        return TEXT_HTML;
     }
 
     @Override

@@ -4,8 +4,10 @@ import com.wideplay.warp.widgets.Respond;
 import com.google.inject.Singleton;
 
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.Map;
 import java.util.List;
+import java.util.Properties;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -18,6 +20,23 @@ import net.jcip.annotations.ThreadSafe;
 @ThreadSafe @Singleton
 class ClasspathResourcesService implements ResourcesService {
     private final Map<String, Resource> resources = new ConcurrentHashMap<String, Resource>();
+
+    private static final AtomicReference<Map<String, String>> mimes = new AtomicReference<Map<String, String>>();
+    private static final String DEFAULT_MIME = "__defaultMimeType";
+
+    public ClasspathResourcesService() {
+        if (null == mimes.get()) {
+            final Properties properties = new Properties();
+            try {
+                properties.load(ClasspathResourcesService.class.getResourceAsStream("mimetypes.properties"));
+            } catch (IOException e) {
+                throw new ResourceLoadingException("Can't find mimes.properties", e);
+            }
+
+            //noinspection unchecked
+            mimes.compareAndSet(null, (Map)properties);
+        }
+    }
 
     public void add(Class<?> clazz, Export export) {
         resources.put(export.at(), new Resource(export, clazz));
@@ -35,15 +54,29 @@ class ClasspathResourcesService implements ResourcesService {
         return new StaticResourceRespond(resource);
     }
 
+
+    static String mimeOf(String file) {
+        final Map<String, String> mimeTypes = mimes.get();
+        for (Map.Entry<String, String> mime : mimeTypes.entrySet()) {
+            if (file.matches(mime.getKey()))
+                return mime.getValue();
+        }
+
+        //no match, use the default?
+        return mimeTypes.get(DEFAULT_MIME);
+    }
+
     private static class Resource {
         private final Export export;
         private final Class<?> clazz;
+        private final String mimeType;
 
         private Resource(Export export, Class<?> clazz) {
             this.export = export;
             this.clazz = clazz;
-        }
 
+            this.mimeType = mimeOf(export.resource());
+        }
 
         public String toString() {
             return new StringBuilder()
@@ -62,6 +95,10 @@ class ClasspathResourcesService implements ResourcesService {
 
         public StaticResourceRespond(Resource resource) {
             this.resource = resource;
+        }
+
+        public String getContentType() {
+            return resource.mimeType;
         }
 
         @Override

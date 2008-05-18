@@ -515,6 +515,10 @@ public class PageBookImplTest {
             
         }
 
+        public String getContentType() {
+            return null;
+        }
+
         public String getRedirect() {
             return null;
         }

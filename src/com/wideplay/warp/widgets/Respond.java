@@ -23,6 +23,8 @@ public interface Respond {
 
     void redirect(String to);
 
+    String getContentType();
+
     String getRedirect();
 
     public static interface HtmlTagBuilder {

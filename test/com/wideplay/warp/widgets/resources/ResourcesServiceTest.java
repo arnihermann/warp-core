@@ -24,7 +24,8 @@ public class ResourcesServiceTest {
                 .andReturn(AN_URI);
 
         expect(export.resource())
-                .andReturn(MY_XML);
+                .andReturn(MY_XML)
+                .anyTimes();
 
         replay(export);
 
@@ -55,7 +56,8 @@ public class ResourcesServiceTest {
                 .andReturn(AN_URI);
 
         expect(export.resource())
-                .andReturn("aoskdaoskdas");
+                .andReturn("aoskdaoskdas")
+                .anyTimes();
 
         replay(export);
 
