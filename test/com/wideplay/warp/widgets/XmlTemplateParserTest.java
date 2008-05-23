@@ -37,7 +37,7 @@ public class XmlTemplateParserTest {
         registry.add("showif", ShowIfWidget.class);
 
 
-        RenderableWidget widget =
+        Renderable widget =
                 new XmlTemplateParser(evaluator, registry)
                     .parse("<xml>@ShowIf(true)<p>hello</p></xml>");
 
@@ -75,7 +75,7 @@ public class XmlTemplateParserTest {
         registry.add("showif", ShowIfWidget.class);
 
 
-        RenderableWidget widget =
+        Renderable widget =
                 new XmlTemplateParser(evaluator, registry)
                     .parse("<xml>@ShowIf(false)<p>hello</p></xml>");
 
@@ -113,7 +113,7 @@ public class XmlTemplateParserTest {
         registry.add("showif", ShowIfWidget.class);
 
 
-        RenderableWidget widget =
+        Renderable widget =
                 new XmlTemplateParser(evaluator, registry)
                     .parse("<xml><div class='${clazz}'>hello <a href='/people/${id}'>${name}</a></div></xml>");
 
@@ -159,7 +159,7 @@ public class XmlTemplateParserTest {
         registry.add("meta", HeaderWidget.class);
 
 
-        RenderableWidget widget =
+        Renderable widget =
                 new XmlTemplateParser(evaluator, registry)
                     .parse("<html>@Meta <head>" +
                             "   @Require <script type='text/javascript' src='my.js'> </script>" +
@@ -197,7 +197,7 @@ public class XmlTemplateParserTest {
         registry.add("showif", ShowIfWidget.class);
 
 
-        RenderableWidget widget =
+        Renderable widget =
                 new XmlTemplateParser(evaluator, registry)
                     .parse("<xml><div class='${clazz}'>hello</div></xml>");
 
@@ -243,7 +243,7 @@ public class XmlTemplateParserTest {
         registry.add("showif", ShowIfWidget.class);
 
 
-        RenderableWidget widget =
+        Renderable widget =
                 new XmlTemplateParser(evaluator, registry)
                     .parse("<xml><div class='${clazz}'>hello @ShowIf(false)<a href='/hi/${id}'>hideme</a></div></xml>");
 
@@ -294,8 +294,8 @@ public class XmlTemplateParserTest {
         }
     }
 
-//    @Test  TODO fix this test!
-    public final void readEmbedWidget() {
+    @Test
+    public final void readEmbedWidgetAndStoredAsPage() {
         final PageBook book = Guice.createInjector()      //hacky, where are you super-packages!
                 .getInstance(PageBook.class);
 
@@ -305,33 +305,16 @@ public class XmlTemplateParserTest {
         final WidgetRegistry registry = new WidgetRegistry(evaluator, book, createNiceMock(Injector.class));
         registry.add("myFave", EmbedWidget.class);
 
-
-        RenderableWidget widget =
+        Renderable widget =
                 new XmlTemplateParser(evaluator, registry)
                     .parse("<xml><div class='content'>hello @MyFave(should=false)<a href='/hi/${id}'>hideme</a></div></xml>");
 
         assert null != widget : " null ";
 
         //tell pagebook to track this as an embedded widget
-        book.embedAs(widget, MyEmbeddedPage.class);
+        book.embedAs(new TerminalWidgetChain(), MyEmbeddedPage.class);
 
-        final StringBuilder builder = new StringBuilder();
-        final Respond mockRespond = new StringBuilderRespond() {
-            @Override
-            public void write(String text) {
-                builder.append(text);
-            }
-
-            @Override
-            public void write(char text) {
-                builder.append(text);
-            }
-
-            @Override
-            public void chew() {
-                builder.deleteCharAt(builder.length() - 1);
-            }
-        };
+        final Respond mockRespond = new StringBuilderRespond();
 
 
         Map<String, String> map = new HashMap<String, String>() {{
@@ -342,8 +325,81 @@ public class XmlTemplateParserTest {
 
         widget.render(map, mockRespond);
 
-        final String s = builder.toString();
+        final String s = mockRespond.toString();
         assert "<xml><div class=\"content\">hello </div></xml>"
+                .equals(s) : "Did not write expected output, instead: " + s;
+    }
+
+
+    @Test
+    public final void readEmbedWidgetOnly() {
+        final PageBook book = Guice.createInjector()      //hacky, where are you super-packages!
+                .getInstance(PageBook.class);
+
+//        book.at("/somewhere", new TerminalWidgetChain(), MyEmbeddedPage.class);
+
+        final Evaluator evaluator = new MvelEvaluator();
+        final WidgetRegistry registry = new WidgetRegistry(evaluator, book, createNiceMock(Injector.class));
+        registry.add("myFave", EmbedWidget.class);
+
+        Renderable widget =
+                new XmlTemplateParser(evaluator, registry)
+                    .parse("<xml><div class='content'>hello @MyFave(should=false)<a href='/hi/${id}'>hideme</a></div></xml>");
+
+        assert null != widget : " null ";
+
+        //tell pagebook to track this as an embedded widget
+        book.embedAs(new TerminalWidgetChain(), MyEmbeddedPage.class);
+
+        final Respond mockRespond = new StringBuilderRespond();
+
+
+        Map<String, String> map = new HashMap<String, String>() {{
+            put("name", "Dhanji");
+            put("clazz", "content");
+            put("id", "12");
+        }};
+
+        widget.render(map, mockRespond);
+
+        final String s = mockRespond.toString();
+        assert "<xml><div class=\"content\">hello </div></xml>"
+                .equals(s) : "Did not write expected output, instead: " + s;
+    }
+
+
+    @Test
+    public final void readEmbedWidgetWithArgs() {
+        final PageBook book = Guice.createInjector()      //hacky, where are you super-packages!
+                .getInstance(PageBook.class);
+
+        final Evaluator evaluator = new MvelEvaluator();
+        final WidgetRegistry registry = new WidgetRegistry(evaluator, book, createNiceMock(Injector.class));
+        registry.add("myFave", EmbedWidget.class);
+        registry.add("with", ArgumentWidget.class);
+
+        Renderable widget =
+                new XmlTemplateParser(evaluator, registry)
+                    .parse("<xml><div class='content'>hello @MyFave(should=true)<a href='/hi/${id}'> @With(\"me\")<p>showme</p></a></div></xml>");
+
+        assert null != widget : " null ";
+
+        //should include the @With("me") annotated widget from the template above (discarding the <p> tag).
+        book.embedAs(new IncludeWidget("'me'", evaluator), MyEmbeddedPage.class);
+
+        final Respond mockRespond = new StringBuilderRespond();
+
+
+        Map<String, String> map = new HashMap<String, String>() {{
+            put("name", "Dhanji");
+            put("clazz", "content");
+            put("id", "12");
+        }};
+
+        widget.render(map, mockRespond);
+
+        final String s = mockRespond.toString();
+        assert "<xml><div class=\"content\">hello showme</div></xml>"
                 .equals(s) : "Did not write expected output, instead: " + s;
     }
 

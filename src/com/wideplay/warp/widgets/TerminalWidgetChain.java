@@ -15,5 +15,5 @@ class TerminalWidgetChain extends WidgetChain {
 
     public void render(Object bound, Respond respond) { }
 
-    public WidgetChain addWidget(RenderableWidget renderableWidget) { return this; }
+    public WidgetChain addWidget(Renderable renderable) { return this; }
 }

@@ -5,7 +5,6 @@ import com.google.inject.Injector;
 import static org.easymock.EasyMock.createNiceMock;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import static org.easymock.EasyMock.*;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
@@ -23,11 +22,11 @@ public class WidgetRegistryTest {
     }
 
     @Test(dataProvider = WIDGETS_AND_KEYS)
-    public final void storeRetrieveWidgets(final String key, final Class<RenderableWidget> expected) {
+    public final void storeRetrieveWidgets(final String key, final Class<Renderable> expected) {
         final WidgetRegistry registry = new WidgetRegistry(new MvelEvaluator(), createNiceMock(PageBook.class), createNiceMock(Injector.class));
         registry.add(key, expected);
 
-        RenderableWidget widget = registry.newWidget(key, "some=expression", new WidgetChain());
+        Renderable widget = registry.newWidget(key, "some=expression", new WidgetChain());
 
         assert expected.isInstance(widget) : "Wrong widget returned";
     }

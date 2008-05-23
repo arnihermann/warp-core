@@ -6,12 +6,14 @@ import com.wideplay.warp.widgets.rendering.SelfRendering;
 import net.jcip.annotations.ThreadSafe;
 
 import java.util.List;
+import java.util.Set;
+import java.util.Collections;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
 @ThreadSafe @SelfRendering
-class TextWidget implements RenderableWidget {
+class TextWidget implements Renderable {
     private final String template;
     private volatile List<Token> tokenizedTemplate;     //TODO store some metrics to allocate buffers later
     private final Evaluator evaluator;
@@ -36,5 +38,10 @@ class TextWidget implements RenderableWidget {
         }
 
         respond.write(builder.toString());
+    }
+
+
+    public <T extends Renderable> Set<T> collect(Class<T> clazz) {
+        return Collections.emptySet();
     }
 }

@@ -35,7 +35,7 @@ public class WidgetFilterTest {
         final int[] adds = new int[1];
         final WidgetRegistry registry = new WidgetRegistry(evaluator, pageBook, createNiceMock(Injector.class)) {
             @Override
-            public void add(String key, Class<? extends RenderableWidget> widget) {
+            public void add(String key, Class<? extends Renderable> widget) {
                 adds[0]++;
             }
         };

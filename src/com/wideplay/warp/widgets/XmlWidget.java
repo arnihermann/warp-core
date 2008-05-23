@@ -6,10 +6,7 @@ import com.wideplay.warp.widgets.rendering.Attributes;
 import com.wideplay.warp.widgets.rendering.SelfRendering;
 import net.jcip.annotations.ThreadSafe;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -19,20 +16,20 @@ import java.util.Map;
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
 @ThreadSafe @SelfRendering
-class XmlWidget implements RenderableWidget {
-    private final WidgetChain chain;
+class XmlWidget implements Renderable {
+    private final WidgetChain widgetChain;
     private final boolean noChildren;
     private final String name;
     private final Evaluator evaluator;
     private final Map<String, List<Token>> attributes;
 
 
-    XmlWidget(WidgetChain chain, String name, Evaluator evaluator, @Attributes Map<String, String> attributes) {
-        this.chain = chain;
+    XmlWidget(WidgetChain widgetChain, String name, Evaluator evaluator, @Attributes Map<String, String> attributes) {
+        this.widgetChain = widgetChain;
         this.name = name;
         this.evaluator = evaluator;
         this.attributes = Collections.unmodifiableMap(tokenize(attributes));
-        this.noChildren = chain instanceof TerminalWidgetChain;
+        this.noChildren = widgetChain instanceof TerminalWidgetChain;
     }
 
     //converts a map of name:value attrs into a map of name:token attrs
@@ -78,7 +75,7 @@ class XmlWidget implements RenderableWidget {
             respond.write("/>");    //write self-closed tag
         } else {
             respond.write('>');
-            chain.render(bound, respond);
+            widgetChain.render(bound, respond);
 
             //close tag
             respond.write("</");
@@ -86,5 +83,10 @@ class XmlWidget implements RenderableWidget {
             respond.write('>');
         }
 
+    }
+
+
+    public <T extends Renderable> Set<T> collect(Class<T> clazz) {
+        return widgetChain.collect(clazz);
     }
 }

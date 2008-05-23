@@ -2,14 +2,16 @@ package com.wideplay.warp.widgets;
 
 import net.jcip.annotations.Immutable;
 
+import java.util.Set;
+
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
 @Immutable
 class SingleWidgetChain extends WidgetChain {
-    private final RenderableWidget widget;
+    private final Renderable widget;
 
-    public SingleWidgetChain(RenderableWidget widget) {
+    public SingleWidgetChain(Renderable widget) {
         this.widget = widget;
     }
 
@@ -17,7 +19,11 @@ class SingleWidgetChain extends WidgetChain {
         widget.render(bound, respond);
     }
 
-    public WidgetChain addWidget(RenderableWidget renderableWidget) {
+    public WidgetChain addWidget(Renderable renderable) {
         throw new IllegalStateException("Cannot add children to single widget chain");
+    }
+
+    public synchronized <T extends Renderable> Set<T> collect(Class<T> clazz) {
+        return widget.collect(clazz);
     }
 }

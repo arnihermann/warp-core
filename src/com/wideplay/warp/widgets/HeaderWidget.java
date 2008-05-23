@@ -3,11 +3,13 @@ package com.wideplay.warp.widgets;
 import com.wideplay.warp.widgets.rendering.EmbedAs;
 import com.wideplay.warp.widgets.rendering.SelfRendering;
 
+import java.util.Set;
+
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
 @EmbedAs("Meta") @SelfRendering
-class HeaderWidget implements RenderableWidget {
+class HeaderWidget implements Renderable {
     private final WidgetChain widgetChain;
     private final String expression;
     private final Evaluator evaluator;
@@ -29,5 +31,10 @@ class HeaderWidget implements RenderableWidget {
         respond.withHtml()
                 .headerPlaceholder();
         respond.write("</head>");
+    }
+
+
+    public <T extends Renderable> Set<T> collect(Class<T> clazz) {
+        return widgetChain.collect(clazz);
     }
 }

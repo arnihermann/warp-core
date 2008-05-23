@@ -7,13 +7,14 @@ import net.jcip.annotations.Immutable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
 @Immutable
 @EmbedAs("Repeat")
-class RepeatWidget implements RenderableWidget {
+class RepeatWidget implements Renderable {
     private final WidgetChain widgetChain;
     private final String items;
     private final String var;
@@ -30,7 +31,7 @@ class RepeatWidget implements RenderableWidget {
         String var = map.get("var");
 
         if (null != var)
-            this.var = stripQuotes(var);
+            this.var = TextTools.stripQuotes(var);
         else
             this.var = null;
 
@@ -39,15 +40,11 @@ class RepeatWidget implements RenderableWidget {
         if (null == pageVar)
             pageVar = DEFAULT_PAGEVAR;
         else
-            pageVar = stripQuotes(pageVar);
+            pageVar = TextTools.stripQuotes(pageVar);
 
         this.pageVar = pageVar;
 
         this.evaluator = evaluator;
-    }
-
-    private String stripQuotes(String var) {
-        return var.substring(1, var.length() - 1);
     }
 
     public void render(Object bound, Respond respond) {
@@ -72,6 +69,11 @@ class RepeatWidget implements RenderableWidget {
             for (Object thing : things) {
                 widgetChain.render(thing, respond);
             }
+    }
+
+
+    public <T extends Renderable> Set<T> collect(Class<T> clazz) {
+        return widgetChain.collect(clazz);
     }
 
 

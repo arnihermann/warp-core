@@ -1,7 +1,7 @@
 package com.wideplay.warp.widgets.routing;
 
 import com.google.inject.ImplementedBy;
-import com.wideplay.warp.widgets.RenderableWidget;
+import com.wideplay.warp.widgets.Renderable;
 
 import java.util.Map;
 
@@ -10,16 +10,16 @@ import java.util.Map;
  */
 @ImplementedBy(PageBookImpl.class)
 public interface PageBook {
-    void at(String uri, RenderableWidget page, Class<?> myPageClass);
+    void at(String uri, Renderable page, Class<?> myPageClass);
 
     Page get(String uri);
 
     Page forName(String name);
 
-    void embedAs(RenderableWidget renderableWidget, Class<?> page);
+    void embedAs(Renderable renderable, Class<?> page);
 
     public static interface Page {
-        RenderableWidget widget();
+        Renderable widget();
 
         Object instantiate();
 

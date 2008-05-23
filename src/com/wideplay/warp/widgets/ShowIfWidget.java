@@ -3,12 +3,14 @@ package com.wideplay.warp.widgets;
 import com.wideplay.warp.widgets.rendering.EmbedAs;
 import net.jcip.annotations.Immutable;
 
+import java.util.Set;
+
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
 @Immutable @EmbedAs("ShowIf")
-class ShowIfWidget implements RenderableWidget {
+class ShowIfWidget implements Renderable {
     private final WidgetChain widgetChain;
     private final String expression;
     private final Evaluator evaluator;
@@ -25,5 +27,10 @@ class ShowIfWidget implements RenderableWidget {
 
         if ((Boolean) o)
             widgetChain.render(bound, respond);
+    }
+
+
+    public <T extends Renderable> Set<T> collect(Class<T> clazz) {
+        return widgetChain.collect(clazz);
     }
 }

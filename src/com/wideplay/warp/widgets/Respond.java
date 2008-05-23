@@ -27,6 +27,8 @@ public interface Respond {
 
     String getRedirect();
 
+    Renderable include(String argument);
+
     public static interface HtmlTagBuilder {
         void textField(String value, String s);
 

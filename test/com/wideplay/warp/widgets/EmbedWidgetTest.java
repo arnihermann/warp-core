@@ -7,6 +7,8 @@ import org.testng.annotations.Test;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
@@ -15,6 +17,7 @@ public class EmbedWidgetTest {
     private static final String PAGES_FOR_EMBEDDING = "pagesForEmbedding";
     private static final String PAGES_FOR_EMBEDDING_BROKEN = "pagesForEmbeddingBroken";
     private static final String PAGES_FOR_EMBEDDING_BROKEN_EXCEPTION = "pagesForEmbeddingBrokenThrowing";
+    private static final String HELLO_FROM_INCLUDE = "helloFromEmbed";
 
     @DataProvider(name = PAGES_FOR_EMBEDDING)
     public Object[][] getPages() {
@@ -92,7 +95,7 @@ public class EmbedWidgetTest {
         final PageBook pageBook = createMock(PageBook.class);
         final PageBook.Page page = createMock(PageBook.Page.class);
         final Respond respond = new StringBuilderRespond();
-        final RenderableWidget widget = createMock(RenderableWidget.class);
+        final Renderable widget = createMock(Renderable.class);
 
         expect(pageBook.forName(pageName))
                 .andReturn(page);
@@ -119,7 +122,7 @@ public class EmbedWidgetTest {
         targetWidgetChain.addWidget(new XmlWidget(new TerminalWidgetChain(), "p", evaluator, Collections.EMPTY_MAP));
         widgetChain.addWidget(new ShowIfWidget(targetWidgetChain, "true", evaluator));
 
-        new EmbedWidget(expression, evaluator, pageBook, pageName)
+        new EmbedWidget(Collections.<String, ArgumentWidget>emptyMap(), expression, evaluator, pageBook, pageName)
                 .render(new MyParentPage(passOn), respond);
 
         //assert bindings
@@ -172,7 +175,7 @@ public class EmbedWidgetTest {
 
 
 
-        new EmbedWidget(expression, evaluator, pageBook, pageName)
+        new EmbedWidget(Collections.<String, ArgumentWidget>emptyMap(), expression, evaluator, pageBook, pageName)
                 .render(new MyParentPage(passOn), respond);
 
         //assert bindings
@@ -182,6 +185,69 @@ public class EmbedWidgetTest {
         //the render was ok
         final String resp = respond.toString();
         assert "<p class=\"pretty\" id=\"a-p-tag\"/>".equals(resp) : "widget not embedded correctly : " + resp;
+
+        verify(pageBook, page);
+    }
+
+
+    @Test(dataProvider = PAGES_FOR_EMBEDDING)
+    public final void pageEmbeddingChainsToEmbeddedWidgetWithArgs(String targetPageName, final String passOn, final String expression) {
+
+        //forName expects pageName to be in all-lower case (it's an optimization)
+        targetPageName = targetPageName.toLowerCase();
+
+        final PageBook pageBook = createMock(PageBook.class);
+        final PageBook.Page page = createMock(PageBook.Page.class);
+        final Respond respond = new StringBuilderRespond();
+
+
+        final MvelEvaluator evaluator = new MvelEvaluator();
+
+        final WidgetChain widget = new WidgetChain();
+        final WidgetChain targetWidgetChain = new WidgetChain();
+        //noinspection unchecked
+        targetWidgetChain.addWidget(new XmlWidget(new WidgetChain()
+                .addWidget(new IncludeWidget("'me'", evaluator)),
+
+                "p", evaluator, new LinkedHashMap<String, String>() {{
+            put("class", "pretty");
+            put("id", "a-p-tag");
+        }}));
+        widget.addWidget(new ShowIfWidget(targetWidgetChain, "true", evaluator));
+
+        expect(pageBook.forName(targetPageName))
+                .andReturn(page);
+
+
+        //mypage does?
+        final MyEmbeddedPage myEmbeddedPage = new MyEmbeddedPage();
+        expect(page.instantiate())
+                .andReturn(myEmbeddedPage);
+
+        expect(page.widget())
+                .andReturn(widget);
+
+        replay(pageBook, page);
+
+        //create embedding arguments
+        final String includeExpr = "me";
+
+        Map<String, ArgumentWidget> inners = new HashMap<String, ArgumentWidget>();
+        inners.put(includeExpr, new ArgumentWidget(new WidgetChain().addWidget(new TextWidget(HELLO_FROM_INCLUDE, evaluator)),
+                includeExpr, evaluator));
+
+
+        new EmbedWidget(inners, expression, evaluator, pageBook, targetPageName)
+                .render(new MyParentPage(passOn), respond);
+
+        //assert bindings
+        assert myEmbeddedPage.isSet() : "variable not passed on to embedded page";
+        assert passOn.equals(myEmbeddedPage.getMessage()) : "variable not set on embedded page";
+
+        //the render was ok
+        final String resp = respond.toString();
+        assert String.format("<p class=\"pretty\" id=\"a-p-tag\">%s</p>", HELLO_FROM_INCLUDE).equals(resp)
+                : "widget not embedded correctly : " + resp;
 
         verify(pageBook, page);
     }
@@ -227,7 +293,7 @@ public class EmbedWidgetTest {
 
 
 
-        new EmbedWidget(expression, evaluator, pageBook, pageName)
+        new EmbedWidget(Collections.<String, ArgumentWidget>emptyMap(), expression, evaluator, pageBook, pageName)
                 .render(new MyParentPage(passOn), respond);
 
         //assert bindings
@@ -251,7 +317,7 @@ public class EmbedWidgetTest {
         final PageBook pageBook = createMock(PageBook.class);
         final PageBook.Page page = createMock(PageBook.Page.class);
         final Respond mockRespond = createNiceMock(Respond.class);
-        final RenderableWidget widget = createMock(RenderableWidget.class);
+        final Renderable widget = createMock(Renderable.class);
 
         expect(pageBook.forName(pageName))
                 .andReturn(page);
@@ -270,7 +336,7 @@ public class EmbedWidgetTest {
 
         replay(pageBook, page, mockRespond, widget);
 
-        new EmbedWidget(expression, new MvelEvaluator(), pageBook, pageName)
+        new EmbedWidget(Collections.<String, ArgumentWidget>emptyMap(), expression, new MvelEvaluator(), pageBook, pageName)
                 .render(new MyParentPage(passOn), mockRespond);
 
 
@@ -288,7 +354,7 @@ public class EmbedWidgetTest {
         final PageBook pageBook = createMock(PageBook.class);
         final PageBook.Page page = createMock(PageBook.Page.class);
         final Respond mockRespond = createMock(Respond.class);
-        final RenderableWidget widget = createMock(RenderableWidget.class);
+        final Renderable widget = createMock(Renderable.class);
 
         expect(pageBook.forName(pageName))
                 .andReturn(page);
@@ -307,7 +373,7 @@ public class EmbedWidgetTest {
 
         replay(pageBook, page, mockRespond, widget);
 
-        new EmbedWidget(expression, new MvelEvaluator(), pageBook, pageName)
+        new EmbedWidget(Collections.<String, ArgumentWidget>emptyMap(), expression, new MvelEvaluator(), pageBook, pageName)
                 .render(new MyParentPage(passOn), mockRespond);
 
 
@@ -324,7 +390,7 @@ public class EmbedWidgetTest {
         final PageBook pageBook = createMock(PageBook.class);
         final PageBook.Page page = createMock(PageBook.Page.class);
         final Respond mockRespond = createNiceMock(Respond.class);  //tolerate whatever output
-        final RenderableWidget widget = createMock(RenderableWidget.class);
+        final Renderable widget = createMock(Renderable.class);
 
         expect(pageBook.forName(pageName))
                 .andReturn(page);
@@ -343,7 +409,7 @@ public class EmbedWidgetTest {
 
         replay(pageBook, page, mockRespond, widget);
 
-        new EmbedWidget(expression, new MvelEvaluator(), pageBook, pageName)
+        new EmbedWidget(Collections.<String, ArgumentWidget>emptyMap(), expression, new MvelEvaluator(), pageBook, pageName)
                 .render(new MyParentPage(passOn), mockRespond);
 
 

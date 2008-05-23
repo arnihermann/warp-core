@@ -1,6 +1,7 @@
 package com.wideplay.warp.widgets.resources;
 
 import com.wideplay.warp.widgets.Respond;
+import com.wideplay.warp.widgets.Renderable;
 import com.google.inject.Singleton;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -154,6 +155,10 @@ class ClasspathResourcesService implements ResourcesService {
         }
 
         public String getRedirect() {
+            return null;
+        }
+
+        public Renderable include(String argument) {
             return null;
         }
     }

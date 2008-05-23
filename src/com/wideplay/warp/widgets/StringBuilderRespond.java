@@ -76,6 +76,10 @@ class StringBuilderRespond implements Respond {
         return redirect;
     }
 
+    public Renderable include(String argument) {
+        return null;
+    }
+
     public String getContentType() {
         return TEXT_HTML;
     }

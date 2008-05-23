@@ -8,6 +8,7 @@ import org.testng.annotations.Test;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
@@ -23,9 +24,13 @@ public class PageBookImplTest {
     public final void storeAndRetrievePageInstance() {
         final Respond respond = new MockRespond();
 
-        RenderableWidget mock = new RenderableWidget() {
+        Renderable mock = new Renderable() {
             public void render(Object bound, Respond respond) {
 
+            }
+
+            public <T extends Renderable> Set<T> collect(Class<T> clazz) {
+                return null;
             }
         };
 
@@ -40,9 +45,13 @@ public class PageBookImplTest {
 
     @Test
     public final void fireGetMethodOnPage() {
-        RenderableWidget mock = new RenderableWidget() {
+        Renderable mock = new Renderable() {
             public void render(Object bound, Respond respond) {
 
+            }
+
+            public <T extends Renderable> Set<T> collect(Class<T> clazz) {
+                return null;
             }
         };
 
@@ -59,9 +68,13 @@ public class PageBookImplTest {
 
    @Test
     public final void fireGetMethodOnPageAndRedirectToURL() {
-        RenderableWidget mock = new RenderableWidget() {
+        Renderable mock = new Renderable() {
             public void render(Object bound, Respond respond) {
 
+            }
+
+            public <T extends Renderable> Set<T> collect(Class<T> clazz) {
+                return null;
             }
         };
 
@@ -78,11 +91,16 @@ public class PageBookImplTest {
 
    @Test
     public final void firePostMethodOnPageAndRedirectToURL() {
-        RenderableWidget mock = new RenderableWidget() {
+        Renderable mock = new
+                Renderable() {
             public void render(Object bound, Respond respond) {
 
             }
-        };
+
+                    public <T extends Renderable> Set<T> collect(Class<T> clazz) {
+                        return null;
+                    }
+                };
 
         final PageBook pageBook = new PageBookImpl(null);
         pageBook.at("/wiki", mock, MyRedirectingPage.class);
@@ -97,9 +115,13 @@ public class PageBookImplTest {
 
     @Test
     public final void fireGetMethodOnPageToCorrectHandler() {
-        RenderableWidget mock = new RenderableWidget() {
+        Renderable mock = new Renderable() {
             public void render(Object bound, Respond respond) {
 
+            }
+
+            public <T extends Renderable> Set<T> collect(Class<T> clazz) {
+                return null;
             }
         };
 
@@ -121,9 +143,13 @@ public class PageBookImplTest {
 
     @Test
     public final void firePostMethodOnPageToCorrectHandler() {
-        RenderableWidget mock = new RenderableWidget() {
+        Renderable mock = new Renderable() {
             public void render(Object bound, Respond respond) {
 
+            }
+
+            public <T extends Renderable> Set<T> collect(Class<T> clazz) {
+                return null;
             }
         };
 
@@ -145,9 +171,13 @@ public class PageBookImplTest {
 
     @Test
     public final void fireGetMethodOnPageToCorrectHandlerOnlyOnce() {
-        RenderableWidget mock = new RenderableWidget() {
+        Renderable mock = new Renderable() {
             public void render(Object bound, Respond respond) {
 
+            }
+
+            public <T extends Renderable> Set<T> collect(Class<T> clazz) {
+                return null;
             }
         };
 
@@ -169,9 +199,13 @@ public class PageBookImplTest {
 
     @Test
     public final void firePostMethodOnPageToCorrectHandlerOnlyOnce() {
-        RenderableWidget mock = new RenderableWidget() {
+        Renderable mock = new Renderable() {
             public void render(Object bound, Respond respond) {
 
+            }
+
+            public <T extends Renderable> Set<T> collect(Class<T> clazz) {
+                return null;
             }
         };
 
@@ -193,9 +227,13 @@ public class PageBookImplTest {
 
     @Test
     public final void fireGetMethodOnPageToDefaultHandler() {
-        RenderableWidget mock = new RenderableWidget() {
+        Renderable mock = new Renderable() {
             public void render(Object bound, Respond respond) {
 
+            }
+
+            public <T extends Renderable> Set<T> collect(Class<T> clazz) {
+                return null;
             }
         };
 
@@ -220,9 +258,13 @@ public class PageBookImplTest {
 
     @Test
     public final void firePostMethodOnPageToDefaultHandler() {
-        RenderableWidget mock = new RenderableWidget() {
+        Renderable mock = new Renderable() {
             public void render(Object bound, Respond respond) {
 
+            }
+
+            public <T extends Renderable> Set<T> collect(Class<T> clazz) {
+                return null;
             }
         };
 
@@ -248,9 +290,13 @@ public class PageBookImplTest {
 
     @Test
     public final void fireGetMethodWithArgsOnPage() {
-        RenderableWidget mock = new RenderableWidget() {
+        Renderable mock = new Renderable() {
             public void render(Object bound, Respond respond) {
 
+            }
+
+            public <T extends Renderable> Set<T> collect(Class<T> clazz) {
+                return null;
             }
         };
 
@@ -267,9 +313,14 @@ public class PageBookImplTest {
 
     @Test
     public final void firePostMethodWithArgsOnPage() {
-        RenderableWidget mock = new RenderableWidget() {
+        Renderable mock = new
+                Renderable() {
             public void render(Object bound, Respond respond) {
 
+            }
+
+            public <T extends Renderable> Set<T> collect(Class<T> clazz) {
+                return null;
             }
         };
 
@@ -287,9 +338,13 @@ public class PageBookImplTest {
 
     @Test(expectedExceptions = InvalidEventHandlerException.class)
     public final void errorOnPostMethodWithUnnamedArgs() {
-        RenderableWidget mock = new RenderableWidget() {
+        Renderable mock = new Renderable() {
             public void render(Object bound, Respond respond) {
 
+            }
+
+            public <T extends Renderable> Set<T> collect(Class<T> clazz) {
+                return null;
             }
         };
 
@@ -305,9 +360,13 @@ public class PageBookImplTest {
 
     @Test
     public final void firePostMethodOnPage() {
-        RenderableWidget mock = new RenderableWidget() {
+        Renderable mock = new Renderable() {
             public void render(Object bound, Respond respond) {
 
+            }
+
+            public <T extends Renderable> Set<T> collect(Class<T> clazz) {
+                return null;
             }
         };
 
@@ -337,9 +396,13 @@ public class PageBookImplTest {
     public final void matchPageByUriTemplate(final String template, final String toMatch) {
         final Respond respond = new MockRespond();
 
-        RenderableWidget mock = new RenderableWidget() {
+        Renderable mock = new Renderable() {
             public void render(Object bound, Respond respond) {
 
+            }
+
+            public <T extends Renderable> Set<T> collect(Class<T> clazz) {
+                return null;
             }
         };
 
@@ -366,9 +429,13 @@ public class PageBookImplTest {
 
     @Test(dataProvider = NOT_URIS_AND_TEMPLATES)
     public final void notMatchPageByUriTemplate(final String template, final String toMatch) {
-        RenderableWidget mock = new RenderableWidget() {
+        Renderable mock = new Renderable() {
             public void render(Object bound, Respond respond) {
 
+            }
+
+            public <T extends Renderable> Set<T> collect(Class<T> clazz) {
+                return null;
             }
         };
 
@@ -520,6 +587,10 @@ public class PageBookImplTest {
         }
 
         public String getRedirect() {
+            return null;
+        }
+
+        public Renderable include(String argument) {
             return null;
         }
     }

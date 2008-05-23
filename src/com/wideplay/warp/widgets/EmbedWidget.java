@@ -7,19 +7,21 @@ import net.jcip.annotations.Immutable;
 
 import java.util.Map;
 import java.util.Set;
-import java.util.HashSet;
+import java.util.Collections;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
-@Immutable @Singleton
-class EmbedWidget implements RenderableWidget {
+@Immutable
+class EmbedWidget implements Renderable {
     private final Map<String, String> bindExpressions;
+    private final Map<String, ArgumentWidget> arguments;
     private final Evaluator evaluator;
     private final PageBook pageBook;
     private final String targetPage;
 
-    public EmbedWidget(String expression, Evaluator evaluator, PageBook pageBook, String targetPage) {
+    public EmbedWidget(Map<String, ArgumentWidget> arguments, String expression, Evaluator evaluator, PageBook pageBook, String targetPage) {
+        this.arguments = arguments;
 
         this.evaluator = evaluator;
         this.pageBook = pageBook;
@@ -42,8 +44,8 @@ class EmbedWidget implements RenderableWidget {
             evaluator.write(entry.getKey(), pageObject, evaluator.evaluate(entry.getValue(), bound));
         }
 
-        //chain to embedded page (widget)
-        final EmbeddedRespond embed = new EmbeddedRespond();
+        //chain to embedded page (widget), with arguments
+        final EmbeddedRespond embed = new EmbeddedRespond(arguments);
         page.widget().render(pageObject, embed);
 
         //extract and write embedded response to enclosing page's respond
@@ -51,17 +53,25 @@ class EmbedWidget implements RenderableWidget {
         respond.write(embed.toString());
     }
 
-    
+    public <T extends Renderable> Set<T> collect(Class<T> clazz) {
+        return Collections.emptySet();
+    }
+
     static class EmbeddedRespond extends StringBuilderRespond {
         private static final String HEAD_BEGIN = "<head";
         private static final String HEAD_END = "</head>";
         private static final String BODY_BEGIN = "<body";
         private static final String BODY_END = "</body>";
+        private static final char NOT_IN_QUOTE = '\0';
 
         //memo fields
         private String head;
         private String body;
-        private static final char NOT_IN_QUOTE = '\0';
+        private final Map<String, ArgumentWidget> arguments;
+
+        public EmbeddedRespond(Map<String, ArgumentWidget> arguments) {
+            this.arguments = arguments;
+        }
 
 
         public String toHeadString() {
@@ -84,8 +94,13 @@ class EmbedWidget implements RenderableWidget {
             return body;
         }
 
+        public ArgumentWidget include(String name) {
+            return arguments.get(name);
+        }
+
         //state machine extracts <head> and <body> tag content separately
         private void extract(String htmlDoc) {
+            //TODO Embed no longer need worry about extracting <head>
             int headEnd = extractHead(htmlDoc);
 
             //now do the body...

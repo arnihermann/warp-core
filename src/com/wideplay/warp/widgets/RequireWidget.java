@@ -6,12 +6,14 @@ import com.wideplay.warp.widgets.rendering.SelfRendering;
 import net.jcip.annotations.Immutable;
 
 import java.util.List;
+import java.util.Set;
+import java.util.Collections;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
 @Immutable @SelfRendering
-class RequireWidget implements RenderableWidget {
+class RequireWidget implements Renderable {
     private final List<Token> template;
     private final Evaluator evaluator;
 
@@ -32,5 +34,9 @@ class RequireWidget implements RenderableWidget {
 
         //special method interns tokens
         respond.require(builder.toString());
+    }
+
+    public <T extends Renderable> Set<T> collect(Class<T> clazz) {
+        return Collections.emptySet();
     }
 }

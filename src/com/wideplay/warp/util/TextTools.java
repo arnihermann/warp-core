@@ -148,6 +148,10 @@ public class TextTools {
                 && (template.endsWith(".html") || template.endsWith(".xhtml"));
     }
 
+    public static String stripQuotes(String var) {
+        return var.substring(1, var.length() - 1);
+    }
+
     private enum TokenizerState { READING_TEXT, READING_EXPRESSION }
 
 

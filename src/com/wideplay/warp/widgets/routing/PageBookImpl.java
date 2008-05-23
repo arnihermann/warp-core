@@ -7,7 +7,7 @@ import com.google.inject.name.Named;
 import com.wideplay.warp.widgets.Get;
 import com.wideplay.warp.widgets.On;
 import com.wideplay.warp.widgets.Post;
-import com.wideplay.warp.widgets.RenderableWidget;
+import com.wideplay.warp.widgets.Renderable;
 import com.wideplay.warp.widgets.rendering.EmbedAs;
 import net.jcip.annotations.ThreadSafe;
 import org.jetbrains.annotations.Nullable;
@@ -38,7 +38,7 @@ class PageBookImpl implements PageBook {
         this.injector = injector;
     }
 
-    public void at(String uri, RenderableWidget page, Class<?> clazz) {
+    public void at(String uri, Renderable page, Class<?> clazz) {
         synchronized (lock) {
             final String key = firstPathElement(uri);
 
@@ -58,9 +58,9 @@ class PageBookImpl implements PageBook {
         }
     }
 
-    public void embedAs(RenderableWidget renderableWidget, Class<?> page) {
+    public void embedAs(Renderable renderable, Class<?> page) {
         pagesByName.put(page.getAnnotation(EmbedAs.class).value().toLowerCase(),
-                new PageTuple(PathMatcherChain.ignoring(), renderableWidget, page, injector));
+                new PageTuple(PathMatcherChain.ignoring(), renderable, page, injector));
     }
 
     private static void multiput(Map<String, List<PageTuple>> pages, String key, PageTuple page) {
@@ -120,7 +120,7 @@ class PageBookImpl implements PageBook {
     @On("") //the default on (hacky!!)
     public static class PageTuple implements Page {
         private final PathMatcher matcher;
-        private final RenderableWidget pageWidget;
+        private final Renderable pageWidget;
         private final Class<?> clazz;
         private final Injector injector;
 
@@ -130,7 +130,7 @@ class PageBookImpl implements PageBook {
         //dispatcher switch
         private final On on;
 
-        public PageTuple(PathMatcher matcher, RenderableWidget pageWidget, Class<?> clazz, Injector injector) {
+        public PageTuple(PathMatcher matcher, Renderable pageWidget, Class<?> clazz, Injector injector) {
             this.matcher = matcher;
             this.pageWidget = pageWidget;
             this.clazz = clazz;
@@ -216,7 +216,7 @@ class PageBookImpl implements PageBook {
             return map;
         }
 
-        public RenderableWidget widget() {
+        public Renderable widget() {
             return pageWidget;
         }
 

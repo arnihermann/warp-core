@@ -11,6 +11,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.HashMap;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
@@ -31,7 +34,7 @@ class WidgetRegistry {
         this.injector = injector;
     }
 
-    public void add(String key, Class<? extends RenderableWidget> widget) {
+    public void add(String key, Class<? extends Renderable> widget) {
         widgets.put(key.toLowerCase().trim(), WidgetWrapper.forWidget(key, widget));
     }
 
@@ -39,7 +42,7 @@ class WidgetRegistry {
         return widgets.get(widget).isSelfRendering();
     }
 
-    public RenderableWidget newWidget(String key, String expression, WidgetChain widgetChain) {
+    public Renderable newWidget(String key, String expression, WidgetChain widgetChain) {
         if (!widgets.containsKey(key))
             throw new NoSuchWidgetException("No such widget registered (did you add it correctly in module setup?): " + key);
 
@@ -48,7 +51,7 @@ class WidgetRegistry {
 
         //otherwise construct via reflection (all widgets MUST have
         // a constructor with: widgetchain, expression, evaluator; in that order)
-        final RenderableWidget widget = widgets
+        final Renderable widget = widgets
                 .get(key)
                 .newWidget(widgetChain, expression, evaluator, pageBook);
 
@@ -59,13 +62,13 @@ class WidgetRegistry {
     }
 
     private static class WidgetWrapper {
-        private final Class<? extends RenderableWidget> clazz;
-        private final Constructor<? extends RenderableWidget> constructor;
+        private final Class<? extends Renderable> clazz;
+        private final Constructor<? extends Renderable> constructor;
         private final String key;
         private final boolean selfRendering;
         private final WidgetKind kind;
 
-        private WidgetWrapper(Class<? extends RenderableWidget> clazz, Constructor<? extends RenderableWidget> constructor,
+        private WidgetWrapper(Class<? extends Renderable> clazz, Constructor<? extends Renderable> constructor,
                               WidgetKind kind, String key) {
             this.kind = kind;
             this.clazz = clazz;
@@ -75,7 +78,7 @@ class WidgetRegistry {
             selfRendering = clazz.isAnnotationPresent(SelfRendering.class);
         }
 
-        public RenderableWidget newWidget(WidgetChain widgetChain, String expression, Evaluator evaluator, PageBook pageBook) {
+        public Renderable newWidget(WidgetChain widgetChain, String expression, Evaluator evaluator, PageBook pageBook) {
             try {
 
 
@@ -83,7 +86,7 @@ class WidgetRegistry {
                     constructor
                         .newInstance(widgetChain, expression, evaluator) :
                     constructor
-                        .newInstance(expression, evaluator, pageBook, key);
+                        .newInstance(toArguments(widgetChain), expression, evaluator, pageBook, key);
 
             } catch (IllegalAccessException e) {
                 throw new IllegalStateException("Malformed Widget (this should never happen): " + clazz);
@@ -94,15 +97,27 @@ class WidgetRegistry {
             }
         }
 
-        public static WidgetWrapper forWidget(String key, Class<? extends RenderableWidget> widgetClass) {
+        private static Map<String, ArgumentWidget> toArguments(WidgetChain widgetChain) {
+            Set<ArgumentWidget> arguments = widgetChain.collect(ArgumentWidget.class);
+
+            Map<String, ArgumentWidget> map = new HashMap<String, ArgumentWidget>();
+
+            for (ArgumentWidget argument : arguments) {
+                map.put(argument.getName(), argument);
+            }
+
+            return map;
+        }
+
+        public static WidgetWrapper forWidget(String key, Class<? extends Renderable> widgetClass) {
             WidgetKind kind = EmbedWidget.class.isAssignableFrom(widgetClass) ? WidgetKind.EMBED : WidgetKind.NORMAL;
-            Constructor<? extends RenderableWidget> constructor;
+            Constructor<? extends Renderable> constructor;
 
             try {
                 switch (kind) {
                     case EMBED:
                         constructor = widgetClass
-                                .getConstructor(String.class, Evaluator.class, PageBook.class, String.class);
+                                .getConstructor(Map.class, String.class, Evaluator.class, PageBook.class, String.class);
                         break;
                     default:    //NORMAL
                         constructor = widgetClass

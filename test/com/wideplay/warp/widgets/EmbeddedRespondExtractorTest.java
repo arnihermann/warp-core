@@ -3,6 +3,8 @@ package com.wideplay.warp.widgets;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.util.Collections;
+
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail com)
  */
@@ -116,7 +118,7 @@ public class EmbeddedRespondExtractorTest {
 
     @Test(dataProvider = HTMLDOCS_AND_SPLITS)
     public final void extractInsideHeadTags(final String htmlDoc, String expectedHead, String expectedBody) {
-        final EmbedWidget.EmbeddedRespond respond = new EmbedWidget.EmbeddedRespond();
+        final EmbedWidget.EmbeddedRespond respond = new EmbedWidget.EmbeddedRespond(Collections.<String, ArgumentWidget>emptyMap());
 
         respond.write(htmlDoc);
 

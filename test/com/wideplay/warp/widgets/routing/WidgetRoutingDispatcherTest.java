@@ -1,7 +1,7 @@
 package com.wideplay.warp.widgets.routing;
 
 import com.google.inject.Provider;
-import com.wideplay.warp.widgets.RenderableWidget;
+import com.wideplay.warp.widgets.Renderable;
 import com.wideplay.warp.widgets.Respond;
 import com.wideplay.warp.widgets.resources.ResourcesService;
 import com.wideplay.warp.widgets.binding.RequestBinder;
@@ -25,7 +25,7 @@ public class WidgetRoutingDispatcherTest {
         final HttpServletRequest request = createMock(HttpServletRequest.class);
         PageBook pageBook = createMock(PageBook.class);
         PageBook.Page page = createMock(PageBook.Page.class);
-        RenderableWidget widget = createMock(RenderableWidget.class);
+        Renderable widget = createMock(Renderable.class);
         final Respond respond = createMock(Respond.class);
         RequestBinder binder = createMock(RequestBinder.class);
 
@@ -86,7 +86,7 @@ public class WidgetRoutingDispatcherTest {
         final HttpServletRequest request = createMock(HttpServletRequest.class);
         PageBook pageBook = createMock(PageBook.class);
         PageBook.Page page = createMock(PageBook.Page.class);
-        RenderableWidget widget = createMock(RenderableWidget.class);
+        Renderable widget = createMock(Renderable.class);
         final Respond respond = createMock(Respond.class);
         RequestBinder binder = createMock(RequestBinder.class);
 
@@ -150,7 +150,7 @@ public class WidgetRoutingDispatcherTest {
         final HttpServletRequest request = createMock(HttpServletRequest.class);
         PageBook pageBook = createMock(PageBook.class);
         PageBook.Page page = createMock(PageBook.Page.class);
-        RenderableWidget widget = createMock(RenderableWidget.class);
+        Renderable widget = createMock(Renderable.class);
         final Respond respond = createMock(Respond.class);
         RequestBinder binder = createMock(RequestBinder.class);
 
@@ -212,7 +212,7 @@ public class WidgetRoutingDispatcherTest {
         final HttpServletRequest request = createMock(HttpServletRequest.class);
         PageBook pageBook = createMock(PageBook.class);
         PageBook.Page page = createMock(PageBook.Page.class);
-        RenderableWidget widget = createMock(RenderableWidget.class);
+        Renderable widget = createMock(Renderable.class);
         final Respond respond = createMock(Respond.class);
         RequestBinder binder = createMock(RequestBinder.class);
 
@@ -275,7 +275,7 @@ public class WidgetRoutingDispatcherTest {
         final HttpServletRequest request = createMock(HttpServletRequest.class);
         PageBook pageBook = createMock(PageBook.class);
         PageBook.Page page = createMock(PageBook.Page.class);
-        RenderableWidget widget = createMock(RenderableWidget.class);
+        Renderable widget = createMock(Renderable.class);
         final Respond respond = createMock(Respond.class);
         RequestBinder binder = createMock(RequestBinder.class);
 

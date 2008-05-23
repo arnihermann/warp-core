@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 class XmlTemplateParser {
     private final Evaluator evaluator;
     private final WidgetRegistry registry;
+    
     public static final Pattern WIDGET_ANNOTATION_REGEX = Pattern.compile("(@\\w\\w*(\\([\\w,=\" ]*\\))?[ \n\r\t]*)$");
     private static final String REQUIRE_WIDGET = "@require";
 //    public static final Pattern WIDGET_ANNOTATION_REGEX = Pattern.compile("@\\w\\w*(\\([\\w,=\" ]*\\))?");
@@ -28,7 +29,7 @@ class XmlTemplateParser {
         this.registry = registry;
     }
 
-    public RenderableWidget parse(String template) {
+    public Renderable parse(String template) {
         WidgetChain widgetChain;
         try {
             widgetChain = walk(DocumentHelper.parseText(template));
@@ -98,7 +99,7 @@ class XmlTemplateParser {
      * This method converts an xml element into a specific kind of warp-widget
      */
     @SuppressWarnings({"JavaDoc"}) @NotNull
-    private RenderableWidget widgetize(Node preceeding, Element element, WidgetChain childsChildren) {
+    private Renderable widgetize(Node preceeding, Element element, WidgetChain childsChildren) {
         String annotation = null;
 
         //read annotation if available

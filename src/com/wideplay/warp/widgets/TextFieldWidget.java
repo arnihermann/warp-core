@@ -3,12 +3,15 @@ package com.wideplay.warp.widgets;
 import com.wideplay.warp.widgets.rendering.SelfRendering;
 import net.jcip.annotations.Immutable;
 
+import java.util.Set;
+import java.util.Collections;
+
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
 @Immutable
 @SelfRendering
-class TextFieldWidget implements RenderableWidget {
+class TextFieldWidget implements Renderable {
     private final WidgetChain widgetChain;
     private final String expression;
     private final Evaluator evaluator;
@@ -22,5 +25,9 @@ class TextFieldWidget implements RenderableWidget {
     public void render(Object bound, Respond respond) {
         respond.withHtml()
                 .textField(expression, (String) evaluator.evaluate(expression, bound));
+    }
+
+    public <T extends Renderable> Set<T> collect(Class<T> clazz) {
+        return Collections.emptySet();
     }
 }

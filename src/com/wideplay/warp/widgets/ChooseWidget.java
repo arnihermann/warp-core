@@ -9,12 +9,13 @@ import net.jcip.annotations.Immutable;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
 @Immutable @SelfRendering
-class ChooseWidget implements RenderableWidget {
+class ChooseWidget implements Renderable {
     private final WidgetChain widgetChain;
     private final Map<String, String> map;
     private final Evaluator evaluator;
@@ -58,6 +59,10 @@ class ChooseWidget implements RenderableWidget {
 
         //store for later retrieval during binding
         cache.get().put(from, collection);
+    }
+
+    public <T extends Renderable> Set<T> collect(Class<T> clazz) {
+        return widgetChain.collect(clazz);
     }
 
     @Inject

@@ -70,7 +70,7 @@ class PageWidgetBuilder {
             for (Class<?> page : set) {
 
                 if (page.isAnnotationPresent(At.class)) {
-                    final RenderableWidget widget = parser.parse(loader.load(page));
+                    final Renderable widget = parser.parse(loader.load(page));
                     pageBook.at(page.getAnnotation(At.class).value(), widget, page);
                 }
 
