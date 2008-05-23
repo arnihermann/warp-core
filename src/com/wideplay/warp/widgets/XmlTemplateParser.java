@@ -19,7 +19,7 @@ class XmlTemplateParser {
     private final Evaluator evaluator;
     private final WidgetRegistry registry;
     
-    public static final Pattern WIDGET_ANNOTATION_REGEX = Pattern.compile("(@\\w\\w*(\\([\\w,=\" ]*\\))?[ \n\r\t]*)$");
+    public static final Pattern WIDGET_ANNOTATION_REGEX = Pattern.compile("(@\\w\\w*(\\([\\w,=\"'()?:><!\\[\\];{}. ]*\\))?[ \n\r\t]*)$");
     private static final String REQUIRE_WIDGET = "@require";
 //    public static final Pattern WIDGET_ANNOTATION_REGEX = Pattern.compile("@\\w\\w*(\\([\\w,=\" ]*\\))?");
 

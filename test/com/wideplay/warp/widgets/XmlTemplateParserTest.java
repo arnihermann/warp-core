@@ -6,6 +6,7 @@ import com.wideplay.warp.widgets.rendering.EmbedAs;
 import com.wideplay.warp.widgets.routing.PageBook;
 import static org.easymock.EasyMock.createNiceMock;
 import org.testng.annotations.Test;
+import org.testng.annotations.DataProvider;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +15,7 @@ import java.util.Map;
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
 public class XmlTemplateParserTest {
+    private static final String ANNOTATION_EXPRESSIONS = "Annotation expressions";
 
     @Test
     public final void annotationKeyExtraction() {
@@ -64,9 +66,66 @@ public class XmlTemplateParserTest {
         widget.render(new Object(), mockRespond);
 
         final String value = builder.toString();
-        System.out.println(value);
+//        System.out.println(value);
         assert "<xml><p>hello</p></xml>".equals(value) : "Did not write expected output, instead: " + value;
     }
+
+
+    @DataProvider(name = ANNOTATION_EXPRESSIONS)
+    public Object[][] get() {
+        return new Object[][] {
+            { "true" },
+            { "java.lang.Boolean.TRUE" },
+            { "java.lang.Boolean.valueOf('true')" },
+            { "true ? true : true" },
+            { "'x' == 'x'" },
+            { "\"x\" == \"x\"" },
+            { "'hello' instanceof java.io.Serializable" },
+            { "true; return true" },
+            { " 5 >= 2 " },
+        };
+    }
+
+    @Test(dataProvider = ANNOTATION_EXPRESSIONS)
+    public final void readAWidgetWithVariousExpressions(String expression) {
+        final Evaluator evaluator = new MvelEvaluator();
+        final WidgetRegistry registry = new WidgetRegistry(evaluator, createNiceMock(PageBook.class), createNiceMock(Injector.class));
+        registry.add("showif", ShowIfWidget.class);
+
+
+        Renderable widget =
+                new XmlTemplateParser(evaluator, registry)
+                    .parse(String.format("<xml>@ShowIf(%s)<p>hello</p></xml>", expression));
+
+        assert null != widget : " null ";
+
+        final StringBuilder builder = new StringBuilder();
+        final Respond mockRespond = new StringBuilderRespond() {
+            @Override
+            public void write(String text) {
+                builder.append(text);
+            }
+
+            @Override
+            public void write(char text) {
+                builder.append(text);
+            }
+
+            @Override
+            public void chew() {
+                builder.deleteCharAt(builder.length() - 1);
+            }
+        };
+
+        widget.render(new Object(), mockRespond);
+
+        final String value = builder.toString();
+//        System.out.println(value);
+        assert "<xml><p>hello</p></xml>".equals(value) : "Did not write expected output, instead: " + value;
+    }
+
+
+
 
     @Test
     public final void readShowIfWidgetFalse() {
