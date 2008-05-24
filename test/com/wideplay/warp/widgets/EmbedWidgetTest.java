@@ -159,6 +159,8 @@ public class EmbedWidgetTest {
         }}));
         widget.addWidget(new ShowIfWidget(targetWidgetChain, "true", evaluator));
 
+        Renderable bodyWrapper = new XmlWidget(widget, "body", evaluator, Collections.<String, String>emptyMap());
+
         expect(pageBook.forName(pageName))
                 .andReturn(page);
 
@@ -169,7 +171,7 @@ public class EmbedWidgetTest {
                 .andReturn(myEmbeddedPage);
 
         expect(page.widget())
-                .andReturn(widget);
+                .andReturn(bodyWrapper);
 
         replay(pageBook, page);
 
@@ -215,6 +217,8 @@ public class EmbedWidgetTest {
         }}));
         widget.addWidget(new ShowIfWidget(targetWidgetChain, "true", evaluator));
 
+        Renderable bodyWrapper = new XmlWidget(widget, "body", evaluator, Collections.<String, String>emptyMap());
+
         expect(pageBook.forName(targetPageName))
                 .andReturn(page);
 
@@ -225,7 +229,7 @@ public class EmbedWidgetTest {
                 .andReturn(myEmbeddedPage);
 
         expect(page.widget())
-                .andReturn(widget);
+                .andReturn(bodyWrapper);
 
         replay(pageBook, page);
 

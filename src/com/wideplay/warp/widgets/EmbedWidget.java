@@ -1,6 +1,5 @@
 package com.wideplay.warp.widgets;
 
-import com.google.inject.Singleton;
 import com.wideplay.warp.util.TextTools;
 import com.wideplay.warp.widgets.routing.PageBook;
 import net.jcip.annotations.Immutable;
@@ -65,7 +64,6 @@ class EmbedWidget implements Renderable {
         private static final char NOT_IN_QUOTE = '\0';
 
         //memo fields
-        private String head;
         private String body;
         private final Map<String, ArgumentWidget> arguments;
 
@@ -75,7 +73,7 @@ class EmbedWidget implements Renderable {
 
 
         public String toHeadString() {
-            if (null == head) {
+            if (null == body) {
                 //extract and store
                 extract(super.toString());
             }
@@ -98,13 +96,11 @@ class EmbedWidget implements Renderable {
             return arguments.get(name);
         }
 
-        //state machine extracts <head> and <body> tag content separately
+        //state machine extracts <body> tag content 
         private void extract(String htmlDoc) {
-            //TODO Embed no longer need worry about extracting <head>
-            int headEnd = extractHead(htmlDoc);
 
-            //now do the body...
-            int bodyStart = htmlDoc.indexOf(BODY_BEGIN, headEnd) + BODY_BEGIN.length();
+            //now extract the contents of <body>...
+            int bodyStart = htmlDoc.indexOf(BODY_BEGIN) + BODY_BEGIN.length();
 
             //scan for end of the <body> start tag (beginning of body content)
             char quote = NOT_IN_QUOTE;
@@ -127,12 +123,7 @@ class EmbedWidget implements Renderable {
 
             //if there was no body tag, just embed whatever was rendered directly
             if (-1 == bodyEnd) {
-
-                //if there was no <head> tag then directly embed, otherwise suppress the body (since it was empty)
-                if ("".equals(this.head))
-                    this.body = htmlDoc;
-                else
-                    this.body = "";
+                this.body = htmlDoc;
             }
             else
                 this.body = htmlDoc.substring(bodyStart, bodyEnd);
@@ -144,42 +135,5 @@ class EmbedWidget implements Renderable {
             return '"' == c || '\'' == c;
         }
 
-        private int extractHead(String htmlDoc) {
-            int headStart = htmlDoc.indexOf(HEAD_BEGIN);
-            if (-1 == headStart) {
-                this.head = ""; //no head tag exists
-                return 0;
-            }
-
-            headStart += HEAD_BEGIN.length();
-
-            //scan for end of <head> start tag (beginning of head section)
-            char quote = NOT_IN_QUOTE;
-            for (int head = headStart; head < htmlDoc.length(); head++) {
-                final char c = htmlDoc.charAt(head);
-                if (isQuoteChar(c)) {
-                    if (quote == NOT_IN_QUOTE)
-                        quote = c;
-                    else if (quote == c)
-                        quote = NOT_IN_QUOTE;
-                }
-
-                if ('>' == c && NOT_IN_QUOTE == quote) {
-
-                    //check if this is a self-closing tag
-                    if ('/' == htmlDoc.charAt(head - 1)) {
-                        this.head = "";
-                        return head + 1;
-                    }
-
-                    headStart = head + 1;
-                    break;
-                }
-            }
-
-            int headEnd = htmlDoc.indexOf(HEAD_END, headStart);
-            this.head = htmlDoc.substring(headStart, headEnd);
-            return headEnd + HEAD_END.length();
-        }
     }
 }

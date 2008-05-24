@@ -10,6 +10,7 @@ import org.testng.annotations.DataProvider;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Collections;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
@@ -443,8 +444,14 @@ public class XmlTemplateParserTest {
 
         assert null != widget : " null ";
 
+
+
+        Renderable bodyWrapper = new XmlWidget(new WidgetChain().addWidget(new IncludeWidget(new TerminalWidgetChain(), "'me'", evaluator)),
+                "body", evaluator, Collections.<String, String>emptyMap());
+
+
         //should include the @With("me") annotated widget from the template above (discarding the <p> tag).
-        book.embedAs(new IncludeWidget(new TerminalWidgetChain(), "'me'", evaluator), MyEmbeddedPage.class);
+        book.embedAs(bodyWrapper, MyEmbeddedPage.class);
 
         final Respond mockRespond = new StringBuilderRespond();
 
