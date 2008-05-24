@@ -8,8 +8,8 @@ http://www.freecsstemplates.org
 Released for free under a Creative Commons Attribution 2.5 License
 
 -->
+@Meta
 <head>
-
     <link href="default.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -38,15 +38,29 @@ Released for free under a Creative Commons Attribution 2.5 License
                 <h1 class="title">examples</h1>
                 <div class="entry">
 
-                    <ul>
-                        <li><a class="comments" href="hello">Hello World</a> </li>
-                        <li><a class="comments" href="showif?show=true">ShowIf Widget</a> (How to hide stuff) </li>
-                        <li><a class="comments" href="repeat">Repeat Widget</a> (How to iterate collections) </li>
-                        <li><a class="comments" href="forms">Form Widgets</a> (textfield, chooser, etc.) </li>
-                        <li><a class="comments" href="embed">Embedding Widgets</a> (Authoring a new widget) </li>
-                        <li><a class="comments" href="case">Case Widget</a> (Like java's switch) </li>
+                    Example of the @Case widget, which is similar to a java switch() statement (we use it to choose between 3 colors):<br/>
 
-                    </ul>
+                    @Case(choice=color)
+                    <span>
+
+                        @When("red")
+                        <span>
+                            <font color="red">Red</font>
+                        </span>
+
+                        @When("yellow")
+                        <span>
+                            <font color="yellow">Yellow</font>
+                        </span>
+
+                        @When("green")
+                        <span>
+                            <font color="green">Green</font>
+                        </span>
+
+                    </span>
+
+
                 </div>
 
 

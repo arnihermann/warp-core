@@ -28,6 +28,7 @@ class ContextInitializer {
         registry.add("showif", ShowIfWidget.class);
         registry.add("meta", HeaderWidget.class);
         registry.add("choose", ChooseWidget.class);
+        registry.add("include", IncludeWidget.class);
 
         //scan and add pages/widgets
         builder.scan();

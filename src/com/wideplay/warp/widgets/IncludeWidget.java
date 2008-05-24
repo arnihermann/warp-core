@@ -10,7 +10,7 @@ public class IncludeWidget implements Renderable {
     private final String name;
     private final Evaluator evaluator;
 
-    public IncludeWidget(String name, Evaluator evaluator) {
+    public IncludeWidget(WidgetChain chain, String name, Evaluator evaluator) {
         this.name = name;
         this.evaluator = evaluator;
     }

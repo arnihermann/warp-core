@@ -444,7 +444,7 @@ public class XmlTemplateParserTest {
         assert null != widget : " null ";
 
         //should include the @With("me") annotated widget from the template above (discarding the <p> tag).
-        book.embedAs(new IncludeWidget("'me'", evaluator), MyEmbeddedPage.class);
+        book.embedAs(new IncludeWidget(new TerminalWidgetChain(), "'me'", evaluator), MyEmbeddedPage.class);
 
         final Respond mockRespond = new StringBuilderRespond();
 

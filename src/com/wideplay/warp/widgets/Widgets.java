@@ -4,6 +4,7 @@ import com.google.inject.Module;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.wideplay.warp.servlet.Servlets;
+import com.wideplay.warp.widgets.aplenty.CaseWidget;
 
 import java.util.*;
 
@@ -17,7 +18,7 @@ public final class Widgets {
 
     public static PackageAddingBuilder configure() {
         return new PackageAddingBuilder() {
-            private final Set<Package> packages = new LinkedHashSet<Package>();
+            private final List<Package> packages = new ArrayList<Package>();
 
             public PackageAddingBuilder with(Package pack) {
                 packages.add(pack);
@@ -26,6 +27,9 @@ public final class Widgets {
             }
 
             public Module buildModule() {
+                //add our base package
+                packages.add(0, CaseWidget.class.getPackage());
+
                 //noinspection InnerClassTooDeeplyNested
                 return new AbstractModule() {
 
@@ -34,7 +38,7 @@ public final class Widgets {
                         //noinspection InnerClassTooDeeplyNested
                         bind(new TypeLiteral<Set<Package>>() {})
                                 .annotatedWith(Packages.class)
-                                .toInstance(Collections.unmodifiableSet(packages));
+                                .toInstance(Collections.unmodifiableSet(new LinkedHashSet<Package>(packages)));
 
                         bind(ContextInitializer.class);
 

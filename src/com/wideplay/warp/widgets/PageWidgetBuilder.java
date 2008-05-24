@@ -8,6 +8,7 @@ import com.wideplay.warp.widgets.resources.ResourcesService;
 import com.wideplay.warp.widgets.resources.Export;
 import com.wideplay.warp.widgets.resources.Assets;
 import com.wideplay.warp.widgets.rendering.EmbedAs;
+import com.wideplay.warp.widgets.rendering.CallWith;
 
 import javax.servlet.ServletContext;
 import java.util.Set;
@@ -49,7 +50,7 @@ class PageWidgetBuilder {
             final Set<Class<?>> set = new ClassLister(context.get())
                                         .list(pack,
                                                 annotatedWith(At.class)
-                                                .or(annotatedWith(EmbedAs.class)
+                                                .or(annotatedWith(EmbedAs.class).or(annotatedWith(CallWith.class))
                                                 .or(annotatedWith(Export.class))
                                                 .or(annotatedWith(Assets.class))
                                                         
@@ -60,6 +61,10 @@ class PageWidgetBuilder {
                 if (page.isAnnotationPresent(EmbedAs.class)) {
                     //store custom page wrapped as an embed widget
                     registry.add(page.getAnnotation(EmbedAs.class).value(), EmbedWidget.class);
+
+                    //store arguments wrapped as an ArgumentWidget
+                    if (page.isAnnotationPresent(CallWith.class))
+                        registry.add(page.getAnnotation(CallWith.class).value(), ArgumentWidget.class);
 
                     //...add as an unbound (to URI) widget
                     pageBook.embedAs(parser.parse(loader.load(page)), page);

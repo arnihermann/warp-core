@@ -207,7 +207,7 @@ public class EmbedWidgetTest {
         final WidgetChain targetWidgetChain = new WidgetChain();
         //noinspection unchecked
         targetWidgetChain.addWidget(new XmlWidget(new WidgetChain()
-                .addWidget(new IncludeWidget("'me'", evaluator)),
+                .addWidget(new IncludeWidget(new TerminalWidgetChain(), "'me'", evaluator)),
 
                 "p", evaluator, new LinkedHashMap<String, String>() {{
             put("class", "pretty");
