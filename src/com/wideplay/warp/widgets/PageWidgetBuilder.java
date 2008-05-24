@@ -59,15 +59,26 @@ class PageWidgetBuilder {
             //we need to store the embeds first (do not collapse into the next loop)
             for (Class<?> page : set) {
                 if (page.isAnnotationPresent(EmbedAs.class)) {
-                    //store custom page wrapped as an embed widget
-                    registry.add(page.getAnnotation(EmbedAs.class).value(), EmbedWidget.class);
+                    final String embedAs = page.getAnnotation(EmbedAs.class).value();
 
-                    //store arguments wrapped as an ArgumentWidget
-                    if (page.isAnnotationPresent(CallWith.class))
-                        registry.add(page.getAnnotation(CallWith.class).value(), ArgumentWidget.class);
+                    //is this a text rendering or embedding-style widget?
+                    if (Renderable.class.isAssignableFrom(page)) {
+                        //noinspection unchecked
+                        registry.add(embedAs, (Class<? extends Renderable>) page);
+                    } else {
 
-                    //...add as an unbound (to URI) widget
-                    pageBook.embedAs(parser.parse(loader.load(page)), page);
+                        //store custom page wrapped as an embed widget
+                        registry.add(embedAs, EmbedWidget.class);
+
+                        //store argument name(s) wrapped as an ArgumentWidget (multiple aliases allowed)
+                        if (page.isAnnotationPresent(CallWith.class))
+                            for (String callWith : page.getAnnotation(CallWith.class).value()) {
+                                registry.add(callWith, ArgumentWidget.class);
+                                                            }
+
+                        //...add as an unbound (to URI) widget
+                        pageBook.embedAs(parser.parse(loader.load(page)), page);
+                    }
                 }
             }
 

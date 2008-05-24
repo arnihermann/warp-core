@@ -16,6 +16,7 @@ import java.util.concurrent.atomic.AtomicReference;
 class StringBuilderRespond implements Respond {
 
     private static final String TEXT_TAG_TEMPLATE = "warp-servlet.template.textfield";
+    private static final String TEXTAREA_TAG_TEMPLATE = "warp-servlet.template.textarea";
     private static final String HEADER_PLACEHOLDER = "__w:w:HEADER_PLACEhOlDeR:NOWRITe::__";
 
     private static final AtomicReference<Map<String, String>> templates = new AtomicReference<Map<String, String>>();
@@ -112,6 +113,10 @@ class StringBuilderRespond implements Respond {
 
         public void headerPlaceholder() {
             write(HEADER_PLACEHOLDER);
+        }
+
+        public void textArea(String bind, String value) {
+            write(String.format(templates.get().get(TEXTAREA_TAG_TEMPLATE), bind, value));
         }
     }
 }

@@ -33,5 +33,7 @@ public interface Respond {
         void textField(String value, String s);
 
         void headerPlaceholder();
+
+        void textArea(String expression, String s);
     }
 }
