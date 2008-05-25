@@ -80,7 +80,7 @@
 
     </target>
 
-    <target name="jar" depends="make" description="Assembles a library jar (for use in WEB-INF/lib for example)">
+    <target name="jar" depends="make" description="Assembles a distributable jar and zip (for direct use in webapps)">
         <taskdef name="jarjar" classname="com.tonicsystems.jarjar.JarJarTask" classpath="${lib}/jarjar-1.0rc7.jar"/>
 
         <jarjar jarfile="${dir.distribute}/warp-widgets-${version}.jar">
@@ -134,6 +134,31 @@
         </testng>
 
         <jar basedir="${src}" destfile="${dir.distribute}/warp-widgets-src-${version}.jar"/>
+
+
+        <!-- make a staging dir for distribution -->
+        <mkdir dir="${staging}/WEB-INF/lib"/>
+        <copy todir="${staging}/WEB-INF/lib">
+            <fileset dir="${dir.distribute}" includes="*.jar" excludes="warp-widgets-src-*.jar"/>
+            <fileset dir="${lib}">
+                <include name="warp-servlet-*.jar"/>
+                <include name="mvel.jar"/>
+                <include name="asm.jar"/>
+                <include name="guice-*.jar"/>
+            </fileset>
+        </copy>
+        <copy todir="${staging}/WEB-INF">
+            <fileset dir="${dir.resources}">
+                <include name="web.xml"/>
+            </fileset>
+        </copy>
+        <copy todir="${staging}">
+            <fileset dir="${dir.resources}">
+                <include name="*.html"/>
+            </fileset>
+        </copy>
+
+        <zip basedir="${staging}" destfile="${dir.distribute}/warp-widgets-full-${version}.zip"/>
     </target>
 
 </project>
