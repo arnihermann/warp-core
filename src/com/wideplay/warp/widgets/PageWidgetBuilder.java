@@ -9,9 +9,11 @@ import com.wideplay.warp.widgets.resources.Export;
 import com.wideplay.warp.widgets.resources.Assets;
 import com.wideplay.warp.widgets.rendering.EmbedAs;
 import com.wideplay.warp.widgets.rendering.CallWith;
+import com.wideplay.warp.widgets.aplenty.CaseWidget;
 
 import javax.servlet.ServletContext;
 import java.util.Set;
+import java.util.LinkedHashSet;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
@@ -43,7 +45,9 @@ class PageWidgetBuilder {
     }
 
     public void scan() {
-
+        //additional core widgets
+        embed("case", CaseWidget.class);
+        
         for (Package pack : packages) {
 
             //list any classes annotated with @At, @EmbedAs and @Export
@@ -66,18 +70,7 @@ class PageWidgetBuilder {
                         //noinspection unchecked
                         registry.add(embedAs, (Class<? extends Renderable>) page);
                     } else {
-
-                        //store custom page wrapped as an embed widget
-                        registry.add(embedAs, EmbedWidget.class);
-
-                        //store argument name(s) wrapped as an ArgumentWidget (multiple aliases allowed)
-                        if (page.isAnnotationPresent(CallWith.class))
-                            for (String callWith : page.getAnnotation(CallWith.class).value()) {
-                                registry.add(callWith, ArgumentWidget.class);
-                                                            }
-
-                        //...add as an unbound (to URI) widget
-                        pageBook.embedAs(parser.parse(loader.load(page)), page);
+                        embed(embedAs, page);
                     }
                 }
             }
@@ -100,5 +93,19 @@ class PageWidgetBuilder {
                 }
             }
         }
+
+    }
+
+    private void embed(String embedAs, Class<?> page) {
+        //store custom page wrapped as an embed widget
+        registry.add(embedAs, EmbedWidget.class);
+
+        //store argument name(s) wrapped as an ArgumentWidget (multiple aliases allowed)
+        if (page.isAnnotationPresent(CallWith.class))
+            for (String callWith : page.getAnnotation(CallWith.class).value())
+                registry.add(callWith, ArgumentWidget.class);
+
+        //...add as an unbound (to URI) widget
+        pageBook.embedAs(parser.parse(loader.load(page)), page);
     }
 }

@@ -27,9 +27,6 @@ public final class Widgets {
             }
 
             public Module buildModule() {
-                //add our base package
-                packages.add(0, CaseWidget.class.getPackage());
-
                 //noinspection InnerClassTooDeeplyNested
                 return new AbstractModule() {
 

@@ -1,7 +1,6 @@
 package com.wideplay.warp.widgets;
 
 import com.google.inject.matcher.Matcher;
-import com.google.inject.Provider;
 
 import javax.servlet.ServletContext;
 import java.util.HashSet;
@@ -44,6 +43,11 @@ class ClassLister {
 
         @SuppressWarnings("unchecked")
         final Set<String> resourcePaths = context.getResourcePaths(mainPath);
+
+        if (null == resourcePaths) {
+            log.severe(String.format("Could not find any resources from servlet context path at %s. The Servlet Container did not expose any available classes or packages (is WEB-INF/classes empty?)", mainPath));
+            throw new IllegalStateException("Could not find any resources from servlet context path");
+        }
 
         for (String path : resourcePaths) {
             if (isClass(path)) {

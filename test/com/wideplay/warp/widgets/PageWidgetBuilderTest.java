@@ -46,16 +46,19 @@ public class PageWidgetBuilderTest {
         registry.add("repeat", RepeatWidget.class);
         registry.add("textfield", TextFieldWidget.class);
         registry.add("meta", HeaderWidget.class);
+        registry.add("include", IncludeWidget.class);
 
         Set<Package> packages = new HashSet<Package>();
         packages.add(target);
 
-        new PageWidgetBuilder(book, new TemplateLoader(null),
-                new XmlTemplateParser(evaluator, registry), packages, resourcesService, new Provider<ServletContext>() {
+        final Provider<ServletContext> servletContextProvider = new Provider<ServletContext>() {
             public ServletContext get() {
                 return mock;
             }
-        }, registry)
+        };
+        
+        new PageWidgetBuilder(book, new TemplateLoader(servletContextProvider),
+                new XmlTemplateParser(evaluator, registry), packages, resourcesService, servletContextProvider, registry)
                 
                 .scan();
 

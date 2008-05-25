@@ -131,7 +131,7 @@ class XmlTemplateParser {
 
 
         //if this is NOT a self-rendering widget, give it an xml child
-        final String widgetName = extract[0].trim();
+        final String widgetName = extract[0].trim().toLowerCase();
         if (!registry.isSelfRendering(widgetName))
             childsChildren = new SingleWidgetChain(
                              new XmlWidget(childsChildren, element.getName(), evaluator,
