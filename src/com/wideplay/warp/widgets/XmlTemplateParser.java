@@ -3,13 +3,20 @@ package com.wideplay.warp.widgets;
 import com.google.inject.Inject;
 import net.jcip.annotations.ThreadSafe;
 import org.dom4j.*;
+import org.dom4j.io.SAXReader;
+import org.dom4j.io.DOMReader;
+import org.dom4j.io.STAXEventReader;
+import org.dom4j.io.XPPReader;
 import org.jetbrains.annotations.NotNull;
 
+import javax.xml.stream.XMLStreamException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.io.StringReader;
+import java.io.IOException;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
@@ -19,7 +26,7 @@ class XmlTemplateParser {
     private final Evaluator evaluator;
     private final WidgetRegistry registry;
     
-    public static final Pattern WIDGET_ANNOTATION_REGEX = Pattern.compile("(@\\w\\w*(\\([\\w,=\"'()?:><!\\[\\];{}. ]*\\))?[ \n\r\t]*)$");
+    public static final Pattern WIDGET_ANNOTATION_REGEX = Pattern.compile("(@\\w\\w*(\\([\\w,=\"'()?:><!\\[\\];{}. ]*\\))?[ \n\r\t]*)\\Z");
     private static final String REQUIRE_WIDGET = "@require";
 //    public static final Pattern WIDGET_ANNOTATION_REGEX = Pattern.compile("@\\w\\w*(\\([\\w,=\" ]*\\))?");
 
@@ -32,7 +39,11 @@ class XmlTemplateParser {
     public Renderable parse(String template) {
         WidgetChain widgetChain;
         try {
-            widgetChain = walk(DocumentHelper.parseText(template));
+//            widgetChain = walk(DocumentHelper.parseText(template));
+            final SAXReader reader = new SAXReader();
+            reader.setMergeAdjacentText(true);
+
+            widgetChain = walk(reader.read(new StringReader(template)));
         } catch (DocumentException e) {
             throw new TemplateParseException(e);
         }
@@ -105,10 +116,11 @@ class XmlTemplateParser {
         //read annotation if available
         if (isText(preceeding)) {
             final Matcher matcher = WIDGET_ANNOTATION_REGEX
-                    .matcher(preceeding.getText());
-            
-            if (matcher.find())
+                    .matcher(preceeding.asXML());
+
+            if (matcher.find()) {
                 annotation = matcher.group();
+            }
             
         }
 

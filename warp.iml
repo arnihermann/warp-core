@@ -64,6 +64,11 @@
           <containerElement type="library" level="module">
             <attribute name="method" value="0" />
             <attribute name="URI" value="&lt;N/A&gt;" />
+            <url>jar://$APPLICATION_HOME_DIR$/lib/javaee.jar!/</url>
+          </containerElement>
+          <containerElement type="library" level="module">
+            <attribute name="method" value="0" />
+            <attribute name="URI" value="&lt;N/A&gt;" />
             <url>jar://$MODULE_DIR$/lib/javaee.jar!/</url>
           </containerElement>
           <containerElement type="library" level="module">
@@ -103,6 +108,11 @@
           </containerElement>
           <containerElement type="library" level="module">
             <attribute name="method" value="1" />
+            <attribute name="URI" value="/WEB-INF/lib/xpp3-1.1.4c.jar" />
+            <url>jar://$MODULE_DIR$/lib/xpp3-1.1.4c.jar!/</url>
+          </containerElement>
+          <containerElement type="library" level="module">
+            <attribute name="method" value="1" />
             <attribute name="URI" value="/WEB-INF/lib/dwr.jar" />
             <url>jar://$MODULE_DIR$/lib/dwr.jar!/</url>
           </containerElement>
@@ -115,33 +125,6 @@
             <attribute name="method" value="1" />
             <attribute name="URI" value="/WEB-INF/lib/log4j-1.2.14.jar" />
             <url>jar://$MODULE_DIR$/lib/log4j-1.2.14.jar!/</url>
-          </containerElement>
-        </packaging>
-      </configuration>
-    </facet>
-    <facet type="web" name="Web" implicit="true">
-      <configuration>
-        <descriptors>
-          <deploymentDescriptor name="web.xml" url="file://$MODULE_DIR$/dist-resources/web.xml" optional="false" version="2.5" />
-        </descriptors>
-        <webroots>
-          <root url="file://$MODULE_DIR$/dist-resources" relative="/WEB-INF" />
-        </webroots>
-        <building>
-          <setting name="EXPLODED_URL" value="file://" />
-          <setting name="EXPLODED_ENABLED" value="false" />
-          <setting name="JAR_URL" value="file://" />
-          <setting name="JAR_ENABLED" value="false" />
-          <setting name="BUILD_MODULE_ON_FRAME_DEACTIVATION" value="false" />
-          <setting name="BUILD_EXTERNAL_DEPENDENCIES" value="false" />
-          <setting name="EXCLUDE_EXPLODED_DIRECTORY" value="true" />
-          <setting name="RUN_JASPER_VALIDATION" value="true" />
-          <setting name="BUILD_ONLY_WEB_RESOURCES" value="false" />
-        </building>
-        <packaging>
-          <containerElement type="module" name="warp">
-            <attribute name="method" value="1" />
-            <attribute name="URI" value="/WEB-INF/classes" />
           </containerElement>
         </packaging>
       </configuration>
@@ -296,6 +279,15 @@
       <library>
         <CLASSES>
           <root url="jar://$APPLICATION_HOME_DIR$/lib/javaee.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/xpp3-1.1.4c.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
