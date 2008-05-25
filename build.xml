@@ -14,12 +14,13 @@
     </target>
 
     <target name="init">
-        <mkdir dir="${build}"/>
+        <mkdir dir="${core-classes}"/>
+        <mkdir dir="${test-classes}"/>
         <mkdir dir="${dir.distribute}"/>
     </target>
 
     <target name="make" depends="init" description="Compiles and tests warp-widgets">
-        <javac sourcepath="" srcdir="${src}" destdir="${build}" debug="on">
+        <javac sourcepath="" srcdir="${src}" destdir="${core-classes}" debug="on">
             <include name="**/*.java"/>
             <exclude name="com/wideplay/warp/example/**"/>
 
@@ -27,7 +28,7 @@
         </javac>
 
         <!-- copy non binary resources to output classpath -->
-        <copy todir="${build}">
+        <copy todir="${core-classes}">
             <fileset dir="${src}">
                 <include name="**/*.xml"/>
                 <include name="**/*.html"/>
@@ -38,6 +39,8 @@
 
                 <exclude name="com/wideplay/warp/example/**"/>
             </fileset>
+        </copy>
+        <copy todir="${test-classes}">
             <fileset dir="${test}">
                 <include name="**/*.xml"/>
                 <include name="**/*.html"/>
@@ -51,11 +54,11 @@
         </copy>
 
 
-        <javac sourcepath="" srcdir="${test}" destdir="${build}" debug="on">
+        <javac sourcepath="" srcdir="${test}" destdir="${test-classes}" debug="on">
             <include name="**/*.java"/>
             <classpath>
                 <path refid="warp-widgets.classpath"/>
-                <pathelement location="${build}"/>
+                <pathelement location="${core-classes}"/>
             </classpath>
         </javac>
 
@@ -68,7 +71,8 @@
             <classpath>
                 <path refid="warp-widgets.classpath"/>
 
-                <pathelement location="${build}"/>
+                <pathelement location="${core-classes}"/>
+                <pathelement location="${test-classes}"/>
             </classpath>
 
             <classfileset dir="${build}" includes="**/widgets/**/*Test.class"/>
@@ -80,7 +84,7 @@
         <taskdef name="jarjar" classname="com.tonicsystems.jarjar.JarJarTask" classpath="${lib}/jarjar-1.0rc7.jar"/>
 
         <jarjar jarfile="${dir.distribute}/warp-widgets-${version}.jar">
-            <fileset dir="${build}">
+            <fileset dir="${core-classes}">
                 <!-- warp-widgets classes -->
                 <exclude name="com/wideplay/warp/widgets/example/**"/>
                 <exclude name="META-INF/**"/>
@@ -105,39 +109,31 @@
 
             <!-- repackage into warp-widgets namespace -->
             <keep pattern="com.wideplay.**"/>
-            <rule pattern="org.objectweb.asm.**" result="com.wideplay.warp.widgets.asm.@1"/>
-            <rule pattern="org.mvel.**" result="com.wideplay.warp.widgets.mvel.@1"/>
+            <!--<rule pattern="org.objectweb.asm.**" result="com.wideplay.warp.widgets.asm.@1"/>-->
+            <!--<rule pattern="org.mvel.**" result="com.wideplay.warp.widgets.mvel.@1"/>-->
             <rule pattern="org.dom4j.**" result="com.wideplay.warp.widgets.dom4j.@1"/>
             <rule pattern="org.apache.commons.io.**" result="com.wideplay.warp.widgets.commons.io.@1"/>
             <rule pattern="org.jaxen.**" result="com.wideplay.warp.widgets.jaxen.@1"/>
         </jarjar>
 
+        <!-- test against jar this time -->
+        <taskdef name="testng" classname="org.testng.TestNGAntTask">
+            <classpath refid="warp-widgets.classpath"/>
+        </taskdef>
+
+        <!-- run them with testng -->
+        <testng haltonfailure="true" verbose="2" suitename="warp-widgets unit tests on jar">
+            <classpath>
+                <path refid="warp-widgets.classpath"/>
+
+                <pathelement location="${test-classes}"/>
+                <pathelement location="${dir.distribute}/warp-widgets-${version}.jar"/>
+            </classpath>
+
+            <classfileset dir="${build}" includes="**/widgets/**/*Test.class"/>
+        </testng>
+
         <jar basedir="${src}" destfile="${dir.distribute}/warp-widgets-src-${version}.jar"/>
     </target>
 
-    <!--<target name="assemble.jar.nodeps" depends="build" description="Assembles a drop-in version of Warp (for use in WEB-INF/lib for example) along with all deps built in">-->
-        <!--<taskdef name="jarjar" classname="com.tonicsystems.jarjar.JarJarTask" classpath="${lib}/jarjar-1.0rc6.jar"/>-->
-        <!---->
-        <!--<jarjar jarfile="${dir.distribute}/${deps.artifact}">-->
-            <!--<include name="${core.artifact}"/>-->
-            <!-- package binaries -->
-            <!--<fileset dir="${build}">-->
-                <!--<exclude name="com/wideplay/warp/example/**"/>-->
-                <!--<exclude name="dist/**"/>-->
-            <!--</fileset>-->
-
-            <!-- and dependencies -->
-            <!--<zipfileset src="${lib}/commons-io.jar"/>-->
-            <!--<zipfileset src="${lib}/commons-logging-1.0.4.jar"/>-->
-            <!--<zipfileset src="${lib}/aopalliance.jar"/>-->
-            <!--<zipfileset src="${lib}/guice-1.0.jar"/>-->
-            <!--<zipfileset src="${lib}/guice-servlet-1.0.jar"/>-->
-            <!--<zipfileset src="${lib}/dom4j-1.6.1.jar"/>-->
-            <!--<zipfileset src="${lib}/jaxen-1.1-beta-7.jar"/>-->
-            <!--<zipfileset src="${lib}/xpp3-1.1.4.jar"/>-->
-            <!--<zipfileset src="${lib}/asm.jar"/>-->
-            <!--<zipfileset src="${lib}/mvel.jar"/>-->
-            <!--<zipfileset src="${lib}/dwr.jar"/>-->
-        <!--</jarjar>-->
-    <!--</target>-->
 </project>
