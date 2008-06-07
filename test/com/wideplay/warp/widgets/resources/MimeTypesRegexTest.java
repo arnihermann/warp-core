@@ -1,7 +1,7 @@
 package com.wideplay.warp.widgets.resources;
 
-import org.testng.annotations.Test;
 import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
 import java.io.IOException;
 

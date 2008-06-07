@@ -1,6 +1,5 @@
 package com.wideplay.warp.widgets.binding;
 
-import com.wideplay.warp.servlet.FlashScoped;
 import com.wideplay.warp.servlet.SessionScoped;
 import net.jcip.annotations.NotThreadSafe;
 

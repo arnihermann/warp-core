@@ -1,10 +1,10 @@
 package com.wideplay.warp.widgets;
 
-import com.google.inject.Provider;
 import com.google.inject.Injector;
+import com.google.inject.Provider;
+import com.wideplay.warp.widgets.resources.ResourcesService;
 import com.wideplay.warp.widgets.routing.PageBook;
 import com.wideplay.warp.widgets.routing.RoutingDispatcher;
-import com.wideplay.warp.widgets.resources.ResourcesService;
 import static org.easymock.EasyMock.*;
 import org.testng.annotations.Test;
 

@@ -5,9 +5,9 @@ import com.wideplay.warp.util.Token;
 import com.wideplay.warp.widgets.rendering.SelfRendering;
 import net.jcip.annotations.ThreadSafe;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.Collections;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)

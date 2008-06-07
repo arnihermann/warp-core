@@ -1,7 +1,6 @@
 package com.wideplay.warp.widgets.example;
 
 import com.wideplay.warp.widgets.At;
-import com.wideplay.warp.widgets.Show;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)

@@ -1,19 +1,15 @@
 package com.wideplay.warp.widgets;
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 import net.jcip.annotations.Immutable;
 
+import javax.servlet.ServletContext;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-
-import org.apache.commons.io.FileUtils;
-
-import javax.servlet.ServletContext;
-
-import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)

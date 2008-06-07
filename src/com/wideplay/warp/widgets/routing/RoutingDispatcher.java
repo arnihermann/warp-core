@@ -1,7 +1,7 @@
 package com.wideplay.warp.widgets.routing;
 
-import com.wideplay.warp.widgets.Respond;
 import com.google.inject.ImplementedBy;
+import com.wideplay.warp.widgets.Respond;
 
 import javax.servlet.http.HttpServletRequest;
 

@@ -1,19 +1,19 @@
 package com.wideplay.warp.widgets;
 
-import com.google.inject.Singleton;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.Singleton;
 import com.wideplay.warp.widgets.rendering.SelfRendering;
 import com.wideplay.warp.widgets.routing.PageBook;
 import net.jcip.annotations.ThreadSafe;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)

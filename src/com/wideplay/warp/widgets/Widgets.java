@@ -1,10 +1,9 @@
 package com.wideplay.warp.widgets;
 
-import com.google.inject.Module;
 import com.google.inject.AbstractModule;
+import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
 import com.wideplay.warp.servlet.Servlets;
-import com.wideplay.warp.widgets.aplenty.CaseWidget;
 
 import java.util.*;
 

@@ -1,13 +1,12 @@
 package com.wideplay.warp.widgets.resources;
 
-import org.testng.annotations.Test;
-import static org.easymock.EasyMock.*;
+import com.wideplay.warp.widgets.Respond;
 import org.apache.commons.io.IOUtils;
+import static org.easymock.EasyMock.*;
+import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.util.List;
-
-import com.wideplay.warp.widgets.Respond;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail com)

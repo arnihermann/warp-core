@@ -1,11 +1,10 @@
 package com.wideplay.warp.widgets;
 
-import com.wideplay.warp.widgets.rendering.SelfRendering;
 import com.wideplay.warp.util.TextTools;
+import com.wideplay.warp.widgets.rendering.SelfRendering;
 import net.jcip.annotations.Immutable;
 
 import java.util.Set;
-import java.util.Collections;
 
 /**
  * Used to embed an argument inside an embedding widget (for later inclusion by the @Include widget).

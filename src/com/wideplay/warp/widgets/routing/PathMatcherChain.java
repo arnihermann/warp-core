@@ -1,10 +1,9 @@
 package com.wideplay.warp.widgets.routing;
 
+import net.jcip.annotations.Immutable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-
-import net.jcip.annotations.Immutable;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)

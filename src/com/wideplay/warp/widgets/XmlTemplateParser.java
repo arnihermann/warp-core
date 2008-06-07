@@ -4,19 +4,14 @@ import com.google.inject.Inject;
 import net.jcip.annotations.ThreadSafe;
 import org.dom4j.*;
 import org.dom4j.io.SAXReader;
-import org.dom4j.io.DOMReader;
-import org.dom4j.io.STAXEventReader;
-import org.dom4j.io.XPPReader;
 import org.jetbrains.annotations.NotNull;
 
-import javax.xml.stream.XMLStreamException;
+import java.io.StringReader;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.io.StringReader;
-import java.io.IOException;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)

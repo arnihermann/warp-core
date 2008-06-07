@@ -1,19 +1,18 @@
 package com.wideplay.warp.widgets.resources;
 
-import com.wideplay.warp.widgets.Respond;
-import com.wideplay.warp.widgets.Renderable;
 import com.google.inject.Singleton;
+import com.wideplay.warp.widgets.Renderable;
+import com.wideplay.warp.widgets.Respond;
+import net.jcip.annotations.ThreadSafe;
+import org.apache.commons.io.IOUtils;
 
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.Map;
-import java.util.List;
-import java.util.Properties;
 import java.io.IOException;
 import java.io.InputStream;
-
-import org.apache.commons.io.IOUtils;
-import net.jcip.annotations.ThreadSafe;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail com)

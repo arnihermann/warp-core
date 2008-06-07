@@ -1,7 +1,7 @@
 package com.wideplay.warp.widgets.aplenty;
 
-import com.wideplay.warp.widgets.rendering.EmbedAs;
 import com.wideplay.warp.widgets.rendering.CallWith;
+import com.wideplay.warp.widgets.rendering.EmbedAs;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail com)

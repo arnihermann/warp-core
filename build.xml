@@ -100,12 +100,6 @@
             <zipfileset src="${lib}/jaxen-1.1-beta-7.jar">
                 <exclude name="META-INF/*"/>
             </zipfileset>
-            <zipfileset src="${lib}/mvel.jar">
-                <exclude name="META-INF/*"/>
-            </zipfileset>
-            <zipfileset src="${lib}/asm.jar">
-                <exclude name="META-INF/*"/>
-            </zipfileset>
 
             <!-- repackage into warp-widgets namespace -->
             <keep pattern="com.wideplay.**"/>

@@ -1,7 +1,6 @@
 package com.wideplay.warp.widgets.example;
 
 import com.wideplay.warp.widgets.At;
-import com.wideplay.warp.widgets.Show;
 import com.wideplay.warp.widgets.rendering.EmbedAs;
 
 /**

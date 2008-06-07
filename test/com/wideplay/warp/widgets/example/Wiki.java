@@ -4,9 +4,9 @@ import com.google.inject.name.Named;
 import com.wideplay.warp.widgets.At;
 import com.wideplay.warp.widgets.Get;
 import com.wideplay.warp.widgets.Show;
+import com.wideplay.warp.widgets.rendering.EmbedAs;
 import com.wideplay.warp.widgets.resources.Assets;
 import com.wideplay.warp.widgets.resources.Export;
-import com.wideplay.warp.widgets.rendering.EmbedAs;
 
 /**
  *

@@ -1,8 +1,8 @@
 package com.wideplay.warp.widgets;
 
-import org.testng.annotations.Test;
 import com.google.inject.*;
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.createNiceMock;
+import org.testng.annotations.Test;
 
 import javax.servlet.ServletContext;
 import java.util.Set;

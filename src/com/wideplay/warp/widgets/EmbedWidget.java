@@ -4,9 +4,9 @@ import com.wideplay.warp.util.TextTools;
 import com.wideplay.warp.widgets.routing.PageBook;
 import net.jcip.annotations.Immutable;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
-import java.util.Collections;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)

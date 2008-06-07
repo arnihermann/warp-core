@@ -1,12 +1,11 @@
 package com.wideplay.warp.widgets;
 
-import net.jcip.annotations.NotThreadSafe;
 import net.jcip.annotations.ThreadSafe;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.HashSet;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)

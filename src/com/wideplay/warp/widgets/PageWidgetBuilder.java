@@ -2,18 +2,17 @@ package com.wideplay.warp.widgets;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import static com.google.inject.matcher.Matchers.*;
-import com.wideplay.warp.widgets.routing.PageBook;
-import com.wideplay.warp.widgets.resources.ResourcesService;
-import com.wideplay.warp.widgets.resources.Export;
-import com.wideplay.warp.widgets.resources.Assets;
-import com.wideplay.warp.widgets.rendering.EmbedAs;
-import com.wideplay.warp.widgets.rendering.CallWith;
+import static com.google.inject.matcher.Matchers.annotatedWith;
 import com.wideplay.warp.widgets.aplenty.CaseWidget;
+import com.wideplay.warp.widgets.rendering.CallWith;
+import com.wideplay.warp.widgets.rendering.EmbedAs;
+import com.wideplay.warp.widgets.resources.Assets;
+import com.wideplay.warp.widgets.resources.Export;
+import com.wideplay.warp.widgets.resources.ResourcesService;
+import com.wideplay.warp.widgets.routing.PageBook;
 
 import javax.servlet.ServletContext;
 import java.util.Set;
-import java.util.LinkedHashSet;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)

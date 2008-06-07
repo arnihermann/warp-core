@@ -5,12 +5,12 @@ import com.google.inject.Injector;
 import com.wideplay.warp.widgets.rendering.EmbedAs;
 import com.wideplay.warp.widgets.routing.PageBook;
 import static org.easymock.EasyMock.createNiceMock;
-import org.testng.annotations.Test;
 import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Collections;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)

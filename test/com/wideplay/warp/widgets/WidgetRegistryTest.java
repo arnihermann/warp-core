@@ -1,7 +1,7 @@
 package com.wideplay.warp.widgets;
 
-import com.wideplay.warp.widgets.routing.PageBook;
 import com.google.inject.Injector;
+import com.wideplay.warp.widgets.routing.PageBook;
 import static org.easymock.EasyMock.createNiceMock;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;

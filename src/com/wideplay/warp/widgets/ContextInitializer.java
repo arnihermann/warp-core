@@ -1,10 +1,9 @@
 package com.wideplay.warp.widgets;
 
+import com.google.inject.Inject;
 import net.jcip.annotations.NotThreadSafe;
 
 import javax.servlet.ServletContext;
-
-import com.google.inject.Inject;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)

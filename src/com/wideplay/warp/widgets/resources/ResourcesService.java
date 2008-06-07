@@ -1,7 +1,7 @@
 package com.wideplay.warp.widgets.resources;
 
-import com.wideplay.warp.widgets.Respond;
 import com.google.inject.ImplementedBy;
+import com.wideplay.warp.widgets.Respond;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail com)

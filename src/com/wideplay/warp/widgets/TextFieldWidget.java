@@ -3,8 +3,8 @@ package com.wideplay.warp.widgets;
 import com.wideplay.warp.widgets.rendering.SelfRendering;
 import net.jcip.annotations.Immutable;
 
-import java.util.Set;
 import java.util.Collections;
+import java.util.Set;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
