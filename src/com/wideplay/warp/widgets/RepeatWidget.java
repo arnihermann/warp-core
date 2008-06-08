@@ -54,21 +54,19 @@ class RepeatWidget implements Renderable {
         if (null == things)
             return;
 
-        if (null != var) {
-            Map<String, Object> context = new HashMap<String, Object>(3);
+        Map<String, Object> context = new HashMap<String, Object>(3);
 
-            //set up context variables
-            for (Object thing : things) {
+        //set up context variables
+        for (Object thing : things) {
 
-                //decorate with some context
+            //decorate with some context
+            if (null != var)
                 context.put(var, thing);
-                context.put(pageVar, bound);
-                widgetChain.render(context, respond);
-            }
-        } else
-            for (Object thing : things) {
-                widgetChain.render(thing, respond);
-            }
+            
+            context.put(pageVar, bound);
+            widgetChain.render(context, respond);
+        }
+
     }
 
 

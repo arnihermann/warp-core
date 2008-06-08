@@ -6,7 +6,7 @@ import java.util.Set;
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail com)
  */
-public class IncludeWidget implements Renderable {
+class IncludeWidget implements Renderable {
     private final String name;
     private final Evaluator evaluator;
 
