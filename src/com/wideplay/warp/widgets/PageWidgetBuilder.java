@@ -3,7 +3,7 @@ package com.wideplay.warp.widgets;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import static com.google.inject.matcher.Matchers.annotatedWith;
-import com.wideplay.warp.widgets.aplenty.CaseWidget;
+import com.wideplay.warp.widgets.basic.CaseWidget;
 import com.wideplay.warp.widgets.rendering.CallWith;
 import com.wideplay.warp.widgets.rendering.EmbedAs;
 import com.wideplay.warp.widgets.resources.Assets;
