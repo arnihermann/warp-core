@@ -22,6 +22,7 @@ class RepeatWidget implements Renderable {
     private final Evaluator evaluator;
     
     private static final String DEFAULT_PAGEVAR = "__page";
+    private static final String DEFAULT_VAR = "__this";
 
     public RepeatWidget(WidgetChain widgetChain, String expression, Evaluator evaluator) {
         this.widgetChain = widgetChain;
@@ -33,7 +34,7 @@ class RepeatWidget implements Renderable {
         if (null != var)
             this.var = TextTools.stripQuotes(var);
         else
-            this.var = null;
+            this.var = DEFAULT_VAR;
 
         //by default the page comes in as __page
         String pageVar = map.get("pageVar");

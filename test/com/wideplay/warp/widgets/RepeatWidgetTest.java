@@ -37,7 +37,7 @@ public class RepeatWidgetTest {
             },
             { "items=things, pageVar='page'", new HashMap<String, Object>() {{
                     put("things", Arrays.asList(new Thing(), new Thing(), new Thing()));
-                }}, 3, "this"
+                }}, 3, "__this"
             },
             { "items=things, var='thingy', pageVar='page'", new HashMap<String, Object>() {{
                     put("things", Arrays.asList(new Thing(), new Thing(), new Thing()));
