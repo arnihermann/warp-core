@@ -8,7 +8,7 @@ import java.io.IOException;
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail com)
  */
-public class MimeTypesRegexTest {
+public class MimeTypesRegexIntegrationTest {
     private static final String MIMES_AND_FILES = "mimesAndFiles";
 
     @DataProvider(name = MIMES_AND_FILES)
