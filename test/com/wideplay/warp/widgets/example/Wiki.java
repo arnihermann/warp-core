@@ -19,7 +19,7 @@ public class Wiki {
     private String title;
     private String language;    //"get" variable, bound by request parameter of same name, via setter
     private String text;        //"post" variable, bound similarly
-
+    private int counter;
 
     @Get
     public void showPage(@Named("title") String title) {    //URI-part extraction
@@ -27,5 +27,9 @@ public class Wiki {
         //etc.
 
         //page is now rendered with the default view
+    }
+
+    public int getCounter() {
+        return counter;
     }
 }

@@ -25,6 +25,7 @@ public class TemplateLoaderTest {
                     .load(pageClass);
 
         assert null != template : "no template found!";
+        template = template.trim();
         assert template.startsWith("<xml>") && template.endsWith("</xml>"); //a weak sauce test
     }
 

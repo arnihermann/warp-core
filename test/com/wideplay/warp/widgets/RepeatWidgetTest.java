@@ -1,5 +1,7 @@
 package com.wideplay.warp.widgets;
 
+import com.wideplay.warp.widgets.rendering.DynTypedMvelEvaluatorCompiler;
+import com.wideplay.warp.widgets.rendering.ExpressionCompileException;
 import org.mvel.optimizers.OptimizerFactory;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -28,24 +30,6 @@ public class RepeatWidgetTest {
     }
 
 
-    @DataProvider(name = EXPRS_AND_OBJECTS)
-    public Object[][] getExpressionsAndObjects() {
-        return new Object[][] {
-            { "items=things, var='thing', pageVar='page'", new HashMap<String, Object>() {{
-                    put("things", Arrays.asList(new Thing(), new Thing(), new Thing()));
-                }}, 3, "thing"
-            },
-            { "items=things, pageVar='page'", new HashMap<String, Object>() {{
-                    put("things", Arrays.asList(new Thing(), new Thing(), new Thing()));
-                }}, 3, "__this"
-            },
-            { "items=things, var='thingy', pageVar='page'", new HashMap<String, Object>() {{
-                    put("things", Arrays.asList(new Thing(), new Thing(), new Thing()));
-                }}, 3, "thingy"
-            }
-        };
-    }
-
     @Test(dataProvider = LISTS_AND_TIMES)
     public final void repeatNumberOfTimes(int should, final Collection<Integer> ints) {
 
@@ -66,11 +50,29 @@ public class RepeatWidgetTest {
         assert times[0] == should : "Did not run expected number of times: " + should;
     }
 
+    @DataProvider(name = EXPRS_AND_OBJECTS)
+    public Object[][] getExpressionsAndObjects() {
+        return new Object[][] {
+                { "items=things, var='thing', pageVar='page'", new HashMap<String, Object>() {{
+                    put("things", Arrays.asList(new Thing(), new Thing(), new Thing()));
+                }}, 3, "thing"
+                },
+                { "items=things, pageVar='page'", new HashMap<String, Object>() {{
+                    put("things", Arrays.asList(new Thing(), new Thing(), new Thing()));
+                }}, 3, "__this"
+                },
+                { "items=things, var='thingy', pageVar='page'", new HashMap<String, Object>() {{
+                    put("things", Arrays.asList(new Thing(), new Thing(), new Thing()));
+                }}, 3, "thingy"
+                }
+        };
+    }
+
     @Test(dataProvider = EXPRS_AND_OBJECTS)
-    public final void repeatNumberOfTimesWithVars(String expression, Object page, int should, final String exp) {
+    public final void repeatNumberOfTimesWithVars(String expression, Object page, int should, final String exp) throws ExpressionCompileException {
         OptimizerFactory.setDefaultOptimizer(OptimizerFactory.SAFE_REFLECTIVE);
         final int[] times = new int[1];
-        final MvelEvaluator evaluator = new MvelEvaluator();
+        final Evaluator evaluator = new DynTypedMvelEvaluatorCompiler(null).compile(exp);
         final WidgetChain mockChain = new WidgetChain() {
             @Override
             public void render(final Object bound, Respond respond) {

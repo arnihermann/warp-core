@@ -35,9 +35,10 @@ public class PageBookImplTest {
         };
 
         final PageBook pageBook = new PageBookImpl(null);
-        pageBook.at("/wiki", mock, MyPage.class);
+        pageBook.at("/wiki", MyPage.class);
 
         PageBook.Page page = pageBook.get("/wiki");
+        page.apply(mock);
         page.widget().render(new Object(), respond);
 
         assert page.widget().equals(mock);
@@ -56,17 +57,18 @@ public class PageBookImplTest {
         };
 
         final PageBook pageBook = new PageBookImpl(null);
-        pageBook.at("/wiki", mock, MyPage.class);
+        pageBook.at("/wiki", MyPage.class);
 
         PageBook.Page page = pageBook.get("/wiki");
+        page.apply(mock);
         final MyPage bound = new MyPage();
         page.doGet(bound, "/wiki", new HashMap<String, String[]>());
 
         assert page.widget().equals(mock);
-        assert bound.getted : "@Get method was not fired, on doGet()"; 
+        assert bound.getted : "@Get method was not fired, on doGet()";
     }
 
-   @Test
+    @Test
     public final void fireGetMethodOnPageAndRedirectToURL() {
         Renderable mock = new Renderable() {
             public void render(Object bound, Respond respond) {
@@ -79,9 +81,10 @@ public class PageBookImplTest {
         };
 
         final PageBook pageBook = new PageBookImpl(null);
-        pageBook.at("/wiki", mock, MyRedirectingPage.class);
+        pageBook.at("/wiki", MyRedirectingPage.class);
 
         PageBook.Page page = pageBook.get("/wiki");
+        page.apply(mock);
         final MyRedirectingPage bound = new MyRedirectingPage();
         Object redirect = page.doGet(bound, "/wiki", new HashMap<String, String[]>());
 
@@ -89,13 +92,13 @@ public class PageBookImplTest {
         assert page.widget().equals(mock);
     }
 
-   @Test
+    @Test
     public final void firePostMethodOnPageAndRedirectToURL() {
         Renderable mock = new
                 Renderable() {
-            public void render(Object bound, Respond respond) {
+                    public void render(Object bound, Respond respond) {
 
-            }
+                    }
 
                     public <T extends Renderable> Set<T> collect(Class<T> clazz) {
                         return null;
@@ -103,9 +106,10 @@ public class PageBookImplTest {
                 };
 
         final PageBook pageBook = new PageBookImpl(null);
-        pageBook.at("/wiki", mock, MyRedirectingPage.class);
+        pageBook.at("/wiki", MyRedirectingPage.class);
 
         PageBook.Page page = pageBook.get("/wiki");
+        page.apply(mock);
         final MyRedirectingPage bound = new MyRedirectingPage();
         Object redirect = page.doPost(bound, "/wiki", new HashMap<String, String[]>());
 
@@ -125,14 +129,17 @@ public class PageBookImplTest {
             }
         };
 
-        Map<String, String[]> params = new HashMap<String, String[]>() {{
-            put("event", new String[] { "1", "2" });
-        }};
+        Map<String, String[]> params = new HashMap<String, String[]>() {
+            {
+                put("event", new String[]{"1", "2"});
+            }
+        };
 
         final PageBook pageBook = new PageBookImpl(null);
-        pageBook.at("/wiki", mock, MyEventSupportingPage.class);
+        pageBook.at("/wiki", MyEventSupportingPage.class);
 
         PageBook.Page page = pageBook.get("/wiki");
+        page.apply(mock);
         final MyEventSupportingPage bound = new MyEventSupportingPage();
         page.doGet(bound, "/wiki", params);
 
@@ -153,14 +160,17 @@ public class PageBookImplTest {
             }
         };
 
-        Map<String, String[]> params = new HashMap<String, String[]>() {{
-            put("event", new String[] { "1", "2" });
-        }};
+        Map<String, String[]> params = new HashMap<String, String[]>() {
+            {
+                put("event", new String[]{"1", "2"});
+            }
+        };
 
         final PageBook pageBook = new PageBookImpl(null);
-        pageBook.at("/wiki", mock, MyEventSupportingPage.class);
+        pageBook.at("/wiki", MyEventSupportingPage.class);
 
         PageBook.Page page = pageBook.get("/wiki");
+        page.apply(mock);
         final MyEventSupportingPage bound = new MyEventSupportingPage();
         page.doPost(bound, "/wiki", params);
 
@@ -181,14 +191,17 @@ public class PageBookImplTest {
             }
         };
 
-        Map<String, String[]> params = new HashMap<String, String[]>() {{
-            put("event", new String[] { "2" });
-        }};
+        Map<String, String[]> params = new HashMap<String, String[]>() {
+            {
+                put("event", new String[]{"2"});
+            }
+        };
 
         final PageBook pageBook = new PageBookImpl(null);
-        pageBook.at("/wiki", mock, MyEventSupportingPage.class);
+        pageBook.at("/wiki", MyEventSupportingPage.class);
 
         PageBook.Page page = pageBook.get("/wiki");
+        page.apply(mock);
         final MyEventSupportingPage bound = new MyEventSupportingPage();
         page.doGet(bound, "/wiki", params);
 
@@ -209,14 +222,17 @@ public class PageBookImplTest {
             }
         };
 
-        Map<String, String[]> params = new HashMap<String, String[]>() {{
-            put("event", new String[] { "2" });
-        }};
+        Map<String, String[]> params = new HashMap<String, String[]>() {
+            {
+                put("event", new String[]{"2"});
+            }
+        };
 
         final PageBook pageBook = new PageBookImpl(null);
-        pageBook.at("/wiki", mock, MyEventSupportingPage.class);
+        pageBook.at("/wiki", MyEventSupportingPage.class);
 
         PageBook.Page page = pageBook.get("/wiki");
+        page.apply(mock);
         final MyEventSupportingPage bound = new MyEventSupportingPage();
         page.doPost(bound, "/wiki", params);
 
@@ -237,14 +253,17 @@ public class PageBookImplTest {
             }
         };
 
-        Map<String, String[]> params = new HashMap<String, String[]>() {{
-            put("event", new String[] { "3" });
-        }};
+        Map<String, String[]> params = new HashMap<String, String[]>() {
+            {
+                put("event", new String[]{"3"});
+            }
+        };
 
         final PageBook pageBook = new PageBookImpl(null);
-        pageBook.at("/wiki", mock, MyEventSupportingPage.class);
+        pageBook.at("/wiki", MyEventSupportingPage.class);
 
         PageBook.Page page = pageBook.get("/wiki");
+        page.apply(mock);
         final MyEventSupportingPage bound = new MyEventSupportingPage();
         page.doGet(bound, "/wiki", params);
 
@@ -268,19 +287,22 @@ public class PageBookImplTest {
             }
         };
 
-        Map<String, String[]> params = new HashMap<String, String[]>() {{
-            put("event", new String[] { "3" });
-        }};
+        Map<String, String[]> params = new HashMap<String, String[]>() {
+            {
+                put("event", new String[]{"3"});
+            }
+        };
 
         final PageBook pageBook = new PageBookImpl(null);
-        pageBook.at("/wiki", mock, MyEventSupportingPage.class);
+        pageBook.at("/wiki", MyEventSupportingPage.class);
 
         PageBook.Page page = pageBook.get("/wiki");
+        page.apply(mock);
         final MyEventSupportingPage bound = new MyEventSupportingPage();
         page.doPost(bound, "/wiki", params);
 
         assert page.widget().equals(mock);
-        assert !bound.getted2: "@Get @On method was fired, on doPost() for [event=2]";
+        assert !bound.getted2 : "@Get @On method was fired, on doPost() for [event=2]";
         assert !bound.getted1 : "@Get @On method was fired, on doPost() for [event=1]";
         assert !bound.posted1 : "@Post @On method was fired, on doPost() for [event=1]";
         assert !bound.posted2 : "@Post @On method was fired, on doPost() for [event=2]";
@@ -301,38 +323,40 @@ public class PageBookImplTest {
         };
 
         final PageBook pageBook = new PageBookImpl(null);
-        pageBook.at("/wiki/:title", mock, MyPageWithTemplate.class);
+        pageBook.at("/wiki/:title", MyPageWithTemplate.class);
 
         PageBook.Page page = pageBook.get("/wiki/IMAX");
+        page.apply(mock);
         final MyPageWithTemplate bound = new MyPageWithTemplate();
         page.doGet(bound, "/wiki/IMAX", new HashMap<String, String[]>());
 
         assert page.widget().equals(mock);
-        assert "IMAX".equals(bound.title) : "@Get method was not fired, on doGet() with the right arg, instead: " + bound.title; 
+        assert "IMAX".equals(bound.title) : "@Get method was not fired, on doGet() with the right arg, instead: " + bound.title;
     }
 
     @Test
     public final void firePostMethodWithArgsOnPage() {
         Renderable mock = new
                 Renderable() {
-            public void render(Object bound, Respond respond) {
+                    public void render(Object bound, Respond respond) {
 
-            }
+                    }
 
-            public <T extends Renderable> Set<T> collect(Class<T> clazz) {
-                return null;
-            }
-        };
+                    public <T extends Renderable> Set<T> collect(Class<T> clazz) {
+                        return null;
+                    }
+                };
 
         final PageBook pageBook = new PageBookImpl(null);
-        pageBook.at("/wiki/:title/cat/:id", mock, MyPageWithTemplate.class);
+        pageBook.at("/wiki/:title/cat/:id", MyPageWithTemplate.class);
 
         PageBook.Page page = pageBook.get("/wiki/IMAX_P/cat/12");
+        page.apply(mock);
         final MyPageWithTemplate bound = new MyPageWithTemplate();
         page.doPost(bound, "/wiki/IMAX_P/cat/12", new HashMap<String, String[]>());
 
         assert page.widget().equals(mock);
-        assert "IMAX_P".equals(bound.post) && "12".equals(bound.id) 
+        assert "IMAX_P".equals(bound.post) && "12".equals(bound.id)
                 : "@Post method was not fired, on doPost() with the right arg, instead: " + bound.post;
     }
 
@@ -349,7 +373,7 @@ public class PageBookImplTest {
         };
 
         final PageBook pageBook = new PageBookImpl(null);
-        pageBook.at("/wiki/:title/cat/:id", mock, MyBrokenPageWithTemplate.class);
+        pageBook.at("/wiki/:title/cat/:id", MyBrokenPageWithTemplate.class);
 
         PageBook.Page page = pageBook.get("/wiki/IMAX_P/cat/12");
         final MyBrokenPageWithTemplate bound = new MyBrokenPageWithTemplate();
@@ -371,10 +395,11 @@ public class PageBookImplTest {
         };
 
         final PageBook pageBook = new PageBookImpl(null);
-        pageBook.at("/wiki", mock, MyPage.class);
+        pageBook.at("/wiki", MyPage.class);
 
         PageBook.Page page = pageBook.get("/wiki");
         final MyPage bound = new MyPage();
+        page.apply(mock);
         page.doPost(bound, "/wiki", new HashMap<String, String[]>());
 
         assert page.widget().equals(mock);
@@ -383,12 +408,12 @@ public class PageBookImplTest {
 
     @DataProvider(name = URI_TEMPLATES_AND_MATCHES)
     public Object[][] getUriTemplatesAndMatches() {
-        return new Object[][] {
-            { "/wiki/:title", "/wiki/HelloPage"  },
-            { "/wiki/:title", "/wiki/HelloPage%20"  },
-            { "/wiki/:title/dude", "/wiki/HelloPage/dude"  },
-            { "/:title/thing", "/wiki/thing"  },
-            { "/:title", "/aposkdapoksd"  },
+        return new Object[][]{
+                {"/wiki/:title", "/wiki/HelloPage"},
+                {"/wiki/:title", "/wiki/HelloPage%20"},
+                {"/wiki/:title/dude", "/wiki/HelloPage/dude"},
+                {"/:title/thing", "/wiki/thing"},
+                {"/:title", "/aposkdapoksd"},
         };
     }
 
@@ -407,10 +432,12 @@ public class PageBookImplTest {
         };
 
         final PageBook pageBook = new PageBookImpl(null);
-        pageBook.at(template, mock, MyPage.class);
+        pageBook.at(template, MyPage.class);
 
         PageBook.Page page = pageBook.get(toMatch);
         final MyPage myPage = new MyPage();
+
+        page.apply(mock);
         page.widget().render(myPage, respond);
 
         assert mock.equals(page.widget());
@@ -418,12 +445,12 @@ public class PageBookImplTest {
 
     @DataProvider(name = NOT_URIS_AND_TEMPLATES)
     public Object[][] getNotUriTemplatesAndMatches() {
-        return new Object[][] {
-            { "/wiki/:title", "/tiki/HelloPage"  },
-            { "/wiki/:title", "/wiki/HelloPage%20/didle"  },
-            { "/wiki/:title/dude", "/wiki/HelloPage"  },
-            { "/:title/thing", "/wiki/thing/thingaling"  },
-            { "/:title", "/aposkdapoksd/12"  },
+        return new Object[][]{
+                {"/wiki/:title", "/tiki/HelloPage"},
+                {"/wiki/:title", "/wiki/HelloPage%20/didle"},
+                {"/wiki/:title/dude", "/wiki/HelloPage"},
+                {"/:title/thing", "/wiki/thing/thingaling"},
+                {"/:title", "/aposkdapoksd/12"},
         };
     }
 
@@ -440,14 +467,15 @@ public class PageBookImplTest {
         };
 
         final PageBook pageBook = new PageBookImpl(null);
-        pageBook.at(template, mock, MyPage.class);
+        pageBook.at(template, MyPage.class);
 
         //cant find
         assert null == pageBook.get(toMatch);
 
     }
 
-    @At("/oas") @On("event")
+    @At("/oas")
+    @On("event")
     public static class MyEventSupportingPage {
         private boolean getted1;
         private boolean getted2;
@@ -475,6 +503,7 @@ public class PageBookImplTest {
         public void post1() {
             posted1 = true;
         }
+
         @Post("2")
         public void post2() {
             posted2 = true;
@@ -486,6 +515,7 @@ public class PageBookImplTest {
         }
 
     }
+
     @At("/oas")
     @EmbedAs("Hi")
     public static class MyPage {
@@ -513,36 +543,37 @@ public class PageBookImplTest {
         private String id;
 
         @Get
-        public void get(@Named("title") String title) {
+        public void get(@Named("title")String title) {
             this.title = title;
         }
 
         @Post
-        public void post(@Named("title") String title, @Named("id") String id) {
+        public void post(@Named("title")String title, @Named("id")String id) {
             this.post = title;
             this.id = id;
         }
 
     }
+
     @At("/wiki/:title/cat/:id")
     @EmbedAs("Hi")
     public static class MyBrokenPageWithTemplate {
 
         @Post
-        public void post(@Named("title") String title, int x, @Named("id") String id) {
+        public void post(@Named("title")String title, int x, @Named("id")String id) {
         }
 
     }
 
     @DataProvider(name = FIRST_PATH_ELEMENTS)
     public Object[][] get() {
-        return new Object[][] {
-            { "/wiki/:title", "wiki" },
-            { "/wiki/:title/:thing", "wiki" },
-            { "/wiki/other/thing/dude", "wiki" },
-            { "/wiki", "wiki" },
-            { "/wiki/", "wiki" },
-            { "/", "" },
+        return new Object[][]{
+                {"/wiki/:title", "wiki"},
+                {"/wiki/:title/:thing", "wiki"},
+                {"/wiki/other/thing/dude", "wiki"},
+                {"/wiki", "wiki"},
+                {"/wiki/", "wiki"},
+                {"/", ""},
         };
     }
 
@@ -571,15 +602,15 @@ public class PageBookImplTest {
         }
 
         public void writeToHead(String text) {
-            
+
         }
 
         public void require(String requireString) {
-            
+
         }
 
         public void redirect(String to) {
-            
+
         }
 
         public String getContentType() {

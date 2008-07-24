@@ -1,7 +1,8 @@
 package com.wideplay.warp.widgets;
 
-import static com.wideplay.warp.util.TextTools.tokenize;
 import com.wideplay.warp.util.Token;
+import com.wideplay.warp.widgets.rendering.EvaluatorCompiler;
+import com.wideplay.warp.widgets.rendering.ExpressionCompileException;
 import com.wideplay.warp.widgets.rendering.SelfRendering;
 import net.jcip.annotations.ThreadSafe;
 
@@ -14,27 +15,20 @@ import java.util.Set;
  */
 @ThreadSafe @SelfRendering
 class TextWidget implements Renderable {
-    private final String template;
-    private volatile List<Token> tokenizedTemplate;     //TODO store some metrics to allocate buffers later
-    private final Evaluator evaluator;
+    private final List<Token> tokenizedTemplate;     //TODO store some metrics to allocate buffers later
 
-    TextWidget(String template, Evaluator evaluator) {
-        this.template = template;
-        this.evaluator = evaluator;
+    TextWidget(String template, EvaluatorCompiler compiler) throws ExpressionCompileException {
+
+        //compile token stream
+        tokenizedTemplate = compiler.tokenizeAndCompile(template);
     }
 
     public void render(Object bound, Respond respond) {
-        //warm up cache
-        if (null == tokenizedTemplate)
-            tokenizedTemplate = tokenize(template);
 
-        //rebuild template from tokens
+        //render template from tokens
         StringBuilder builder = new StringBuilder();
         for (Token token : tokenizedTemplate) {
-            if (token.isExpression())
-                builder.append(evaluator.evaluate(token.getToken(), bound));
-            else
-                builder.append(token.getToken());
+            builder.append(token.render(bound));
         }
 
         respond.write(builder.toString());

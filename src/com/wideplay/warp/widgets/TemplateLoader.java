@@ -5,10 +5,7 @@ import com.google.inject.Provider;
 import net.jcip.annotations.Immutable;
 
 import javax.servlet.ServletContext;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
 
 /**
@@ -42,8 +39,10 @@ class TemplateLoader {
 
             //look on the webapp resource path if not in classpath
             if (null == stream) {
+
                 final ServletContext servletContext = context.get();
-                stream = servletContext.getResourceAsStream(template);
+                if (null != template)
+                    stream = open(template, servletContext);
 
                 //resolve again, but this time on the webapp resource path
                 if (null == stream)
@@ -66,12 +65,27 @@ class TemplateLoader {
     }
 
     private InputStream resolve(Class<?> pageClass, ServletContext context) {
-        InputStream resource = context.getResourceAsStream(String.format("%s.html", pageClass.getSimpleName()));
+        //first resolve using url conversion
+        InputStream resource = open(String.format("%s.html", pageClass.getSimpleName()), context);
+
+        if (null == resource) {
+            resource = open(String.format("%s.xhtml", pageClass.getSimpleName()), context);
+        } else
+            return resource;
+
+        if (null == resource) {
+            resource = open(String.format("%s.xml", pageClass.getSimpleName()), context);
+        }
+
+
+        //resolve again using servlet context if that fail
+        if (null == resource) {
+            resource = context.getResourceAsStream(String.format("%s.html", pageClass.getSimpleName()));
+        }
 
         if (null == resource) {
             resource = context.getResourceAsStream(String.format("%s.xhtml", pageClass.getSimpleName()));
-        } else
-            return resource;
+        }
 
         if (null == resource) {
             resource = context.getResourceAsStream(String.format("%s.xml", pageClass.getSimpleName()));
@@ -81,6 +95,14 @@ class TemplateLoader {
             return resource;
 
         return null;
+    }
+
+    private static InputStream open(String file, ServletContext context) {
+        try {
+            return new FileInputStream(new File(context.getRealPath(file)));
+        } catch (FileNotFoundException e) {
+            return null;
+        }
     }
 
     //resolves a location for this page class's template (assuming @Show is not present)
@@ -107,12 +129,13 @@ class TemplateLoader {
     }
 
     private static String read(InputStream stream) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
 
         StringBuilder builder = new StringBuilder();
         try {
             while (reader.ready()) {
                 builder.append(reader.readLine());
+                builder.append("\n");
             }
         } finally {
             stream.close();

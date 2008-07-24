@@ -1,16 +1,18 @@
 package com.wideplay.warp.widgets;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Provider;
+import static com.wideplay.warp.widgets.XmlTemplateCompilerTest.mockRequestProviderForContext;
 import com.wideplay.warp.widgets.example.Wiki;
 import com.wideplay.warp.widgets.resources.ResourcesService;
 import com.wideplay.warp.widgets.routing.PageBook;
 import static org.easymock.EasyMock.*;
-import org.testng.annotations.Test;
 
 import javax.servlet.ServletContext;
-import java.util.Arrays;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,23 +20,34 @@ import java.util.Set;
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
 public class PageWidgetBuilderTest {
+    private static final String SIMPLE_HTML = "<html><head></head><body> <p> hi</p></body></html>\n";
 
-    @Test
-    public final void scanPackageForPagesAndWidgets() {
+//    @Test
+    public final void scanPackageForPagesAndWidgets() throws IOException {
         final Package target = Wiki.class.getPackage();
 
-        final Injector injector = Guice.createInjector();
+        final Injector injector = Guice.createInjector(new AbstractModule() {
+            protected void configure() {
+                //TODO cleanup this by factoring into a test util class?
+                bind(HttpServletRequest.class).toProvider(mockRequestProviderForContext());
+            }
+        });
         final PageBook book = injector.getInstance(PageBook.class);
         final ResourcesService resourcesService = injector.getInstance(ResourcesService.class);
 
         final ServletContext mock = createMock(ServletContext.class);
+//
+//        expect(mock.getResourcePaths("/WEB-INF/classes/com/wideplay/warp/widgets/example/"))
+//                .andReturn(new HashSet<String>(Arrays.asList(
+//                        "/WEB-INF/classes/com/wideplay/warp/widgets/example/Wiki.class",
+//                        "/WEB-INF/classes/com/wideplay/warp/widgets/example/Search.class",
+//                        "/WEB-INF/classes/com/wideplay/warp/widgets/example/ContentNegotiationExample.class"
+//                )));
 
-        expect(mock.getResourcePaths("/WEB-INF/classes/com/wideplay/warp/widgets/example/"))
-                .andReturn(new HashSet<String>(Arrays.asList(
-                        "/WEB-INF/classes/com/wideplay/warp/widgets/example/Wiki.class",
-                        "/WEB-INF/classes/com/wideplay/warp/widgets/example/Search.class",
-                        "/WEB-INF/classes/com/wideplay/warp/widgets/example/ContentNegotiationExample.class"
-                )));
+        expect(mock.getRealPath(isA(String.class))).andReturn("").anyTimes();
+
+        expect(mock.getResourceAsStream(isA(String.class)))
+                .andReturn(PageWidgetBuilderTest.class.getResourceAsStream("MyHtml.html")).anyTimes();
 
         replay(mock);
 
@@ -58,7 +71,7 @@ public class PageWidgetBuilderTest {
         };
         
         new PageWidgetBuilder(book, new TemplateLoader(servletContextProvider),
-                new XmlTemplateParser(evaluator, registry), packages, resourcesService, servletContextProvider, registry)
+                packages, resourcesService, servletContextProvider, registry)
                 
                 .scan();
 

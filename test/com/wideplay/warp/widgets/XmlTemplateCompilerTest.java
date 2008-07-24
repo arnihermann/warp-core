@@ -1,47 +1,67 @@
 package com.wideplay.warp.widgets;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Provider;
 import com.wideplay.warp.widgets.rendering.EmbedAs;
+import com.wideplay.warp.widgets.rendering.ExpressionCompileException;
+import com.wideplay.warp.widgets.rendering.MvelEvaluatorCompiler;
 import com.wideplay.warp.widgets.routing.PageBook;
-import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.*;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
-public class XmlTemplateParserTest {
+public class XmlTemplateCompilerTest {
     private static final String ANNOTATION_EXPRESSIONS = "Annotation expressions";
+    private Injector injector;
+    private PageBook pageBook;
+
+    @BeforeMethod
+    public void pre() {
+        injector = Guice.createInjector(new AbstractModule() {
+            protected void configure() {
+                bind(HttpServletRequest.class).toProvider(mockRequestProviderForContext());
+            }
+        });
+
+        pageBook = createNiceMock(PageBook.class);
+    }
 
     @Test
     public final void annotationKeyExtraction() {
-        assert "link".equals(XmlTemplateParser.extractKeyAndContent("@Link")[0]) : "Extraction wrong: ";
-        assert "thing".equals(XmlTemplateParser.extractKeyAndContent("@Thing()")[0]) : "Extraction wrong: ";
-        assert "thing".equals(XmlTemplateParser.extractKeyAndContent("@Thing(asodkoas)")[0]) : "Extraction wrong: ";
-        assert "thing".equals(XmlTemplateParser.extractKeyAndContent("@Thing(asodkoas)  ")[0]) : "Extraction wrong: ";
-        assert "thing".equals(XmlTemplateParser.extractKeyAndContent("@Thing(asodkoas)  kko")[0]) : "Extraction wrong: ";
+        assert "link".equals(Dom.extractKeyAndContent("@Link")[0]) : "Extraction wrong: ";
+        assert "thing".equals(Dom.extractKeyAndContent("@Thing()")[0]) : "Extraction wrong: ";
+        assert "thing".equals(Dom.extractKeyAndContent("@Thing(asodkoas)")[0]) : "Extraction wrong: ";
+        assert "thing".equals(Dom.extractKeyAndContent("@Thing(asodkoas)  ")[0]) : "Extraction wrong: ";
+        assert "thing".equals(Dom.extractKeyAndContent("@Thing(asodkoas)  kko")[0]) : "Extraction wrong: ";
 
-        assert "".equals(XmlTemplateParser.extractKeyAndContent("@Link")[1]) : "Extraction wrong: ";
-        assert "".equals(XmlTemplateParser.extractKeyAndContent("@Thing()")[1]) : "Extraction wrong: ";
-        assert "asodkoas".equals(XmlTemplateParser.extractKeyAndContent("@Thing(asodkoas)")[1]) : "Extraction wrong: ";
-        assert "asodkoas".equals(XmlTemplateParser.extractKeyAndContent("@Thing(asodkoas)  ")[1]) : "Extraction wrong: ";
-        assert "asodkoas".equals(XmlTemplateParser.extractKeyAndContent("@Thing(asodkoas)  kko")[1]) : "Extraction wrong: ";
+        assert "".equals(Dom.extractKeyAndContent("@Link")[1]) : "Extraction wrong: ";
+        final String val = Dom.extractKeyAndContent("@Thing()")[1];
+        assert null == (val) : "Extraction wrong: " + val;
+        assert "asodkoas".equals(Dom.extractKeyAndContent("@Thing(asodkoas)")[1]) : "Extraction wrong: ";
+        assert "asodkoas".equals(Dom.extractKeyAndContent("@Thing(asodkoas)  ")[1]) : "Extraction wrong: ";
+        assert "asodkoas".equals(Dom.extractKeyAndContent("@Thing(asodkoas)  kko")[1]) : "Extraction wrong: ";
     }
 
     @Test
     public final void readShowIfWidgetTrue() {
         final Evaluator evaluator = new MvelEvaluator();
-        final WidgetRegistry registry = new WidgetRegistry(evaluator, createNiceMock(PageBook.class), createNiceMock(Injector.class));
+
+        final WidgetRegistry registry = new WidgetRegistry(evaluator, createNiceMock(PageBook.class), injector);
         registry.add("showif", ShowIfWidget.class);
 
 
+        final MvelEvaluatorCompiler compiler = new MvelEvaluatorCompiler(TestBackingType.class);
         Renderable widget =
-                new XmlTemplateParser(evaluator, registry)
+                new XmlTemplateCompiler(Object.class, compiler, registry, pageBook)
                     .parse("<xml>@ShowIf(true)<p>hello</p></xml>");
 
         assert null != widget : " null ";
@@ -95,7 +115,7 @@ public class XmlTemplateParserTest {
 
 
         Renderable widget =
-                new XmlTemplateParser(evaluator, registry)
+                new XmlTemplateCompiler(Object.class, new MvelEvaluatorCompiler(Object.class), registry, pageBook)
                     .parse(String.format("<xml>@ShowIf(%s)<p>hello</p></xml>", expression));
 
         assert null != widget : " null ";
@@ -130,13 +150,19 @@ public class XmlTemplateParserTest {
 
     @Test
     public final void readShowIfWidgetFalse() {
+        final Injector injector = Guice.createInjector(new AbstractModule() {
+            protected void configure() {
+                bind(HttpServletRequest.class).toProvider(mockRequestProviderForContext());
+            }
+        });
+
         final Evaluator evaluator = new MvelEvaluator();
-        final WidgetRegistry registry = new WidgetRegistry(evaluator, createNiceMock(PageBook.class), createNiceMock(Injector.class));
+        final WidgetRegistry registry = new WidgetRegistry(evaluator, createNiceMock(PageBook.class), injector);
         registry.add("showif", ShowIfWidget.class);
 
 
         Renderable widget =
-                new XmlTemplateParser(evaluator, registry)
+                new XmlTemplateCompiler(Object.class, new MvelEvaluatorCompiler(Object.class), registry, pageBook)
                     .parse("<xml>@ShowIf(false)<p>hello</p></xml>");
 
         assert null != widget : " null ";
@@ -169,12 +195,18 @@ public class XmlTemplateParserTest {
     @Test
     public final void readTextWidgetValues() {
         final Evaluator evaluator = new MvelEvaluator();
-        final WidgetRegistry registry = new WidgetRegistry(evaluator, createNiceMock(PageBook.class), createNiceMock(Injector.class));
+        final Injector injector = Guice.createInjector(new AbstractModule() {
+            protected void configure() {
+                bind(HttpServletRequest.class).toProvider(mockRequestProviderForContext());
+            }
+        });
+        
+        final WidgetRegistry registry = new WidgetRegistry(evaluator, createNiceMock(PageBook.class), injector);
         registry.add("showif", ShowIfWidget.class);
 
 
         Renderable widget =
-                new XmlTemplateParser(evaluator, registry)
+                new XmlTemplateCompiler(Object.class, new MvelEvaluatorCompiler(TestBackingType.class), registry, pageBook)
                     .parse("<xml><div class='${clazz}'>hello <a href='/people/${id}'>${name}</a></div></xml>");
 
         assert null != widget : " null ";
@@ -197,13 +229,7 @@ public class XmlTemplateParserTest {
         };
 
 
-        Map<String, String> map = new HashMap<String, String>() {{
-            put("name", "Dhanji");
-            put("clazz", "content");
-            put("id", "12");
-        }};
-
-        widget.render(map, mockRespond);
+        widget.render(new TestBackingType("Dhanji", "content", 12), mockRespond);
 
         final String value = builder.toString();
         assert "<xml><div class='content'>hello <a href='/people/12'>Dhanji</a></div></xml>"
@@ -211,16 +237,49 @@ public class XmlTemplateParserTest {
                 .equals(value) : "Did not write expected output, instead: " + value;
     }
 
+    public static class TestBackingType {
+        private String name;
+        private String clazz;
+        private Integer id;
+
+        public TestBackingType(String name, String clazz, Integer id) {
+            this.name = name;
+            this.clazz = clazz;
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getClazz() {
+            return clazz;
+        }
+
+        public Integer getId() {
+            return id;
+        }
+    }
+
 
     @Test
     public final void readAndRenderRequireWidget() {
         final Evaluator evaluator = new MvelEvaluator();
-        final WidgetRegistry registry = new WidgetRegistry(evaluator, createNiceMock(PageBook.class), createNiceMock(Injector.class));
+        final Injector injector = Guice.createInjector(new AbstractModule() {
+            protected void configure() {
+                bind(HttpServletRequest.class).toProvider(mockRequestProviderForContext());
+            }
+        });
+
+
+        final PageBook pageBook = injector.getInstance(PageBook.class);
+
+        final WidgetRegistry registry = new WidgetRegistry(evaluator, pageBook, injector);
         registry.add("meta", HeaderWidget.class);
 
 
         Renderable widget =
-                new XmlTemplateParser(evaluator, registry)
+                new XmlTemplateCompiler(Object.class, new MvelEvaluatorCompiler(TestBackingType.class), registry, pageBook)
                     .parse("<html>@Meta <head>" +
                             "   @Require <script type='text/javascript' src='my.js'> </script>" +
                             "   @Require <script type='text/javascript' src='my.js'> </script>" +
@@ -231,13 +290,7 @@ public class XmlTemplateParserTest {
 
         final Respond respond = new StringBuilderRespond();
 
-        Map<String, String> map = new HashMap<String, String>() {{
-            put("name", "Dhanji");
-            put("clazz", "content");
-            put("id", "12");
-        }};
-
-        widget.render(map, respond);
+        widget.render(new TestBackingType("Dhanji", "content", 12), respond);
 
         final String value = respond.toString();
         assert ("<html><head>" +
@@ -258,7 +311,7 @@ public class XmlTemplateParserTest {
 
 
         Renderable widget =
-                new XmlTemplateParser(evaluator, registry)
+                new XmlTemplateCompiler(Object.class, new MvelEvaluatorCompiler(TestBackingType.class), registry, pageBook)
                     .parse("<xml><div class='${clazz}'>hello</div></xml>");
 
         assert null != widget : " null ";
@@ -281,14 +334,7 @@ public class XmlTemplateParserTest {
             }
         };
 
-
-        Map<String, String> map = new HashMap<String, String>() {{
-            put("name", "Dhanji");
-            put("clazz", "content");
-            put("id", "12");
-        }};
-
-        widget.render(map, mockRespond);
+        widget.render(new TestBackingType("Dhanji", "content", 12), mockRespond);
 
         final String s = builder.toString();
         assert "<xml><div class=\"content\">hello</div></xml>"
@@ -304,7 +350,7 @@ public class XmlTemplateParserTest {
 
 
         Renderable widget =
-                new XmlTemplateParser(evaluator, registry)
+                new XmlTemplateCompiler(Object.class, new MvelEvaluatorCompiler(TestBackingType.class), registry, pageBook)
                     .parse("<xml><div class='${clazz}'>hello @ShowIf(false)<a href='/hi/${id}'>hideme</a></div></xml>");
 
         assert null != widget : " null ";
@@ -327,14 +373,7 @@ public class XmlTemplateParserTest {
             }
         };
 
-
-        Map<String, String> map = new HashMap<String, String>() {{
-            put("name", "Dhanji");
-            put("clazz", "content");
-            put("id", "12");
-        }};
-
-        widget.render(map, mockRespond);
+        widget.render(new TestBackingType("Dhanji", "content", 12), mockRespond);
 
         final String s = builder.toString();
         assert "<xml><div class=\"content\">hello </div></xml>"
@@ -355,35 +394,32 @@ public class XmlTemplateParserTest {
     }
 
     @Test
-    public final void readEmbedWidgetAndStoredAsPage() {
-        final PageBook book = Guice.createInjector()      //hacky, where are you super-packages!
+    public final void readEmbedWidgetAndStoreAsPage() {
+        final Injector injector = Guice.createInjector(new AbstractModule() {
+            protected void configure() {
+                bind(HttpServletRequest.class).toProvider(mockRequestProviderForContext());
+            }
+        });
+        final PageBook book = injector      //hacky, where are you super-packages!
                 .getInstance(PageBook.class);
 
-        book.at("/somewhere", new TerminalWidgetChain(), MyEmbeddedPage.class);
+        book.at("/somewhere", MyEmbeddedPage.class).apply(new TerminalWidgetChain());
 
         final Evaluator evaluator = new MvelEvaluator();
-        final WidgetRegistry registry = new WidgetRegistry(evaluator, book, createNiceMock(Injector.class));
+        final WidgetRegistry registry = new WidgetRegistry(evaluator, book, injector);
         registry.add("myFave", EmbedWidget.class);
 
         Renderable widget =
-                new XmlTemplateParser(evaluator, registry)
+                new XmlTemplateCompiler(Object.class, new MvelEvaluatorCompiler(TestBackingType.class), registry, book)
                     .parse("<xml><div class='content'>hello @MyFave(should=false)<a href='/hi/${id}'>hideme</a></div></xml>");
 
         assert null != widget : " null ";
 
         //tell pagebook to track this as an embedded widget
-        book.embedAs(new TerminalWidgetChain(), MyEmbeddedPage.class);
-
+        book.embedAs(MyEmbeddedPage.class).apply(new TerminalWidgetChain());
         final Respond mockRespond = new StringBuilderRespond();
 
-
-        Map<String, String> map = new HashMap<String, String>() {{
-            put("name", "Dhanji");
-            put("clazz", "content");
-            put("id", "12");
-        }};
-
-        widget.render(map, mockRespond);
+        widget.render(new TestBackingType("Dhanji", "content", 12), mockRespond);
 
         final String s = mockRespond.toString();
         assert "<xml><div class=\"content\">hello </div></xml>"
@@ -393,34 +429,30 @@ public class XmlTemplateParserTest {
 
     @Test
     public final void readEmbedWidgetOnly() {
-        final PageBook book = Guice.createInjector()      //hacky, where are you super-packages!
+        final Injector injector = Guice.createInjector(new AbstractModule() {
+            protected void configure() {
+                bind(HttpServletRequest.class).toProvider(mockRequestProviderForContext());
+            }
+        });
+        final PageBook book = injector      //hacky, where are you super-packages!
                 .getInstance(PageBook.class);
 
-//        book.at("/somewhere", new TerminalWidgetChain(), MyEmbeddedPage.class);
-
         final Evaluator evaluator = new MvelEvaluator();
-        final WidgetRegistry registry = new WidgetRegistry(evaluator, book, createNiceMock(Injector.class));
+        final WidgetRegistry registry = new WidgetRegistry(evaluator, book, injector);
         registry.add("myFave", EmbedWidget.class);
 
         Renderable widget =
-                new XmlTemplateParser(evaluator, registry)
+                new XmlTemplateCompiler(Object.class, new MvelEvaluatorCompiler(TestBackingType.class), registry, pageBook)
                     .parse("<xml><div class='content'>hello @MyFave(should=false)<a href='/hi/${id}'>hideme</a></div></xml>");
 
         assert null != widget : " null ";
 
         //tell pagebook to track this as an embedded widget
-        book.embedAs(new TerminalWidgetChain(), MyEmbeddedPage.class);
+        book.embedAs(MyEmbeddedPage.class).apply(new TerminalWidgetChain());
 
         final Respond mockRespond = new StringBuilderRespond();
 
-
-        Map<String, String> map = new HashMap<String, String>() {{
-            put("name", "Dhanji");
-            put("clazz", "content");
-            put("id", "12");
-        }};
-
-        widget.render(map, mockRespond);
+        widget.render(new TestBackingType("Dhanji", "content", 12), mockRespond);
 
         final String s = mockRespond.toString();
         assert "<xml><div class=\"content\">hello </div></xml>"
@@ -429,44 +461,57 @@ public class XmlTemplateParserTest {
 
 
     @Test
-    public final void readEmbedWidgetWithArgs() {
-        final PageBook book = Guice.createInjector()      //hacky, where are you super-packages!
-                .getInstance(PageBook.class);
+    public final void readEmbedWidgetWithArgs() throws ExpressionCompileException {
 
         final Evaluator evaluator = new MvelEvaluator();
-        final WidgetRegistry registry = new WidgetRegistry(evaluator, book, createNiceMock(Injector.class));
+        final Injector injector = Guice.createInjector(new AbstractModule() {
+            protected void configure() {
+                bind(HttpServletRequest.class).toProvider(mockRequestProviderForContext());
+            }
+        });
+        final PageBook book = injector.getInstance(PageBook.class);           //hacky, where are you super-packages!
+
+        final WidgetRegistry registry = new WidgetRegistry(evaluator, book, injector);
         registry.add("myFave", EmbedWidget.class);
         registry.add("with", ArgumentWidget.class);
 
+        final MvelEvaluatorCompiler compiler = new MvelEvaluatorCompiler(TestBackingType.class);
         Renderable widget =
-                new XmlTemplateParser(evaluator, registry)
+                new XmlTemplateCompiler(Object.class, compiler, registry, book)
                     .parse("<xml><div class='content'>hello @MyFave(should=true)<a href='/hi/${id}'> @With(\"me\")<p>showme</p></a></div></xml>");
 
         assert null != widget : " null ";
 
 
+        XmlWidget bodyWrapper = new XmlWidget(new WidgetChain().addWidget(new IncludeWidget(new TerminalWidgetChain(), "'me'", evaluator)),
+                "body", compiler, Collections.<String, String>emptyMap());
 
-        Renderable bodyWrapper = new XmlWidget(new WidgetChain().addWidget(new IncludeWidget(new TerminalWidgetChain(), "'me'", evaluator)),
-                "body", evaluator, Collections.<String, String>emptyMap());
-
+        bodyWrapper.setRequestProvider(mockRequestProviderForContext());
 
         //should include the @With("me") annotated widget from the template above (discarding the <p> tag).
-        book.embedAs(bodyWrapper, MyEmbeddedPage.class);
+        book.embedAs(MyEmbeddedPage.class).apply(bodyWrapper);
 
         final Respond mockRespond = new StringBuilderRespond();
 
-
-        Map<String, String> map = new HashMap<String, String>() {{
-            put("name", "Dhanji");
-            put("clazz", "content");
-            put("id", "12");
-        }};
-
-        widget.render(map, mockRespond);
+        widget.render(new TestBackingType("Dhanji", "content", 12), mockRespond);
 
         final String s = mockRespond.toString();
         assert "<xml><div class=\"content\">hello showme</div></xml>"
                 .equals(s) : "Did not write expected output, instead: " + s;
+    }
+
+    static Provider<HttpServletRequest> mockRequestProviderForContext() {
+        return new Provider<HttpServletRequest>() {
+            public HttpServletRequest get() {
+                final HttpServletRequest request = createMock(HttpServletRequest.class);
+                expect(request.getContextPath())
+                        .andReturn("")
+                        .anyTimes();
+                replay(request);
+                
+                return request;
+            }
+        };
     }
 
 }

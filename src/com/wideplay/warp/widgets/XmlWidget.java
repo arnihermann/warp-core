@@ -1,11 +1,15 @@
 package com.wideplay.warp.widgets;
 
-import com.wideplay.warp.util.TextTools;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.wideplay.warp.util.Token;
 import com.wideplay.warp.widgets.rendering.Attributes;
+import com.wideplay.warp.widgets.rendering.EvaluatorCompiler;
+import com.wideplay.warp.widgets.rendering.ExpressionCompileException;
 import com.wideplay.warp.widgets.rendering.SelfRendering;
 import net.jcip.annotations.ThreadSafe;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -20,24 +24,36 @@ class XmlWidget implements Renderable {
     private final WidgetChain widgetChain;
     private final boolean noChildren;
     private final String name;
-    private final Evaluator evaluator;
     private final Map<String, List<Token>> attributes;
+    private volatile Provider<HttpServletRequest> request;
+
+    private static final Set<String> CONTEXTUAL_ATTRIBS;
+
+    static {
+        Set<String> set = new HashSet<String>();
+
+        set.add("href");
+        set.add("action");
+        set.add("src");
+
+        CONTEXTUAL_ATTRIBS = Collections.unmodifiableSet(set);
+    }
 
 
-    XmlWidget(WidgetChain widgetChain, String name, Evaluator evaluator, @Attributes Map<String, String> attributes) {
+    XmlWidget(WidgetChain widgetChain, String name, EvaluatorCompiler compiler,
+              @Attributes Map<String, String> attributes) throws ExpressionCompileException {
         this.widgetChain = widgetChain;
         this.name = name;
-        this.evaluator = evaluator;
-        this.attributes = Collections.unmodifiableMap(tokenize(attributes));
+        this.attributes = Collections.unmodifiableMap(compile(attributes, compiler));
         this.noChildren = widgetChain instanceof TerminalWidgetChain;
     }
 
     //converts a map of name:value attrs into a map of name:token attrs
-    private Map<String, List<Token>> tokenize(Map<String, String> attributes) {
+    private Map<String, List<Token>> compile(Map<String, String> attributes, EvaluatorCompiler compiler) throws ExpressionCompileException {
         Map<String, List<Token>> map = new LinkedHashMap<String, List<Token>>();
 
         for (Map.Entry<String, String> attribute : attributes.entrySet()) {
-            map.put(attribute.getKey(), TextTools.tokenize(attribute.getValue()));
+            map.put(attribute.getKey(), compiler.tokenizeAndCompile(attribute.getValue()));
         }
 
         return map;
@@ -54,15 +70,19 @@ class XmlWidget implements Renderable {
             respond.write(attribute.getKey());
             respond.write("=\"");
 
-            for (Token token : attribute.getValue()) {
+            final List<Token> tokenList = attribute.getValue();
+            for (int i = 0; i < tokenList.size(); i++) {
+                Token token = tokenList.get(i);
+
                 if (token.isExpression()) {
-                    final Object value = evaluator.evaluate(token.getToken(), bound);
+                    final Object value = token.render(bound);
 
                     //normalize nulls to "null" (i.e. let responder take care of writing it)
                     respond.write((null == value) ? (String)value : value.toString());
                 }
-                else
-                    respond.write(token.getToken());
+                else {
+                    respond.write(contextualizeIfNeeded(attribute.getKey(), (0 == i), (String) token.render(bound)));
+                }
             }
 
             respond.write("\" ");
@@ -85,8 +105,23 @@ class XmlWidget implements Renderable {
 
     }
 
+    private String contextualizeIfNeeded(String attribute, boolean isFirstToken, String raw) {
+        if (isFirstToken && CONTEXTUAL_ATTRIBS.contains(attribute)) {
+            //add context to path if needed
+            if (raw.startsWith("/"))
+                raw = String.format("%s%s", request.get().getContextPath(), raw);
+        }
+        
+        return raw;
+    }
+
 
     public <T extends Renderable> Set<T> collect(Class<T> clazz) {
         return widgetChain.collect(clazz);
+    }
+
+    @Inject
+    public void setRequestProvider(Provider<HttpServletRequest> request) {
+        this.request = request;
     }
 }

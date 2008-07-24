@@ -1,5 +1,7 @@
 package com.wideplay.warp.widgets;
 
+import com.wideplay.warp.widgets.rendering.ExpressionCompileException;
+import com.wideplay.warp.widgets.rendering.MvelEvaluatorCompiler;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -18,7 +20,7 @@ public class RequireWidgetTest {
     }
 
     @Test(dataProvider = REQUIRE_TAGS)
-    public final void requireWidgetsRenderToHeadTag(final String requireString) {
+    public final void requireWidgetsRenderToHeadTag(final String requireString) throws ExpressionCompileException {
         final Respond respond = new StringBuilderRespond();
 
         respond.require(requireString);
@@ -30,9 +32,10 @@ public class RequireWidgetTest {
 
         chain.addWidget(new HeaderWidget(new TerminalWidgetChain(), "", evaluator));
 
-        chain.addWidget(new RequireWidget(requireString, evaluator));
-        chain.addWidget(new RequireWidget(requireString, evaluator));
-        chain.addWidget(new RequireWidget(requireString, evaluator));
+        final MvelEvaluatorCompiler compiler = new MvelEvaluatorCompiler(Object.class);
+        chain.addWidget(new RequireWidget(requireString, compiler));
+        chain.addWidget(new RequireWidget(requireString, compiler));
+        chain.addWidget(new RequireWidget(requireString, compiler));
 
         //render
         chain.render(new Object(), respond);

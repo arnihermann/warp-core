@@ -1,5 +1,9 @@
 package com.wideplay.warp.widgets;
 
+import com.wideplay.warp.widgets.rendering.EvaluatorCompiler;
+import com.wideplay.warp.widgets.rendering.ExpressionCompileException;
+import com.wideplay.warp.widgets.rendering.MvelEvaluatorCompiler;
+import static org.easymock.EasyMock.createNiceMock;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -35,15 +39,15 @@ public class HeaderWidgetTest {
     }
 
     @Test
-    public final void renderHeaderWithContent() {
+    public final void renderHeaderWithContent() throws ExpressionCompileException {
 
         Respond respond = new StringBuilderRespond();
 
         final WidgetChain widgetChain = new WidgetChain();
-        final MvelEvaluator evaluator = new MvelEvaluator();
-        widgetChain.addWidget(new TextWidget("<meta name=\"thing\"/>", evaluator));
+        final EvaluatorCompiler mock = new MvelEvaluatorCompiler(Object.class);
+        widgetChain.addWidget(new TextWidget("<meta name=\"thing\"/>", mock));
 
-        new HeaderWidget(widgetChain, "", evaluator)
+        new HeaderWidget(widgetChain, "", createNiceMock(Evaluator.class))
                 .render(new Object(), respond);
 
         respond.writeToHead("<title>bs</title>");

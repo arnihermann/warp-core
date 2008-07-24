@@ -44,7 +44,6 @@ class RepeatWidget implements Renderable {
             pageVar = TextTools.stripQuotes(pageVar);
 
         this.pageVar = pageVar;
-
         this.evaluator = evaluator;
     }
 
@@ -55,15 +54,13 @@ class RepeatWidget implements Renderable {
         if (null == things)
             return;
 
-        Map<String, Object> context = new HashMap<String, Object>(3);
+        Map<String, Object> context = new HashMap<String, Object>();
 
         //set up context variables
         for (Object thing : things) {
 
             //decorate with some context
-            if (null != var)
-                context.put(var, thing);
-            
+            context.put(var, thing);
             context.put(pageVar, bound);
             widgetChain.render(context, respond);
         }
@@ -74,6 +71,4 @@ class RepeatWidget implements Renderable {
     public <T extends Renderable> Set<T> collect(Class<T> clazz) {
         return widgetChain.collect(clazz);
     }
-
-
 }

@@ -1,6 +1,9 @@
 package com.wideplay.warp.util;
 
 
+import com.wideplay.warp.widgets.rendering.EvaluatorCompiler;
+import com.wideplay.warp.widgets.rendering.ExpressionCompileException;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -27,19 +30,58 @@ public class TextTools {
         if (Strings.empty(expression))
             return Collections.emptyMap();
 
-        String[] pairs = expression.split(",");
+
+        boolean escape = false;
+        List<String> pairs = new ArrayList<String>();
+        int index = 0;
+        for (int i = 0; i < expression.length(); i++) {
+            char c = expression.charAt(i);
+
+            //skip commas in strings
+            if ('"' == c)
+                escape = !escape;
+
+            if (!escape && ',' == c) {
+                if (index < i)
+                    pairs.add(expression.substring(index, i));
+
+                //skip comma & whitespace if any
+                for (; i < expression.length() && (',' == expression.charAt(i) || ' ' == expression.charAt(i));)
+                    i++;
+
+                //reset new start index
+                index = i;
+            }
+
+        }
+
+        //add last pair if needed
+        if (index < expression.length()) {
+            //chew up leading comma & whitespace if any
+            for (; ',' == expression.charAt(index) || ' ' == expression.charAt(index); index++);
+
+            final String pair = expression.substring(index, expression.length()).trim();
+
+            //only consider this a pair if it has something in it!
+            if (pair.length() > 1)
+                pairs.add(pair);
+        }
+
+//        if (escape)
+//            throw new ExpressionCompileException("unterminated string found in widget annotation: " + expression);
+
 
         //nice to preserve insertion order
         final Map<String, String> map = new LinkedHashMap<String, String>();
         for (String pair : pairs) {
-            final String[] nameAndValue = pair.split("=");
+            final String[] nameAndValue = pair.split("=", 2);
 
             //do some validation
             if (nameAndValue.length != 2)
                 throw new IllegalArgumentException("Invalid parameter binding format: " + pair);
 
             Strings.nonEmpty(nameAndValue[0], "Cannot have an empty left hand side target parameter: " + pair);
-            Strings.nonEmpty(nameAndValue[1], "Must provide a non-empty right hand side expression" + pair);
+            Strings.nonEmpty(nameAndValue[1], "Must provide a non-empty right hand side expression: " + pair);
 
             map.put(nameAndValue[0].trim(), nameAndValue[1].trim());
         }
@@ -48,7 +90,7 @@ public class TextTools {
     }
 
     //tokenizes text into raw text chunks interspersed with expression chunks
-    public static List<Token> tokenize(String warpRawText) {
+    public static List<Token> tokenize(String warpRawText, EvaluatorCompiler compiler) throws ExpressionCompileException {
         List<Token> tokens = new ArrayList<Token>();
         
         //simple state machine to iterate the text and break it up into chunks
@@ -79,7 +121,7 @@ public class TextTools {
                     //YES it is the end of the expr, so close it up and start a new token
                     token.append(characters[i]);
 
-                    tokens.add(Token.expression(token.toString()));
+                    tokens.add(Token.expression(token.toString(), compiler));
                     token = new StringBuilder();
 
                     state = TokenizerState.READING_TEXT;
@@ -103,11 +145,6 @@ public class TextTools {
         return Collections.unmodifiableList(tokens);
     }
 
-    //TODO make this better (use a regex to validate URI tempalates)
-    public static boolean isValidTemplateUri(String uri) {
-        return null != uri && uri.contains("{") && uri.contains("}");
-    }
-
     public static String stripAttributePrefix(String attr, String prefix) {
 //        System.out.println(attr + " - " + prefix);
         return attr.substring(prefix.length());
@@ -126,6 +163,8 @@ public class TextTools {
     }
 
     public static String[] commaSeparatorRegexSplit(String viewports) {
+        //state machine (automaton) to read a comma separated list
+
         return new String[] { viewports };
         //TODO return viewports.split(",[ ]*") 
     }

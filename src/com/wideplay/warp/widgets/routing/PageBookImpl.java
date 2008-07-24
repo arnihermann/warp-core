@@ -16,6 +16,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * contains active uri/widget mappings
@@ -38,16 +39,11 @@ class PageBookImpl implements PageBook {
         this.injector = injector;
     }
 
-    public void at(String uri, Renderable page, Class<?> clazz) {
+    public PageTuple at(String uri, Class<?> clazz) {
         synchronized (lock) {
             final String key = firstPathElement(uri);
 
-            final PageTuple pageTuple = new PageTuple(new PathMatcherChain(uri), page, clazz, injector);
-
-            //store in alias map if necessary
-//            if (clazz.isAnnotationPresent(EmbedAs.class)) {
-//                pagesByName.put(clazz.getAnnotation(EmbedAs.class).value().toLowerCase(), pageTuple);
-//            }
+            final PageTuple pageTuple = new PageTuple(new PathMatcherChain(uri), clazz, injector);
 
             //is universal? (i.e. first element is a variable)
             if (isFirstElementVariable(key))
@@ -55,12 +51,17 @@ class PageBookImpl implements PageBook {
             else {
                 multiput(pages, key, pageTuple);
             }
+
+            return pageTuple;
         }
     }
 
-    public void embedAs(Renderable renderable, Class<?> page) {
-        pagesByName.put(page.getAnnotation(EmbedAs.class).value().toLowerCase(),
-                new PageTuple(PathMatcherChain.ignoring(), renderable, page, injector));
+    public Page embedAs(Class<?> clazz) {
+        PageTuple pageTuple = new PageTuple(PathMatcherChain.ignoring(), clazz, injector);
+        pagesByName.put(clazz.getAnnotation(EmbedAs.class).value().toLowerCase(),
+                pageTuple);
+
+        return pageTuple;
     }
 
     private static void multiput(Map<String, List<PageTuple>> pages, String key, PageTuple page) {
@@ -120,7 +121,7 @@ class PageBookImpl implements PageBook {
     @On("") //the default on (hacky!!)
     public static class PageTuple implements Page {
         private final PathMatcher matcher;
-        private final Renderable pageWidget;
+        private final AtomicReference<Renderable> pageWidget = new AtomicReference<Renderable>();
         private final Class<?> clazz;
         private final Injector injector;
 
@@ -130,9 +131,9 @@ class PageBookImpl implements PageBook {
         //dispatcher switch
         private final On on;
 
-        public PageTuple(PathMatcher matcher, Renderable pageWidget, Class<?> clazz, Injector injector) {
+        public PageTuple(PathMatcher matcher, Class<?> clazz, Injector injector) {
             this.matcher = matcher;
-            this.pageWidget = pageWidget;
+//            this.pageWidget.set(pageWidget);
             this.clazz = clazz;
             this.injector = injector;
 
@@ -217,7 +218,7 @@ class PageBookImpl implements PageBook {
         }
 
         public Renderable widget() {
-            return pageWidget;
+            return pageWidget.get();
         }
 
         public Object instantiate() {
@@ -288,6 +289,14 @@ class PageBookImpl implements PageBook {
 
             //no redirects, render normally
             return null;  
+        }
+
+        public Class<?> pageClass() {
+            return clazz;
+        }
+
+        public void apply(Renderable widget) {
+            this.pageWidget.set(widget);
         }
     }
     

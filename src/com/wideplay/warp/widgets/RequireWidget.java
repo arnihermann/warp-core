@@ -1,7 +1,8 @@
 package com.wideplay.warp.widgets;
 
-import com.wideplay.warp.util.TextTools;
 import com.wideplay.warp.util.Token;
+import com.wideplay.warp.widgets.rendering.EvaluatorCompiler;
+import com.wideplay.warp.widgets.rendering.ExpressionCompileException;
 import com.wideplay.warp.widgets.rendering.SelfRendering;
 import net.jcip.annotations.Immutable;
 
@@ -15,21 +16,16 @@ import java.util.Set;
 @Immutable @SelfRendering
 class RequireWidget implements Renderable {
     private final List<Token> template;
-    private final Evaluator evaluator;
 
-    public RequireWidget(String xml, Evaluator evaluator) {
-        this.template = TextTools.tokenize(xml);
-        this.evaluator = evaluator;
+    public RequireWidget(String xml, EvaluatorCompiler compiler) throws ExpressionCompileException {
+        this.template = compiler.tokenizeAndCompile(xml);
     }
 
     public void render(Object bound, Respond respond) {
         //rebuild template from tokens
         StringBuilder builder = new StringBuilder();
         for (Token token : template) {
-            if (token.isExpression())
-                builder.append(evaluator.evaluate(token.getToken(), bound));
-            else
-                builder.append(token.getToken());
+                builder.append(token.render(bound));
         }
 
         //special method interns tokens

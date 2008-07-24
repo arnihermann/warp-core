@@ -136,7 +136,7 @@
             <fileset dir="${dir.distribute}" includes="*.jar" excludes="warp-widgets-src-*.jar"/>
             <fileset dir="${lib}">
                 <include name="warp-servlet-*.jar"/>
-                <include name="mvel.jar"/>
+                <include name="mvel-2.0-SNAPSHOT.jar"/>
                 <include name="asm.jar"/>
                 <include name="guice-*.jar"/>
             </fileset>

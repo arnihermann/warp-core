@@ -57,4 +57,5 @@ public class GenericInjectionSpike {
         //see what was injected...
         System.out.println("Injected: " + object);
     }
+
 }

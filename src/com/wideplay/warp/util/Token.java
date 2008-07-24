@@ -1,5 +1,9 @@
 package com.wideplay.warp.util;
 
+import com.wideplay.warp.widgets.Evaluator;
+import com.wideplay.warp.widgets.rendering.EvaluatorCompiler;
+import com.wideplay.warp.widgets.rendering.ExpressionCompileException;
+
 /**
  * Created with IntelliJ IDEA.
  * On: 20/03/2007
@@ -12,24 +16,31 @@ package com.wideplay.warp.util;
 public class Token {
     private final String token;
     private final boolean isExpression;
+    private final Evaluator evaluator;
 
     private Token(String token, boolean expression) {
         this.token = token;
+        this.evaluator = null;
         isExpression = expression;
     }
 
-    public String getToken() {
-        return token;
+    private Token(Evaluator evaluator, boolean expression) {
+        this.evaluator = evaluator;
+        isExpression = expression;
+        this.token = null;
     }
-
 
     public boolean isExpression() {
         return isExpression;
     }
 
-    static Token expression(String token) {
+    public Object render(Object bound) {
+        return isExpression ? evaluator.evaluate(null, bound) : token;
+    }
+
+    static Token expression(String token, EvaluatorCompiler compiler) throws ExpressionCompileException {
         //strip leading ${ and trailing }
-        return new Token(token.substring(2, token.length() - 1), true);
+        return new Token(compiler.compile(token.substring(2, token.length() - 1)), true);
     }
 
     static Token text(String token) {

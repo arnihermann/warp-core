@@ -10,6 +10,7 @@ import com.wideplay.warp.widgets.Show;
  */
 @At("/aPage") @Show("Wiki.html") @On("Accept")
 public class ContentNegotiationExample {
+    private int counter;
 
     @Get("text/plain") @Show("text.txt")    //Does not work yet!!!
     public void textPage() {
@@ -19,5 +20,9 @@ public class ContentNegotiationExample {
     @Get("text/html") @Show("text.html")    //Does not work yet!!!
     public void htmlPage() {
 
+    }
+
+    public int getCounter() {
+        return counter;
     }
 }

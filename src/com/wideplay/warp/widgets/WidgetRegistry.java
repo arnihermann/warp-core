@@ -3,10 +3,16 @@ package com.wideplay.warp.widgets;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
+import com.google.inject.util.ToStringBuilder;
+import com.wideplay.warp.util.TextTools;
+import com.wideplay.warp.widgets.rendering.EvaluatorCompiler;
+import com.wideplay.warp.widgets.rendering.ExpressionCompileException;
+import com.wideplay.warp.widgets.rendering.Repeat;
 import com.wideplay.warp.widgets.rendering.SelfRendering;
 import com.wideplay.warp.widgets.routing.PageBook;
 import net.jcip.annotations.ThreadSafe;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -25,6 +31,7 @@ class WidgetRegistry {
     private final Injector injector;
     private final Evaluator evaluator;
     private final PageBook pageBook;
+
     private final ConcurrentMap<String, WidgetWrapper> widgets = new ConcurrentHashMap<String, WidgetWrapper>();
 
     @Inject
@@ -39,15 +46,56 @@ class WidgetRegistry {
     }
 
     public boolean isSelfRendering(String widget) {
-        return widgets.get(widget).isSelfRendering();
+        WidgetWrapper wrapper = widgets.get(widget);
+
+        if (null == wrapper)
+            throw new NoSuchWidgetException("No widget found matching the name: @" + widget + " ; Did you forget to" +
+                    " annotate your widget class with @Embed?");
+        
+        return wrapper.isSelfRendering();
     }
 
-    public Renderable newWidget(String key, String expression, WidgetChain widgetChain) {
+    public Repeat parseRepeat(String expression) {
+        //parse and convert widget into metadata annotation
+        final Map<String, String> bindMap = TextTools.toBindMap(expression);
+
+        return new Repeat() {
+
+            public String items() {
+                return bindMap.get(Repeat.ITEMS);
+            }
+
+            public String var() {
+                return bindMap.get(Repeat.VAR);
+            }
+
+            public String pageVar() {
+                return bindMap.get(Repeat.PAGE_VAR);
+            }
+
+            public Class<? extends Annotation> annotationType() {
+                return Repeat.class;
+            }
+        };
+    }
+
+
+    public XmlWidget xmlWidget(WidgetChain childsChildren, String elementName, Map<String, String> attribs,
+                                EvaluatorCompiler compiler) throws ExpressionCompileException {
+
+        final XmlWidget widget = new XmlWidget(childsChildren, elementName, compiler, attribs);
+        injector.injectMembers(widget);
+
+        return widget;
+    }
+
+    public Renderable newWidget(String key, String expression, WidgetChain widgetChain, EvaluatorCompiler compiler)
+            throws ExpressionCompileException {
         if (!widgets.containsKey(key))
             throw new NoSuchWidgetException("No such widget registered (did you add it correctly in module setup?): " + key);
 
         if (TEXT_WIDGET.equals(key))
-            return new TextWidget(null, evaluator);
+            return new TextWidget(null, compiler);
 
         //otherwise construct via reflection (all widgets MUST have
         // a constructor with: widgetchain, expression, evaluator; in that order)
@@ -137,6 +185,15 @@ class WidgetRegistry {
 
         public boolean isSelfRendering() {
             return selfRendering;
+        }
+
+        @Override
+        public String toString() {
+            return new ToStringBuilder(WidgetWrapper.class)
+                    .add("key", key)
+                    .add("class", clazz)
+                    .add("kind", kind)
+                    .toString();
         }
 
         @SuppressWarnings({"InnerClassTooDeeplyNested"})

@@ -3,15 +3,15 @@ package com.wideplay.warp.widgets;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import static com.google.inject.matcher.Matchers.annotatedWith;
-import com.wideplay.warp.widgets.basic.CaseWidget;
-import com.wideplay.warp.widgets.rendering.CallWith;
-import com.wideplay.warp.widgets.rendering.EmbedAs;
+import com.wideplay.warp.util.Classes;
+import com.wideplay.warp.widgets.rendering.*;
 import com.wideplay.warp.widgets.resources.Assets;
 import com.wideplay.warp.widgets.resources.Export;
 import com.wideplay.warp.widgets.resources.ResourcesService;
 import com.wideplay.warp.widgets.routing.PageBook;
 
 import javax.servlet.ServletContext;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -20,7 +20,6 @@ import java.util.Set;
 class PageWidgetBuilder {
     private final PageBook pageBook;
     private final TemplateLoader loader;
-    private final XmlTemplateParser parser;
     private final Set<Package> packages;
     private final ResourcesService resourcesService;
     private final Provider<ServletContext> context;
@@ -28,7 +27,6 @@ class PageWidgetBuilder {
 
     @Inject
     PageWidgetBuilder(PageBook pageBook, TemplateLoader loader,
-                      XmlTemplateParser parser,
                       @Packages Set<Package> packages,
                       ResourcesService resourcesService,
                       Provider<ServletContext> servletContextProvider,
@@ -36,30 +34,30 @@ class PageWidgetBuilder {
 
         this.pageBook = pageBook;
         this.loader = loader;
-        this.parser = parser;
         this.packages = packages;
         this.resourcesService = resourcesService;
         this.context = servletContextProvider;
         this.registry = registry;
+
     }
 
     public void scan() {
-        //additional core widgets
-        embed("case", CaseWidget.class);
         
         for (Package pack : packages) {
 
             //list any classes annotated with @At, @EmbedAs and @Export
-            final Set<Class<?>> set = new ClassLister(context.get())
-                                        .list(pack,
-                                                annotatedWith(At.class)
+            final Set<Class<?>> set = Classes.matching(annotatedWith(At.class)
                                                 .or(annotatedWith(EmbedAs.class).or(annotatedWith(CallWith.class))
+                                                .or(annotatedWith(Embed.class)).or(annotatedWith(With.class))
                                                 .or(annotatedWith(Export.class))
                                                 .or(annotatedWith(Assets.class))
                                                         
-                                                ));
+                                                )).in(pack);
 
-            //we need to store the embeds first (do not collapse into the next loop)
+            //store a set of pages to compile
+            Set<PageBook.Page> pagesToCompile = new HashSet<PageBook.Page>();
+
+            //we need to store the pages first (do not collapse into the next loop)
             for (Class<?> page : set) {
                 if (page.isAnnotationPresent(EmbedAs.class)) {
                     final String embedAs = page.getAnnotation(EmbedAs.class).value();
@@ -69,18 +67,33 @@ class PageWidgetBuilder {
                         //noinspection unchecked
                         registry.add(embedAs, (Class<? extends Renderable>) page);
                     } else {
-                        embed(embedAs, page);
+                        pagesToCompile.add(embed(embedAs, page));
                     }
                 }
+
+                At at = page.getAnnotation(At.class);
+                if (null != at)
+                    pagesToCompile.add(pageBook.at(at.value(), page));
             }
+
+
+
+            //perform a compilation pass over all the pages and their templates
+            for (PageBook.Page toCompile : pagesToCompile) {
+                Class<?> page = toCompile.pageClass();
+
+                final Renderable widget = new XmlTemplateCompiler(page, new MvelEvaluatorCompiler(page),
+                        registry, pageBook)
+                        .parse(loader.load(page));
+
+                //apply the compiled widget chain to the page (completing compile step)
+                toCompile.apply(widget);
+            }
+
+
 
             //now iterate and build widgets and store them (or whatever)
             for (Class<?> page : set) {
-
-                if (page.isAnnotationPresent(At.class)) {
-                    final Renderable widget = parser.parse(loader.load(page));
-                    pageBook.at(page.getAnnotation(At.class).value(), widget, page);
-                }
 
                 if (page.isAnnotationPresent(Export.class)) {
                     resourcesService.add(page, page.getAnnotation(Export.class));
@@ -95,7 +108,7 @@ class PageWidgetBuilder {
 
     }
 
-    private void embed(String embedAs, Class<?> page) {
+    private PageBook.Page embed(String embedAs, Class<?> page) {
         //store custom page wrapped as an embed widget
         registry.add(embedAs, EmbedWidget.class);
 
@@ -104,7 +117,8 @@ class PageWidgetBuilder {
             for (String callWith : page.getAnnotation(CallWith.class).value())
                 registry.add(callWith, ArgumentWidget.class);
 
+
         //...add as an unbound (to URI) widget
-        pageBook.embedAs(parser.parse(loader.load(page)), page);
+        return pageBook.embedAs(page);
     }
 }

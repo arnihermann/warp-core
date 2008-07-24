@@ -1,7 +1,7 @@
 package com.wideplay.warp.widgets.rendering;
 
-import org.testng.annotations.Test;
 import com.wideplay.warp.widgets.Evaluator;
+import org.testng.annotations.Test;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail com)
@@ -11,7 +11,7 @@ public class EvaluatorCompilerTest {
 
     @Test
     public final void compileEvaluatorFromExpression() throws ExpressionCompileException {
-        Evaluator compiled = new EvaluatorCompiler<AType>(AType.class)
+        Evaluator compiled = new MvelEvaluatorCompiler(AType.class)
                                     .compile("name");
 
         //reading expression
@@ -22,7 +22,7 @@ public class EvaluatorCompilerTest {
 
     @Test
     public final void compileExpressionInvokingArbitraryMethod() throws ExpressionCompileException {
-        Evaluator compiled = new EvaluatorCompiler<AType>(AType.class)
+        Evaluator compiled = new MvelEvaluatorCompiler(AType.class)
                                     .compile("b.sigmatron('Hi')");
 
         //reading expression
@@ -32,7 +32,7 @@ public class EvaluatorCompilerTest {
 
     @Test
     public final void compileExpressionInvokingArbitraryMethodAndTestReturn() throws ExpressionCompileException {
-        Evaluator compiled = new EvaluatorCompiler<AType>(AType.class)
+        Evaluator compiled = new MvelEvaluatorCompiler(AType.class)
                                     .compile("b.sigmatron(null)");
 
         //reading expression
@@ -42,7 +42,7 @@ public class EvaluatorCompilerTest {
 
     @Test(expectedExceptions = ExpressionCompileException.class)
     public final void failCompileExpressionInvokingArbitraryMethodThruInterface() throws ExpressionCompileException {
-        Evaluator compiled = new EvaluatorCompiler<AType>(AType.class)
+        Evaluator compiled = new MvelEvaluatorCompiler(AType.class)
                                     .compile("b.bkind.sigmatron(null)");
 
         //reading expression
@@ -52,7 +52,7 @@ public class EvaluatorCompilerTest {
 
     @Test
     public final void compileExpressionInvokingArbitraryMethodThruInterface() throws ExpressionCompileException {
-        Evaluator compiled = new EvaluatorCompiler<AType>(AType.class)
+        Evaluator compiled = new MvelEvaluatorCompiler(AType.class)
                                     .compile("bkind.getDubdub()");
 
         //reading expression
@@ -63,7 +63,7 @@ public class EvaluatorCompilerTest {
 
     @Test
     public final void compileExpressionInvokingArbitraryMethodThruInterfaceAndRegular() throws ExpressionCompileException {
-        Evaluator compiled = new EvaluatorCompiler<AType>(AType.class)
+        Evaluator compiled = new MvelEvaluatorCompiler(AType.class)
                                     .compile("bkind.getDubdub() == b.dubdub");
 
         //reading expression
@@ -74,14 +74,14 @@ public class EvaluatorCompilerTest {
 
     @Test(expectedExceptions = ExpressionCompileException.class)
     public final void failCompileExpressionInvokingArbitraryMethodWithWrongArgs() throws ExpressionCompileException {
-        Evaluator compiled = new EvaluatorCompiler<AType>(AType.class)
+        Evaluator compiled = new MvelEvaluatorCompiler(AType.class)
                                     .compile("b.sigmatron()");
 
     }
 
     @Test(expectedExceptions = ExpressionCompileException.class)
     public final void failCompileDueToNameMismatch() throws ExpressionCompileException {
-        new EvaluatorCompiler<AType>(AType.class)
+        new MvelEvaluatorCompiler(AType.class)
                                     .compile("anythingaling");
 
 
@@ -89,28 +89,28 @@ public class EvaluatorCompilerTest {
 
     @Test(expectedExceptions = ExpressionCompileException.class)
     public final void failCompileDueToNameMismatchInDeeperObjectGraph() throws ExpressionCompileException {
-        new EvaluatorCompiler<AType>(AType.class)
+        new MvelEvaluatorCompiler(AType.class)
                                     .compile("name.anythingaling");
 
     }
 
     @Test(expectedExceptions = ExpressionCompileException.class)
     public final void failCompileDueToNameMismatchInDeeperObjectGraph2() throws ExpressionCompileException {
-        new EvaluatorCompiler<AType>(AType.class)
+        new MvelEvaluatorCompiler(AType.class)
                                     .compile("name.b.anythingaling");
 
     }
 
     @Test(expectedExceptions = ExpressionCompileException.class)
     public final void failCompileDueToMethodMismatchInDeeperObjectGraph() throws ExpressionCompileException {
-        new EvaluatorCompiler<AType>(AType.class)
+        new MvelEvaluatorCompiler(AType.class)
                                     .compile("b.a.b.name.substring(1)");
 
     }
 
     @Test
     public final void compileMethodMatchInDeeperObjectGraph() throws ExpressionCompileException {
-        assert A_NAME.substring(1).equals(new EvaluatorCompiler<AType>(AType.class)
+        assert A_NAME.substring(1).equals(new MvelEvaluatorCompiler(AType.class)
                                             .compile("b.aString.substring(1)")
                                             .evaluate(null, new AType(A_NAME)));
 
@@ -119,47 +119,47 @@ public class EvaluatorCompilerTest {
 
     @Test
     public final void compileExpressionIntegerTypeMatchInDeeperObjectGraph() throws ExpressionCompileException {
-        new EvaluatorCompiler<AType>(AType.class)
+        new MvelEvaluatorCompiler(AType.class)
                                     .compile("b.a.b.a.b.name / 44");
 
     }
 
     @Test
     public final void compileExpressionNumericTypeMatchInDeeperObjectGraph() throws ExpressionCompileException {
-        new EvaluatorCompiler<AType>(AType.class)
+        new MvelEvaluatorCompiler(AType.class)
                                     .compile("b.a.b.a.b.dubdub / new Double(44.0)");
 
     }
 
     @Test(expectedExceptions = ExpressionCompileException.class)
     public final void failCompileExpressionNumericTypeMismatchInDeeperObjectGraph() throws ExpressionCompileException {
-        new EvaluatorCompiler<AType>(AType.class)
+        new MvelEvaluatorCompiler(AType.class)
                                     .compile("b.a.b.a.b.name / new Double(44.0)");
 
     }
 
     @Test(expectedExceptions = ExpressionCompileException.class)
     public final void failCompileDueToPathMismatchInDeeperObjectGraph() throws ExpressionCompileException {
-        new EvaluatorCompiler<AType>(AType.class)
+        new MvelEvaluatorCompiler(AType.class)
                                     .compile("name.b.a.b.name + 2");
 
     }
 
     @Test(expectedExceptions = ExpressionCompileException.class)
     public final void failCompileDueToTypeMismatchInDeeperObjectGraph() throws ExpressionCompileException {
-        new EvaluatorCompiler<AType>(AType.class)
+        new MvelEvaluatorCompiler(AType.class)
                                     .compile("b.a.name - 2");
     }
 
     @Test
     public final void compileTypeMatchInDeeperObjectGraph() throws ExpressionCompileException {
-        new EvaluatorCompiler<AType>(AType.class)
+        new MvelEvaluatorCompiler(AType.class)
                                     .compile("b.name - 2");
     }
 
     @Test(expectedExceptions = ExpressionCompileException.class)
     public final void failCompileDueToTypeMismatch() throws ExpressionCompileException {
-        new EvaluatorCompiler<AType>(AType.class)
+        new MvelEvaluatorCompiler(AType.class)
                                     .compile("name - 2");
     }
 

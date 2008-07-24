@@ -1,5 +1,8 @@
 package com.wideplay.warp.widgets;
 
+import com.wideplay.warp.widgets.rendering.EvaluatorCompiler;
+import com.wideplay.warp.widgets.rendering.ExpressionCompileException;
+import com.wideplay.warp.widgets.rendering.MvelEvaluatorCompiler;
 import com.wideplay.warp.widgets.routing.PageBook;
 import static org.easymock.EasyMock.*;
 import org.testng.annotations.DataProvider;
@@ -88,7 +91,7 @@ public class EmbedWidgetTest {
     }
 
     @Test(dataProvider = PAGES_FOR_EMBEDDING)
-    public final void pageEmbeddingSupressesNormalWidgetChain(String pageName, final String passOn, final String expression) {
+    public final void pageEmbeddingSupressesNormalWidgetChain(String pageName, final String passOn, final String expression) throws ExpressionCompileException {
         //forName expects pageName to be in all-lower case (it's an optimization)
         pageName = pageName.toLowerCase();
 
@@ -119,7 +122,7 @@ public class EmbedWidgetTest {
         final WidgetChain targetWidgetChain = new WidgetChain();
 
         //noinspection unchecked
-        targetWidgetChain.addWidget(new XmlWidget(new TerminalWidgetChain(), "p", evaluator, Collections.EMPTY_MAP));
+        targetWidgetChain.addWidget(new XmlWidget(new TerminalWidgetChain(), "p", createMock(EvaluatorCompiler.class), Collections.EMPTY_MAP));
         widgetChain.addWidget(new ShowIfWidget(targetWidgetChain, "true", evaluator));
 
         new EmbedWidget(Collections.<String, ArgumentWidget>emptyMap(), expression, evaluator, pageBook, pageName)
@@ -138,7 +141,7 @@ public class EmbedWidgetTest {
 
 
     @Test(dataProvider = PAGES_FOR_EMBEDDING)
-    public final void pageEmbeddingChainsToEmbeddedWidget(String pageName, final String passOn, final String expression) {
+    public final void pageEmbeddingChainsToEmbeddedWidget(String pageName, final String passOn, final String expression) throws ExpressionCompileException {
 
         //forName expects pageName to be in all-lower case (it's an optimization)
         pageName = pageName.toLowerCase();
@@ -152,14 +155,16 @@ public class EmbedWidgetTest {
 
         final WidgetChain widget = new WidgetChain();
         final WidgetChain targetWidgetChain = new WidgetChain();
+
         //noinspection unchecked
-        targetWidgetChain.addWidget(new XmlWidget(new TerminalWidgetChain(), "p", evaluator, new LinkedHashMap<String, String>() {{
+        targetWidgetChain.addWidget(new XmlWidget(new TerminalWidgetChain(), "p", new MvelEvaluatorCompiler(Object.class), 
+                new LinkedHashMap<String, String>() {{
             put("class", "pretty");
             put("id", "a-p-tag");
         }}));
         widget.addWidget(new ShowIfWidget(targetWidgetChain, "true", evaluator));
 
-        Renderable bodyWrapper = new XmlWidget(widget, "body", evaluator, Collections.<String, String>emptyMap());
+        Renderable bodyWrapper = new XmlWidget(widget, "body", createMock(EvaluatorCompiler.class), Collections.<String, String>emptyMap());
 
         expect(pageBook.forName(pageName))
                 .andReturn(page);
@@ -193,7 +198,7 @@ public class EmbedWidgetTest {
 
 
     @Test(dataProvider = PAGES_FOR_EMBEDDING)
-    public final void pageEmbeddingChainsToEmbeddedWidgetWithArgs(String targetPageName, final String passOn, final String expression) {
+    public final void pageEmbeddingChainsToEmbeddedWidgetWithArgs(String targetPageName, final String passOn, final String expression) throws ExpressionCompileException {
 
         //forName expects pageName to be in all-lower case (it's an optimization)
         targetPageName = targetPageName.toLowerCase();
@@ -211,13 +216,13 @@ public class EmbedWidgetTest {
         targetWidgetChain.addWidget(new XmlWidget(new WidgetChain()
                 .addWidget(new IncludeWidget(new TerminalWidgetChain(), "'me'", evaluator)),
 
-                "p", evaluator, new LinkedHashMap<String, String>() {{
+                "p", new MvelEvaluatorCompiler(Object.class), new LinkedHashMap<String, String>() {{
             put("class", "pretty");
             put("id", "a-p-tag");
         }}));
         widget.addWidget(new ShowIfWidget(targetWidgetChain, "true", evaluator));
 
-        Renderable bodyWrapper = new XmlWidget(widget, "body", evaluator, Collections.<String, String>emptyMap());
+        Renderable bodyWrapper = new XmlWidget(widget, "body", createMock(EvaluatorCompiler.class), Collections.<String, String>emptyMap());
 
         expect(pageBook.forName(targetPageName))
                 .andReturn(page);
@@ -237,7 +242,7 @@ public class EmbedWidgetTest {
         final String includeExpr = "me";
 
         Map<String, ArgumentWidget> inners = new HashMap<String, ArgumentWidget>();
-        inners.put(includeExpr, new ArgumentWidget(new WidgetChain().addWidget(new TextWidget(HELLO_FROM_INCLUDE, evaluator)),
+        inners.put(includeExpr, new ArgumentWidget(new WidgetChain().addWidget(new TextWidget(HELLO_FROM_INCLUDE, new MvelEvaluatorCompiler(Object.class))),
                 includeExpr, evaluator));
 
 
@@ -260,7 +265,7 @@ public class EmbedWidgetTest {
 
 
     @Test(dataProvider = PAGES_FOR_EMBEDDING)
-    public final void pageEmbeddingChainsToEmbeddedWidgetBehavior(String pageName, final String passOn, final String expression) {
+    public final void pageEmbeddingChainsToEmbeddedWidgetBehavior(String pageName, final String passOn, final String expression) throws ExpressionCompileException {
 
         //forName expects pageName to be in all-lower case (it's an optimization)
         pageName = pageName.toLowerCase();
@@ -275,7 +280,7 @@ public class EmbedWidgetTest {
         final WidgetChain widget = new WidgetChain();
         final WidgetChain targetWidgetChain = new WidgetChain();
         //noinspection unchecked
-        targetWidgetChain.addWidget(new XmlWidget(new TerminalWidgetChain(), "p", evaluator, new LinkedHashMap<String, String>() {{
+        targetWidgetChain.addWidget(new XmlWidget(new TerminalWidgetChain(), "p", new MvelEvaluatorCompiler(Object.class), new LinkedHashMap<String, String>() {{
             put("class", "pretty");
             put("id", "a-p-tag");
         }}));

@@ -10,13 +10,13 @@ import java.util.Map;
  */
 @ImplementedBy(PageBookImpl.class)
 public interface PageBook {
-    void at(String uri, Renderable page, Class<?> myPageClass);
+    Page at(String uri, Class<?> myPageClass);
 
     Page get(String uri);
 
     Page forName(String name);
 
-    void embedAs(Renderable renderable, Class<?> page);
+    Page embedAs(Class<?> page);
 
     public static interface Page {
         Renderable widget();
@@ -26,5 +26,9 @@ public interface PageBook {
         Object doGet(Object page, String pathInfo, Map<String, String[]> params);
 
         Object doPost(Object page, String pathInfo, Map<String, String[]> params);
+
+        Class<?> pageClass();
+
+        void apply(Renderable widget);
     }
 }
