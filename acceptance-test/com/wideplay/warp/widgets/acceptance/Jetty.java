@@ -14,7 +14,7 @@ public class Jetty {
     }
 
     public static void main(String... args) throws Exception {
-        new Jetty(new WebAppContext("out/exploded/Warp-mvcWeb", "/warp")).run();
+        new Jetty(new WebAppContext("exploded", "/warp")).run();
     }
 
     private void run() throws Exception {
