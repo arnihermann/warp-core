@@ -318,7 +318,7 @@ class XmlTemplateCompiler {
                 if (null == pageBook.get(uri))
                     warnings.add(new EvaluatorCompiler.CompileErrorDetail(uriAttrib.asXML(),
                             new ErrorDetail(1, -1, true,
-                                    "No page registered at the linked URI: " + uri)));
+                                    "no page registered at the linked URI: " + uri)));
         }
     }
 
