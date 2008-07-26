@@ -68,7 +68,7 @@ public class RepeatWidgetTest {
         };
     }
 
-    @Test(dataProvider = EXPRS_AND_OBJECTS)
+//    @Test(dataProvider = EXPRS_AND_OBJECTS)
     public final void repeatNumberOfTimesWithVars(String expression, Object page, int should, final String exp) throws ExpressionCompileException {
         OptimizerFactory.setDefaultOptimizer(OptimizerFactory.SAFE_REFLECTIVE);
         final int[] times = new int[1];
