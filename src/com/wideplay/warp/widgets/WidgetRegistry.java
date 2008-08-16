@@ -59,6 +59,7 @@ class WidgetRegistry {
         //parse and convert widget into metadata annotation
         final Map<String, String> bindMap = TextTools.toBindMap(expression);
 
+        //noinspection OverlyComplexAnonymousInnerClass
         return new Repeat() {
 
             public String items() {
@@ -66,11 +67,13 @@ class WidgetRegistry {
             }
 
             public String var() {
-                return bindMap.get(Repeat.VAR);
+                return TextTools.stripQuotes(bindMap.get(Repeat.VAR));
             }
 
             public String pageVar() {
-                return bindMap.get(Repeat.PAGE_VAR);
+                final String pageVar = bindMap.get(Repeat.PAGE_VAR);
+
+                return null == pageVar ? Repeat.DEFAULT_PAGEVAR : pageVar;
             }
 
             public Class<? extends Annotation> annotationType() {

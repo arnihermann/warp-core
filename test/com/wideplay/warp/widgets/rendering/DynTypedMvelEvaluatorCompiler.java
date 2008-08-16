@@ -9,6 +9,7 @@ import org.mvel.MVEL;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -49,11 +50,15 @@ public class DynTypedMvelEvaluatorCompiler implements EvaluatorCompiler {
         };
     }
 
-    public Class<?> determineEgressType(String expression) throws ExpressionCompileException {
+    public Class<?> resolveCollectionTypeParameter(String expression) throws ExpressionCompileException {
         return Object.class;
     }
 
     public List<Token> tokenizeAndCompile(String template) throws ExpressionCompileException {
         return TextTools.tokenize(template, this);
+    }
+
+    public Class<?> resolveEgressType(String expression) throws ExpressionCompileException {
+        return Collection.class;
     }
 }

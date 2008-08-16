@@ -3,6 +3,9 @@ package com.wideplay.warp.widgets.rendering;
 import com.wideplay.warp.widgets.Evaluator;
 import org.testng.annotations.Test;
 
+import java.util.List;
+import java.util.Arrays;
+
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail com)
  */
@@ -46,7 +49,7 @@ public class EvaluatorCompilerTest {
                                     .compile("b.bkind.sigmatron(null)");
 
         //reading expression
-//        assert null == (compiled.evaluate(null, new AType(A_NAME)));
+        assert null == (compiled.evaluate(null, new AType(A_NAME)));
 
     }
 
@@ -153,14 +156,33 @@ public class EvaluatorCompilerTest {
 
     @Test
     public final void compileTypeMatchInDeeperObjectGraph() throws ExpressionCompileException {
-        new MvelEvaluatorCompiler(AType.class)
-                                    .compile("b.name - 2");
+        //should not throw exception
+        final MvelEvaluatorCompiler evaluatorCompiler = new MvelEvaluatorCompiler(AType.class);
+//        evaluatorCompiler.compile();
+
+        assert Integer.class.isAssignableFrom(evaluatorCompiler.resolveEgressType("b.name - 2"));
     }
 
     @Test(expectedExceptions = ExpressionCompileException.class)
     public final void failCompileDueToTypeMismatch() throws ExpressionCompileException {
         new MvelEvaluatorCompiler(AType.class)
                                     .compile("name - 2");
+    }
+
+    @Test
+    public final void determineEgressTypeParameter() throws ExpressionCompileException {
+        final Class<?> egressType = new MvelEvaluatorCompiler(AType.class)
+                .resolveCollectionTypeParameter("bs");
+        
+        assert BType.class.equals(egressType);
+    }
+
+    @Test
+    public final void determineEgressTypeParameterInExpressionChain() throws ExpressionCompileException {
+        final Class<?> egressType = new MvelEvaluatorCompiler(BType.class)
+                .resolveCollectionTypeParameter("a.bs");
+
+        assert BType.class.equals(egressType);
     }
 
     public static class AType {
@@ -182,6 +204,10 @@ public class EvaluatorCompilerTest {
 
         public BKind getBkind() {
             return bkind;
+        }
+
+        public List<BType> getBs() {
+            return Arrays.asList(new BType(1));
         }
     }
 

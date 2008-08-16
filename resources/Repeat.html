@@ -49,6 +49,19 @@ Released for free under a Creative Commons Attribution 2.5 License
                 </div>
 
 
+                <div class="entry">
+
+                    Repeat inside a repeat:
+
+                    <ul>
+                        @Repeat(items=movies, var="movie")
+                        <li> @Repeat(items=movie.actors, var="actor")<span>${actor} </span> </li>
+                    </ul>
+
+                    <br/><br/><br/>
+                </div>
+
+
                 <div class="meta">
                     <p class="byline">warp-widgets. Wideplay Interactive Group.</p>
                 </div>

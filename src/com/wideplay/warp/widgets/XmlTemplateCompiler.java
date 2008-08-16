@@ -11,6 +11,7 @@ import org.mvel.ErrorDetail;
 
 import java.io.StringReader;
 import java.util.*;
+import java.lang.reflect.TypeVariable;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
@@ -150,7 +151,7 @@ class XmlTemplateCompiler {
             //setup a new lexical scope if necessary (symbol table changes on each lexical closure encountered)
             final String name = keyAndContent[0];
             if (REPEAT_WIDGET.equalsIgnoreCase(name) || CHOOSE_WIDGET.equalsIgnoreCase(name)) {
-                lexicalScopes.push(new DynTypedMvelEvaluatorCompiler(parseRepeatScope(keyAndContent)));
+                lexicalScopes.push(new MvelEvaluatorCompiler(parseRepeatScope(keyAndContent)));
                 return true;
             }
 
@@ -236,21 +237,42 @@ class XmlTemplateCompiler {
         Repeat repeat = registry.parseRepeat(extract[1]);
         Map<String, Class<?>> context = new HashMap<String, Class<?>>();
 
-        try {
-            Class<?> egressType = lexicalScopes.peek().determineEgressType(repeat.items());
-//            if (Collection.class.isAssignableFrom(egressType)) {
-//
-//                determine collection parameter type
-//                TypeVariable<? extends Class<?>> typeVariable = egressType.getTypeParameters()[0];
-//            }
-            //else, add a compile error 
+        //verify that repeat was parsed properly
+        if (null == repeat.var()) {
+            errors.add(new EvaluatorCompiler.CompileErrorDetail(extract[1],
+                        new ErrorDetail("missing 'var' attribute on @Repeat widget declaration", true))
+                );
+        }
+        if (null == repeat.items()) {
+            errors.add(new EvaluatorCompiler.CompileErrorDetail(extract[1],
+                        new ErrorDetail("missing 'items' attribute on @Repeat widget declaration", true))
+                );
+        }
 
-//            context.put(repeat.var(), typeVariable);
+        try {
+            Class<?> egressType = lexicalScopes.peek().resolveEgressType(repeat.items());
+
+            Class<?> typeParameter = null;
+            if (Collection.class.isAssignableFrom(egressType)) {
+
+                //determine collection parameter type
+                typeParameter = lexicalScopes.peek().resolveCollectionTypeParameter(repeat.items());
+
+            } else {
+                errors.add(new EvaluatorCompiler.CompileErrorDetail(extract[1],
+                        new ErrorDetail("cannot repeat over non-Collections. Please ensure 'items' " +
+                                "is a subtype of java.util.Collection", true))
+                );
+            }
+
+
+            context.put(repeat.var(), typeParameter);
             context.put(repeat.pageVar(), page);
 
         } catch (ExpressionCompileException e) {
             errors.add(e.getError());
         }
+
         return context;
     }
 

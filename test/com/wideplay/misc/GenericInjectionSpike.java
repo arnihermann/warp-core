@@ -55,7 +55,7 @@ public class GenericInjectionSpike {
         assert numbers.equals(object.numberWrap.anotherGenericInjectee.getTs());
 
         //see what was injected...
-        System.out.println("Injected: " + object);
+//        System.out.println("Injected: " + object);
     }
 
 }

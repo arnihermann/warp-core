@@ -16,9 +16,10 @@ import org.mvel.util.ASTIterator;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.lang.reflect.ParameterizedType;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail com)
@@ -41,21 +42,25 @@ public class MvelEvaluatorCompiler implements EvaluatorCompiler {
 
     }
 
-    public Class<?> determineEgressType(String expression) throws ExpressionCompileException {
-        CompiledExpression compiledExpression = compileExpression(expression);
+    //memo field caches compiled expressions
+    private final Map<String, CompiledExpression> compiled = new HashMap<String, CompiledExpression>();
 
-        ASTIterator astIterator = compiledExpression.getTokenIterator();
-        while(astIterator.hasMoreNodes()) {
-            ASTNode astNode = astIterator.nextNode();
 
-            //look inside our own parsing context
-        }
+    public Class<?> resolveEgressType(String expression) throws ExpressionCompileException {
+        return compileExpression(expression).getKnownEgressType();
+    }
 
-        return compiledExpression.getKnownEgressType();
+    public Class<?> resolveCollectionTypeParameter(String expression) throws ExpressionCompileException {
+
+        //TODO unsafe, this assumes no nested generic type param?
+        return (Class<?>) compileExpression(expression)
+                .getParserContext()
+                .getLastTypeParameters()[0];
     }
 
     public Evaluator compile(String expression) throws ExpressionCompileException {
 
+        //do *not* inline
         final CompiledExpression compiled = compileExpression(expression);
 
         return new Evaluator() {
@@ -76,20 +81,31 @@ public class MvelEvaluatorCompiler implements EvaluatorCompiler {
     }
 
     private CompiledExpression compileExpression(String expression) throws ExpressionCompileException {
-        final ExpressionCompiler compiler = new ExpressionCompiler(expression);
+        final CompiledExpression compiledExpression = compiled.get(expression);
+
+        //use cached copy
+        if (null != compiledExpression)
+            return compiledExpression;
+
+        //otherwise compile expression and cache
+        final ExpressionCompiler compiler = new ExpressionCompiler(expression, (null != backingType)
+                    ? singleBackingTypeParserContext() : backingMapParserContext());
 
         CompiledExpression tempCompiled;
         try {
-            tempCompiled = compiler.compile((null != backingType)
-                    ? singleBackingTypeParserContext() : backingMapParserContext());
+            tempCompiled = compiler.compile();
 
         } catch (CompileException ce) {
             throw new ExpressionCompileException(expression, ce.getErrors());
         }
+
+        //store in memo cache
+        compiled.put(expression, tempCompiled);
+
         return tempCompiled;
     }
 
-    @SuppressWarnings("unchecked")
+
     private ParserContext backingMapParserContext() {
         ParserContext context = new ParserContext();
         context.setStrongTyping(true);
@@ -116,12 +132,29 @@ public class MvelEvaluatorCompiler implements EvaluatorCompiler {
             throw new ExpressionCompileException("Could not read class " + backingType);
         }
 
+
+        //read javabean properties
         for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
             //skip getClass()
             if (CLASS.equals(propertyDescriptor.getName()))
                 continue;
 
-            context.addInput(propertyDescriptor.getName(), propertyDescriptor.getPropertyType());
+            //if this is a collection, determine its parametric type
+            if (Collection.class.isAssignableFrom(propertyDescriptor.getPropertyType())) {
+                final ParameterizedType returnType = (ParameterizedType) propertyDescriptor
+                        .getReadMethod()
+                        .getGenericReturnType();
+
+                //box actual parametric type arguments into a Class<?> array
+                List<Class<?>> typeParameters = new ArrayList<Class<?>>(1);
+                typeParameters.add((Class<?>) returnType.getActualTypeArguments()[0]);
+
+                //TODO unsafe if parametric type is a nested generic?
+                context.addInput(propertyDescriptor.getName(), propertyDescriptor.getPropertyType(),
+                        typeParameters.toArray(new Class[1]));
+
+            } else
+                context.addInput(propertyDescriptor.getName(), propertyDescriptor.getPropertyType());
         }
 
         return context;
