@@ -4,11 +4,10 @@
     <facet type="web" name="warp">
       <configuration>
         <descriptors>
-          <deploymentDescriptor name="web.xml" url="file://$MODULE_DIR$/WEB-INF/web.xml" optional="false" version="2.5" />
+          <deploymentDescriptor name="web.xml" url="file://$MODULE_DIR$/resources/WEB-INF/web.xml" optional="false" version="2.5" />
         </descriptors>
         <webroots>
           <root url="file://$MODULE_DIR$/resources" relative="/" />
-          <root url="file://$MODULE_DIR$/WEB-INF" relative="/WEB-INF" />
         </webroots>
         <sourceRoots>
           <root url="file://$MODULE_DIR$/src" />
@@ -159,7 +158,9 @@
           <root url="jar://$MODULE_DIR$/lib/guice-1.0.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/../google-guice/src" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">

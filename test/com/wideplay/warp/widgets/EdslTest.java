@@ -14,8 +14,11 @@ public class EdslTest {
 
     @Test
     public final void edsl() {
-        Package aPackage = Package.getPackage("com.wideplay.warp.widgets.example");
-        Package anotherPackage = Package.getPackage("com.wideplay.warp.widgets.example");
+        Package aPackage = com.wideplay.warp.widgets.example.WidgetStartup.class.getPackage();
+        Package anotherPackage = com.wideplay.warp.widgets.example.WidgetStartup.class.getPackage();
+
+        assert null != aPackage;
+        assert null != anotherPackage;
 
         final Module module = Widgets.configure()
                 .with(aPackage)

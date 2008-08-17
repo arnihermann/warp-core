@@ -1,7 +1,9 @@
 package com.wideplay.warp.widgets;
 
-import com.google.inject.Inject;
-import com.wideplay.warp.widgets.rendering.*;
+import com.wideplay.warp.widgets.rendering.EvaluatorCompiler;
+import com.wideplay.warp.widgets.rendering.ExpressionCompileException;
+import com.wideplay.warp.widgets.rendering.MvelEvaluatorCompiler;
+import com.wideplay.warp.widgets.rendering.Repeat;
 import com.wideplay.warp.widgets.routing.PageBook;
 import net.jcip.annotations.NotThreadSafe;
 import org.dom4j.*;
@@ -11,7 +13,6 @@ import org.mvel.ErrorDetail;
 
 import java.io.StringReader;
 import java.util.*;
-import java.lang.reflect.TypeVariable;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
@@ -36,7 +37,7 @@ class XmlTemplateCompiler {
     private static final String CHOOSE_WIDGET = "choose";
 
 
-    @Inject
+//    @Inject
     public XmlTemplateCompiler(Class<?> page, EvaluatorCompiler compiler, WidgetRegistry registry, PageBook pageBook) {
         this.page = page;
         this.registry = registry;

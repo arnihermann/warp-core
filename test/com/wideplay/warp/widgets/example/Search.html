@@ -25,11 +25,11 @@
 
         @ShowIf(visible)
         <span>
-            @Repeat(items=${movies}, var="movie", pageVar="page")
+            @Repeat(items=movies, var="movie", pageVar="page")
             <p>${movie.movieName}, released on
 
                 @ShowIf(movie.name.matches("Under Siege"))
-                <b>${page.format(movie.releasedOn)}</b>
+                <b>movie.releasedOn</b>
             </p>
         </span>
     </p>

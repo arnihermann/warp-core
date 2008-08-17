@@ -92,8 +92,9 @@ class TemplateCompileException extends RuntimeException {
         }
 
         //should never happen
-        throw new AssertionError("Expression compiler error reported in a template that didn't contain the expression! "
-                + expression);
+        return new ErrorLocationTuple(0, 0, "there was a problem computing error location");
+//        throw new AssertionError("Expression compiler error reported in a template that didn't contain the expression! "
+//                + expression);
     }
 
     private static class ErrorLocationTuple {

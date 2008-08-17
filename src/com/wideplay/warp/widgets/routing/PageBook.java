@@ -1,6 +1,10 @@
 package com.wideplay.warp.widgets.routing;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.ImplementedBy;
+import com.google.inject.Module;
+import com.google.inject.Stage;
+import com.wideplay.warp.widgets.Debug;
 import com.wideplay.warp.widgets.Renderable;
 
 import java.util.Map;
@@ -31,4 +35,24 @@ public interface PageBook {
 
         void apply(Renderable widget);
     }
+
+    public static final class Routing {
+        private Routing() {}
+        
+        public static Module module() {
+
+            //noinspection InnerClassTooDeeplyNested
+            return new AbstractModule() {
+
+                @Override
+                protected void configure() {
+                    if (Stage.DEVELOPMENT.equals(binder().currentStage()))
+                        bind(PageBook.class).annotatedWith(Debug.class).to(PageBookImpl.class);
+//                    else
+//                        bind(PageBook.class).to(PageBookImpl.class);
+                }
+            };
+        }
+    }
+
 }

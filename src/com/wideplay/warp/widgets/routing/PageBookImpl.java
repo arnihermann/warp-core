@@ -35,7 +35,7 @@ class PageBookImpl implements PageBook {
     private final Object lock = new Object();
 
     @Inject
-    PageBookImpl(Injector injector) {
+    public PageBookImpl(Injector injector) {
         this.injector = injector;
     }
 
@@ -193,24 +193,24 @@ class PageBookImpl implements PageBook {
             final Map<String, MethodTuple> map = new HashMap<String, MethodTuple>();
 
             //first search class's methods only
-            final Class<Post> get = Post.class;
+            final Class<Post> post = Post.class;
             for (Method method : clazz.getDeclaredMethods()) {
-                if (method.isAnnotationPresent(get)) {
+                if (method.isAnnotationPresent(post)) {
                     if (!method.isAccessible())
                         method.setAccessible(true); //ugh
 
                     //remember default value is empty string
-                    map.put(method.getAnnotation(get).value(), new MethodTuple(method));
+                    map.put(method.getAnnotation(post).value(), new MethodTuple(method));
                 }
             }
 
             for (Method method : clazz.getMethods()) {
-                if (method.isAnnotationPresent(get)) {
+                if (method.isAnnotationPresent(post)) {
                     if (!method.isAccessible())
                         method.setAccessible(true); //ugh
 
                     //remember default value is empty string
-                    map.put(method.getAnnotation(get).value(), new MethodTuple(method));
+                    map.put(method.getAnnotation(post).value(), new MethodTuple(method));
                 }
             }
 

@@ -2,9 +2,11 @@ package com.wideplay.warp.widgets;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
+import com.google.inject.Stage;
 import com.google.inject.TypeLiteral;
 import com.wideplay.warp.servlet.Servlets;
 import com.wideplay.warp.widgets.core.CaseWidget;
+import com.wideplay.warp.widgets.routing.PageBook;
 
 import java.util.*;
 
@@ -40,7 +42,14 @@ public final class Widgets {
                                 .annotatedWith(Packages.class)
                                 .toInstance(Collections.unmodifiableSet(new LinkedHashSet<Package>(packages)));
 
-                        bind(ContextInitializer.class);
+                        //initialize startup services and routing modules
+                        bind(ContextInitializer.class).asEagerSingleton();
+                        install(PageBook.Routing.module());
+
+
+                        //development mode services
+                        if (Stage.DEVELOPMENT.equals(binder().currentStage()))
+                            bind(PageBook.class).to(DebugModePageBook.class);
 
                         Servlets.bindScopes(binder());
                     }
@@ -48,6 +57,7 @@ public final class Widgets {
             }
         };
     }
+
 
     public static interface PackageAddingBuilder {
 

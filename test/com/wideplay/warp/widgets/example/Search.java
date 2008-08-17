@@ -23,6 +23,9 @@ public class Search {   //defaults to @Show("Search.xhtml"), or @Show("Search.ht
 
 
     public static class Movie {
+        public String getMovieName() {
+            return "thing";
+        }
 
     }
 
