@@ -187,6 +187,7 @@ public class TextTools {
                 && (template.endsWith(".html") || template.endsWith(".xhtml"));
     }
 
+    //dont pass null or empty string or 1 char
     public static String stripQuotes(String var) {
         return var.substring(1, var.length() - 1);
     }

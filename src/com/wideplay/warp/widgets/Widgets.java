@@ -4,7 +4,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
 import com.wideplay.warp.servlet.Servlets;
-import com.wideplay.warp.widgets.basic.CaseWidget;
+import com.wideplay.warp.widgets.core.CaseWidget;
 
 import java.util.*;
 
@@ -32,7 +32,7 @@ public final class Widgets {
 
                     @Override
                     protected void configure() {
-                        //insert basic widgets set
+                        //insert core widgets set
                         packages.add(0, CaseWidget.class.getPackage());
 
                         //noinspection InnerClassTooDeeplyNested

@@ -1,4 +1,4 @@
-package com.wideplay.warp.widgets.basic;
+package com.wideplay.warp.widgets.core;
 
 import com.wideplay.warp.widgets.rendering.CallWith;
 import com.wideplay.warp.widgets.rendering.EmbedAs;
