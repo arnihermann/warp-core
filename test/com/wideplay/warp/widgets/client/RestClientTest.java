@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public class RestClientTest {
 
-    @Test
+//    @Test
     public final void edslForRequests() {
         WebResponse response = new WebClientImpl<Object>()
 

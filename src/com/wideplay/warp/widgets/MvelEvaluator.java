@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentMap;
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
 @ThreadSafe
-public class MvelEvaluator implements Evaluator {
+class MvelEvaluator implements Evaluator {
 
     //lets do some caching of expressions to see if we cant go a bit faster
     private final ConcurrentMap<String, Serializable> compiledExpressions =
