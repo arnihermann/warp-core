@@ -2,9 +2,9 @@ package com.wideplay.warp.widgets;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.wideplay.warp.util.TextTools;
 import com.wideplay.warp.widgets.binding.FlashCache;
 import com.wideplay.warp.widgets.rendering.SelfRendering;
+import com.wideplay.warp.widgets.rendering.TextTools;
 import net.jcip.annotations.Immutable;
 
 import java.util.Collection;

@@ -1,4 +1,4 @@
-package com.wideplay.warp.util;
+package com.wideplay.warp.widgets;
 
 
 /**
@@ -6,7 +6,7 @@ package com.wideplay.warp.util;
  *
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
-public final class PackageScanFailedException extends RuntimeException {
+class PackageScanFailedException extends RuntimeException {
     public PackageScanFailedException(String s, Exception e) {
         super(s, e);
     }

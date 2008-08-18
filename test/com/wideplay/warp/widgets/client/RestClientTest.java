@@ -1,7 +1,5 @@
 package com.wideplay.warp.widgets.client;
 
-import org.testng.annotations.Test;
-
 import java.util.HashMap;
 import java.util.Map;
 

@@ -1,6 +1,5 @@
 package com.wideplay.warp.widgets.rendering;
 
-import com.wideplay.warp.util.Token;
 import com.wideplay.warp.widgets.Evaluator;
 import org.mvel.ErrorDetail;
 

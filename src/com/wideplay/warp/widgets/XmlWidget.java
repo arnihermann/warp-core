@@ -2,11 +2,7 @@ package com.wideplay.warp.widgets;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.wideplay.warp.util.Token;
-import com.wideplay.warp.widgets.rendering.Attributes;
-import com.wideplay.warp.widgets.rendering.EvaluatorCompiler;
-import com.wideplay.warp.widgets.rendering.ExpressionCompileException;
-import com.wideplay.warp.widgets.rendering.SelfRendering;
+import com.wideplay.warp.widgets.rendering.*;
 import net.jcip.annotations.ThreadSafe;
 
 import javax.servlet.http.HttpServletRequest;

@@ -1,25 +1,19 @@
 package com.wideplay.warp.widgets.rendering;
 
-import com.wideplay.warp.util.TextTools;
-import com.wideplay.warp.util.Token;
 import com.wideplay.warp.widgets.Evaluator;
 import net.jcip.annotations.Immutable;
 import org.jetbrains.annotations.Nullable;
 import org.mvel.CompileException;
 import org.mvel.MVEL;
 import org.mvel.ParserContext;
-import org.mvel.ast.ASTNode;
 import org.mvel.compiler.CompiledExpression;
 import org.mvel.compiler.ExpressionCompiler;
-import org.mvel.util.ASTIterator;
 
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.util.*;
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.lang.reflect.ParameterizedType;
+import java.util.*;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail com)

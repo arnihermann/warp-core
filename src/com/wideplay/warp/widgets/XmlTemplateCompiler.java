@@ -37,7 +37,6 @@ class XmlTemplateCompiler {
     private static final String CHOOSE_WIDGET = "choose";
 
 
-//    @Inject
     public XmlTemplateCompiler(Class<?> page, EvaluatorCompiler compiler, WidgetRegistry registry, PageBook pageBook) {
         this.page = page;
         this.registry = registry;
@@ -46,7 +45,7 @@ class XmlTemplateCompiler {
         this.lexicalScopes.push(compiler);
     }
 
-    public Renderable parse(String template) {
+    public Renderable compile(String template) {
         WidgetChain widgetChain;
         try {
             final SAXReader reader = new SAXReader();

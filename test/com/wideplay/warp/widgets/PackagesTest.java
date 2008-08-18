@@ -1,9 +1,6 @@
-package com.wideplay.warp.util;
+package com.wideplay.warp.widgets;
 
 import static com.google.inject.matcher.Matchers.any;
-import com.wideplay.warp.widgets.Evaluator;
-import com.wideplay.warp.widgets.SwitchKind;
-import com.wideplay.warp.widgets.Widgets;
 import com.wideplay.warp.widgets.binding.RequestBinder;
 import com.wideplay.warp.widgets.rendering.EvaluatorCompiler;
 import com.wideplay.warp.widgets.resources.ResourcesService;

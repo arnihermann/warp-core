@@ -62,7 +62,7 @@ public class XmlTemplateCompilerTest {
         final MvelEvaluatorCompiler compiler = new MvelEvaluatorCompiler(TestBackingType.class);
         Renderable widget =
                 new XmlTemplateCompiler(Object.class, compiler, registry, pageBook)
-                    .parse("<xml>@ShowIf(true)<p>hello</p></xml>");
+                    .compile("<xml>@ShowIf(true)<p>hello</p></xml>");
 
         assert null != widget : " null ";
 
@@ -116,7 +116,7 @@ public class XmlTemplateCompilerTest {
 
         Renderable widget =
                 new XmlTemplateCompiler(Object.class, new MvelEvaluatorCompiler(Object.class), registry, pageBook)
-                    .parse(String.format("<xml>@ShowIf(%s)<p>hello</p></xml>", expression));
+                    .compile(String.format("<xml>@ShowIf(%s)<p>hello</p></xml>", expression));
 
         assert null != widget : " null ";
 
@@ -163,7 +163,7 @@ public class XmlTemplateCompilerTest {
 
         Renderable widget =
                 new XmlTemplateCompiler(Object.class, new MvelEvaluatorCompiler(Object.class), registry, pageBook)
-                    .parse("<xml>@ShowIf(false)<p>hello</p></xml>");
+                    .compile("<xml>@ShowIf(false)<p>hello</p></xml>");
 
         assert null != widget : " null ";
 
@@ -207,7 +207,7 @@ public class XmlTemplateCompilerTest {
 
         Renderable widget =
                 new XmlTemplateCompiler(Object.class, new MvelEvaluatorCompiler(TestBackingType.class), registry, pageBook)
-                    .parse("<xml><div class='${clazz}'>hello <a href='/people/${id}'>${name}</a></div></xml>");
+                    .compile("<xml><div class='${clazz}'>hello <a href='/people/${id}'>${name}</a></div></xml>");
 
         assert null != widget : " null ";
 
@@ -280,7 +280,7 @@ public class XmlTemplateCompilerTest {
 
         Renderable widget =
                 new XmlTemplateCompiler(Object.class, new MvelEvaluatorCompiler(TestBackingType.class), registry, pageBook)
-                    .parse("<html>@Meta <head>" +
+                    .compile("<html>@Meta <head>" +
                             "   @Require <script type='text/javascript' src='my.js'> </script>" +
                             "   @Require <script type='text/javascript' src='my.js'> </script>" +
                             "</head>" +
@@ -312,7 +312,7 @@ public class XmlTemplateCompilerTest {
 
         Renderable widget =
                 new XmlTemplateCompiler(Object.class, new MvelEvaluatorCompiler(TestBackingType.class), registry, pageBook)
-                    .parse("<xml><div class='${clazz}'>hello</div></xml>");
+                    .compile("<xml><div class='${clazz}'>hello</div></xml>");
 
         assert null != widget : " null ";
 
@@ -351,7 +351,7 @@ public class XmlTemplateCompilerTest {
 
         Renderable widget =
                 new XmlTemplateCompiler(Object.class, new MvelEvaluatorCompiler(TestBackingType.class), registry, pageBook)
-                    .parse("<xml><div class='${clazz}'>hello @ShowIf(false)<a href='/hi/${id}'>hideme</a></div></xml>");
+                    .compile("<xml><div class='${clazz}'>hello @ShowIf(false)<a href='/hi/${id}'>hideme</a></div></xml>");
 
         assert null != widget : " null ";
 
@@ -411,7 +411,7 @@ public class XmlTemplateCompilerTest {
 
         Renderable widget =
                 new XmlTemplateCompiler(Object.class, new MvelEvaluatorCompiler(TestBackingType.class), registry, book)
-                    .parse("<xml><div class='content'>hello @MyFave(should=false)<a href='/hi/${id}'>hideme</a></div></xml>");
+                    .compile("<xml><div class='content'>hello @MyFave(should=false)<a href='/hi/${id}'>hideme</a></div></xml>");
 
         assert null != widget : " null ";
 
@@ -443,7 +443,7 @@ public class XmlTemplateCompilerTest {
 
         Renderable widget =
                 new XmlTemplateCompiler(Object.class, new MvelEvaluatorCompiler(TestBackingType.class), registry, pageBook)
-                    .parse("<xml><div class='content'>hello @MyFave(should=false)<a href='/hi/${id}'>hideme</a></div></xml>");
+                    .compile("<xml><div class='content'>hello @MyFave(should=false)<a href='/hi/${id}'>hideme</a></div></xml>");
 
         assert null != widget : " null ";
 
@@ -478,7 +478,7 @@ public class XmlTemplateCompilerTest {
         final MvelEvaluatorCompiler compiler = new MvelEvaluatorCompiler(TestBackingType.class);
         Renderable widget =
                 new XmlTemplateCompiler(Object.class, compiler, registry, book)
-                    .parse("<xml><div class='content'>hello @MyFave(should=true)<a href='/hi/${id}'> @With(\"me\")<p>showme</p></a></div></xml>");
+                    .compile("<xml><div class='content'>hello @MyFave(should=true)<a href='/hi/${id}'> @With(\"me\")<p>showme</p></a></div></xml>");
 
         assert null != widget : " null ";
 

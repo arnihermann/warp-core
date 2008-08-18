@@ -1,19 +1,14 @@
 package com.wideplay.warp.widgets.rendering;
 
-import org.testng.annotations.Test;
-import org.mvel.ParserContext;
 import org.mvel.MVEL;
-import org.mvel.compiler.ExpressionCompiler;
+import org.mvel.ParserContext;
 import org.mvel.compiler.CompiledExpression;
+import org.mvel.compiler.ExpressionCompiler;
+import org.testng.annotations.Test;
 
-import java.util.List;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.ArrayList;
 import java.lang.reflect.Type;
-
-import com.google.inject.Module;
-import com.google.inject.AbstractModule;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail com)

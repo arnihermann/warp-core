@@ -3,7 +3,6 @@ package com.wideplay.warp.widgets;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import static com.google.inject.matcher.Matchers.annotatedWith;
-import com.wideplay.warp.util.Classes;
 import com.wideplay.warp.widgets.rendering.*;
 import com.wideplay.warp.widgets.resources.Assets;
 import com.wideplay.warp.widgets.resources.Export;
@@ -84,7 +83,7 @@ class PageWidgetBuilder {
 
                 final Renderable widget = new XmlTemplateCompiler(page, new MvelEvaluatorCompiler(page),
                         registry, pageBook)
-                        .parse(loader.load(page));
+                        .compile(loader.load(page));
 
                 //apply the compiled widget chain to the page (completing compile step)
                 toCompile.apply(widget);

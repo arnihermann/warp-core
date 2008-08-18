@@ -1,9 +1,9 @@
 package com.wideplay.warp.widgets;
 
-import com.wideplay.warp.util.Token;
 import com.wideplay.warp.widgets.rendering.EvaluatorCompiler;
 import com.wideplay.warp.widgets.rendering.ExpressionCompileException;
 import com.wideplay.warp.widgets.rendering.SelfRendering;
+import com.wideplay.warp.widgets.rendering.Token;
 import net.jcip.annotations.Immutable;
 
 import java.util.Collections;

@@ -3,7 +3,7 @@ package com.wideplay.warp.widgets.binding;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import com.wideplay.warp.util.TextTools;
+import com.wideplay.warp.util.Strings;
 import com.wideplay.warp.widgets.Evaluator;
 import net.jcip.annotations.Immutable;
 import org.mvel.PropertyAccessException;
@@ -81,7 +81,7 @@ class MvelRequestBinder implements RequestBinder {
 
     private void validate(String binding) {
         //guard against expression-injection attacks
-        if (TextTools.isEmptyString(binding)
+        if (Strings.empty(binding)
                     || !binding.matches(VALID_BINDING_REGEX))
             throw new InvalidBindingException("Binding expression (request/form parameter) contained invalid characters: " + binding);
     }

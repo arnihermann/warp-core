@@ -7,10 +7,11 @@ import java.lang.annotation.Target;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
+ *
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-@Deprecated
+//@Deprecated
 public @interface CallWith {
     String[] value();
 }

@@ -1,22 +1,20 @@
 package com.wideplay.warp.widgets.rendering;
 
-import com.wideplay.warp.util.TextTools;
-import com.wideplay.warp.util.Token;
 import com.wideplay.warp.widgets.Evaluator;
 import org.jetbrains.annotations.Nullable;
 import org.mvel.MVEL;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 
 /**
- * TODO Temporary class to enable dynamic typing for collection projections (since we don't have
- * TODO a good mechanism in MVEL to reflect on parametric types yet)
+ * Temporary class to enable dynamic typing for collection projections (since we don't have
+ * a good mechanism in MVEL to reflect on parametric types yet)
  *
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */

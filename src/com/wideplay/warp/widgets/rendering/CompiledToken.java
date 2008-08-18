@@ -1,30 +1,31 @@
-package com.wideplay.warp.util;
+package com.wideplay.warp.widgets.rendering;
 
 import com.wideplay.warp.widgets.Evaluator;
-import com.wideplay.warp.widgets.rendering.EvaluatorCompiler;
-import com.wideplay.warp.widgets.rendering.ExpressionCompileException;
+import net.jcip.annotations.Immutable;
 
 /**
  * Created with IntelliJ IDEA.
  * On: 20/03/2007
  *
- * A simple wrapper around a string denoting it as an token.
+ * A simple wrapper around a string or expression (with evaluator), denoting it as a
+ *  renderable token.
  *
  * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
-public class Token {
+@Immutable
+class CompiledToken implements Token {
     private final String token;
     private final boolean isExpression;
     private final Evaluator evaluator;
 
-    private Token(String token, boolean expression) {
+    private CompiledToken(String token, boolean expression) {
         this.token = token;
         this.evaluator = null;
         isExpression = expression;
     }
 
-    private Token(Evaluator evaluator, boolean expression) {
+    private CompiledToken(Evaluator evaluator, boolean expression) {
         this.evaluator = evaluator;
         isExpression = expression;
         this.token = null;
@@ -38,12 +39,13 @@ public class Token {
         return isExpression ? evaluator.evaluate(null, bound) : token;
     }
 
-    static Token expression(String token, EvaluatorCompiler compiler) throws ExpressionCompileException {
+    //local factories
+    static CompiledToken expression(String token, EvaluatorCompiler compiler) throws ExpressionCompileException {
         //strip leading ${ and trailing }
-        return new Token(compiler.compile(token.substring(2, token.length() - 1)), true);
+        return new CompiledToken(compiler.compile(token.substring(2, token.length() - 1)), true);
     }
 
-    static Token text(String token) {
-        return new Token(token, false);
+    static CompiledToken text(String token) {
+        return new CompiledToken(token, false);
     }
 }

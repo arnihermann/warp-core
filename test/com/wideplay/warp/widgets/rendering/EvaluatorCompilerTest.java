@@ -3,8 +3,8 @@ package com.wideplay.warp.widgets.rendering;
 import com.wideplay.warp.widgets.Evaluator;
 import org.testng.annotations.Test;
 
-import java.util.List;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail com)

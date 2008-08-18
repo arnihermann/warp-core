@@ -3,6 +3,8 @@ package com.wideplay.warp.util;
 import com.google.inject.Guice;
 import com.wideplay.warp.widgets.rendering.EvaluatorCompiler;
 import com.wideplay.warp.widgets.rendering.ExpressionCompileException;
+import com.wideplay.warp.widgets.rendering.TextTools;
+import com.wideplay.warp.widgets.rendering.Token;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 

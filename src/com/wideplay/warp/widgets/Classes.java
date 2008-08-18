@@ -1,4 +1,4 @@
-package com.wideplay.warp.util;
+package com.wideplay.warp.widgets;
 
 
 import com.google.inject.matcher.Matcher;
@@ -29,7 +29,7 @@ import java.util.logging.Logger;
  * @see org.testng.internal.PackageUtils
  */
 @Immutable
-public class Classes {
+class Classes {
 
     private final Matcher<? super Class<?>> matcher;
     private final Logger log = Logger.getLogger(Classes.class.getName());
