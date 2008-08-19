@@ -10,6 +10,6 @@ public @interface Repeat {
     String DEFAULT_PAGEVAR = "__page";
 
     String items();
-    String var() default "__this";
+    String var();
     String pageVar() default DEFAULT_PAGEVAR;
 }

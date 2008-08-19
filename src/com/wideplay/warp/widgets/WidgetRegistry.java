@@ -63,7 +63,9 @@ class WidgetRegistry {
             }
 
             public String var() {
-                return TextTools.stripQuotes(bindMap.get(Repeat.VAR));
+                final String var = bindMap.get(Repeat.VAR);
+
+                return null != var ? TextTools.stripQuotes(var) : null;
             }
 
             public String pageVar() {
