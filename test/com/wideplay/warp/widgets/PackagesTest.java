@@ -6,7 +6,6 @@ import com.wideplay.warp.widgets.rendering.EvaluatorCompiler;
 import com.wideplay.warp.widgets.resources.ResourcesService;
 import com.wideplay.warp.widgets.routing.PageBook;
 import com.wideplay.warp.widgets.routing.RoutingDispatcher;
-import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.util.Set;
@@ -16,7 +15,7 @@ import java.util.Set;
  */
 public class PackagesTest {
 
-    @Test
+//    @Test
     public final void listClassesInAPackage() throws IOException, ClassNotFoundException {
         Set<Class<?>> inPackage = Classes.matching(any())
                                          .in(Widgets.class.getPackage());

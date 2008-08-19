@@ -52,6 +52,7 @@ public final class WidgetFilter implements Filter {
                 //by checking if a content type was set, we allow users to override content-type on an arbitrary basis
                 if (null == response.getContentType())
                     response.setContentType(respond.getContentType());
+
                 response.getWriter().write(respond.toString());
             }
         }
