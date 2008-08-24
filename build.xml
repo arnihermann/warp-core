@@ -16,6 +16,7 @@
     <target name="init">
         <mkdir dir="${core-classes}"/>
         <mkdir dir="${test-classes}"/>
+        <mkdir dir="${acceptance-test-classes}"/>
         <mkdir dir="${dir.distribute}"/>
     </target>
 
@@ -75,7 +76,7 @@
                 <pathelement location="${test-classes}"/>
             </classpath>
 
-            <classfileset dir="${build}" includes="**/widgets/**/*Test.class"/>
+            <classfileset dir="${test-classes}" includes="**/widgets/**/*Test.class"/>
         </testng>
 
     </target>
@@ -153,6 +154,27 @@
         </copy>
 
         <zip basedir="${staging}" destfile="${dir.distribute}/warp-widgets-full-${version}.zip"/>
+    </target>
+
+    <target name="acceptance" depends="make">
+        <javac sourcepath="" srcdir="${acceptance-test}" destdir="${acceptance-test-classes}" debug="on">
+            <include name="**/*.java"/>
+            <classpath>
+                <path refid="warp-widgets.classpath"/>
+                <pathelement location="${core-classes}"/>
+                <pathelement location="${test-classes}"/>
+            </classpath>
+        </javac>
+
+        <testng haltonfailure="true" verbose="2" suitename="warp-widgets acceptance tests">
+            <classpath>
+                <path refid="warp-widgets.classpath"/>
+                <pathelement location="${core-classes}"/>
+                <pathelement location="${acceptance-test-classes}"/>
+            </classpath>
+
+            <classfileset dir="${acceptance-test-classes}" includes="**/*AcceptanceTest.class"/>
+        </testng>
     </target>
 
 </project>
