@@ -48,7 +48,7 @@ public class XmlLineNumberParsingTest {
             ParserConfigurationException, SAXException, IOException {
 
         final SAXReader reader = new SAXReader();
-        reader.setXMLFilter(new SaxLineNumbersFilter());
+        reader.setXMLFilter(Dom.newLineNumberFilter());
 
         final Document document = reader.read(new StringReader(XML));
 
@@ -59,11 +59,6 @@ public class XmlLineNumberParsingTest {
     }
 
     private static int lineNumberOf(Document document, final String xpath) {
-        String line = ((Element) document.selectSingleNode(xpath))
-                .attribute(SaxLineNumbersFilter.LINE_NUMBER_ATTRIBUTE)
-                .getValue();
-
-        assert null != line;
-        return Integer.valueOf(line);
+        return Dom.lineNumberOf(((Element) document.selectSingleNode(xpath)));
     }
 }

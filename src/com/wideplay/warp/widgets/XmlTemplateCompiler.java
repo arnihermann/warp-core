@@ -10,7 +10,6 @@ import org.dom4j.*;
 import org.dom4j.io.SAXReader;
 import org.jetbrains.annotations.NotNull;
 import org.mvel.ErrorDetail;
-import org.xml.sax.XMLFilter;
 
 import java.io.StringReader;
 import java.util.*;
@@ -20,8 +19,6 @@ import java.util.*;
  */
 @NotThreadSafe
 class XmlTemplateCompiler {
-    private static final XMLFilter LINE_NUMBER_ATTR_FILTER = new SaxLineNumbersFilter();
-
     private final Class<?> page;
     private final WidgetRegistry registry;
     private final PageBook pageBook;
@@ -53,7 +50,7 @@ class XmlTemplateCompiler {
         try {
             final SAXReader reader = new SAXReader();
             reader.setMergeAdjacentText(true);
-            reader.setXMLFilter(LINE_NUMBER_ATTR_FILTER);
+            reader.setXMLFilter(Dom.newLineNumberFilter());
 
             widgetChain = walk(reader.read(new StringReader(template)));
         } catch (DocumentException e) {

@@ -1,8 +1,15 @@
 package com.wideplay.warp.widgets;
 
+import net.jcip.annotations.NotThreadSafe;
 import org.dom4j.Attribute;
 import org.dom4j.Element;
 import org.dom4j.Node;
+import org.xml.sax.Attributes;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLFilter;
+import org.xml.sax.helpers.AttributesImpl;
+import org.xml.sax.helpers.XMLFilterImpl;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -17,8 +24,10 @@ import java.util.regex.Pattern;
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
 class Dom {
+    private static final String LINE_NUMBER_ATTRIBUTE = "__WarpWidgetsSaxLineNumber";
+
     static final String FORM_TAG = "form";
-    public static final Pattern WIDGET_ANNOTATION_REGEX = Pattern.compile("(@\\w\\w*(\\([\\w,=\"'()?:><!\\[\\];{}. ]*\\))?[ \n\r\t]*)\\Z");
+    static final Pattern WIDGET_ANNOTATION_REGEX = Pattern.compile("(@\\w\\w*(\\([\\w,=\"'()?:><!\\[\\];{}. ]*\\))?[ \n\r\t]*)\\Z");
     static final String XMLNS_ATTRIB_REGEX = " xmlns=\"[a-zA-Z0-9_+%;#/\\-:\\.]*\"";
 
     private Dom() {
@@ -80,7 +89,7 @@ class Dom {
             Attribute attribute = (Attribute)o;
 
             //skip special attributes
-            if (SaxLineNumbersFilter.LINE_NUMBER_ATTRIBUTE.equals(attribute.getName()))
+            if (LINE_NUMBER_ATTRIBUTE.equals(attribute.getName()))
                 continue;
 
             attrs.put(attribute.getName(), attribute.getValue());
@@ -111,8 +120,8 @@ class Dom {
         return isText(node) || Node.COMMENT_NODE == nodeType || Node.CDATA_SECTION_NODE == nodeType;
     }
 
-    static boolean isText(Node preceeding) {
-        return null != preceeding && Node.TEXT_NODE == preceeding.getNodeType();
+    static boolean isText(Node node) {
+        return null != node && Node.TEXT_NODE == node.getNodeType();
     }
 
     static boolean isElement(Node node) {
@@ -121,9 +130,45 @@ class Dom {
 
     //removes special attributes, so rendering can happen normally
     public static void normalizeAttributes(Element element) {
-        final Attribute toRemove = element.attribute(SaxLineNumbersFilter.LINE_NUMBER_ATTRIBUTE);
+        final Attribute toRemove = element.attribute(LINE_NUMBER_ATTRIBUTE);
 
         if (null != toRemove)
             element.remove(toRemove);
+    }
+
+    /**
+     * An XML filter used to generate line numbers as a special attribute.
+     *
+     * @author Dhanji R. Prasanna (dhanji@gmail com)
+     */
+    @NotThreadSafe
+    private static class SaxLineNumbersFilter extends XMLFilterImpl {
+        private Locator locator;
+
+        public void setDocumentLocator(Locator locator) {
+            this.locator = locator;
+
+            super.setDocumentLocator(locator);
+        }
+
+        public void startElement(String s, String s1, String s2, Attributes attributes) throws SAXException {
+
+            //replace existing attributes with a decorator that stores line numbers
+            AttributesImpl attr = new AttributesImpl(attributes);
+            attr.addAttribute("", "", LINE_NUMBER_ATTRIBUTE, "int", String.valueOf(locator.getLineNumber()));
+
+            super.startElement(s, s1, s2, attr);
+        }
+
+    }
+
+    public static XMLFilter newLineNumberFilter() {
+        return new SaxLineNumbersFilter();
+    }
+
+    public static int lineNumberOf(Element element) {
+        final Attribute attribute = element.attribute(LINE_NUMBER_ATTRIBUTE);
+        
+        return null == attribute ? null : Integer.parseInt(attribute.getValue());
     }
 }
