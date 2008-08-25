@@ -1,0 +1,13 @@
+<module>
+
+    <!-- Inherit the core Web Toolkit stuff.                  -->
+    <inherits name='com.google.gwt.user.User'/>
+
+    <!-- Specify the app entry point class.                   -->
+    <entry-point class='com.wideplay.warp.widgets.debug.client.Debug'/>
+
+
+    <!-- Specify the app servlets.                   -->
+    <!--<servlet path='/com.wideplay.source360.web.Test/TestService' class='com.wideplay.source360.web.server.TestServiceImpl'/>-->
+
+</module>
