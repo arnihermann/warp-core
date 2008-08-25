@@ -79,6 +79,10 @@ class Dom {
         for (Object o : list) {
             Attribute attribute = (Attribute)o;
 
+            //skip special attributes
+            if (SaxLineNumbersFilter.LINE_NUMBER_ATTRIBUTE.equals(attribute.getName()))
+                continue;
+
             attrs.put(attribute.getName(), attribute.getValue());
         }
 
@@ -113,5 +117,13 @@ class Dom {
 
     static boolean isElement(Node node) {
         return Node.ELEMENT_NODE == node.getNodeType();
+    }
+
+    //removes special attributes, so rendering can happen normally
+    public static void normalizeAttributes(Element element) {
+        final Attribute toRemove = element.attribute(SaxLineNumbersFilter.LINE_NUMBER_ATTRIBUTE);
+
+        if (null != toRemove)
+            element.remove(toRemove);
     }
 }

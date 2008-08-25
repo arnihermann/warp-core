@@ -10,6 +10,7 @@ import org.dom4j.*;
 import org.dom4j.io.SAXReader;
 import org.jetbrains.annotations.NotNull;
 import org.mvel.ErrorDetail;
+import org.xml.sax.XMLFilter;
 
 import java.io.StringReader;
 import java.util.*;
@@ -19,6 +20,8 @@ import java.util.*;
  */
 @NotThreadSafe
 class XmlTemplateCompiler {
+    private static final XMLFilter LINE_NUMBER_ATTR_FILTER = new SaxLineNumbersFilter();
+
     private final Class<?> page;
     private final WidgetRegistry registry;
     private final PageBook pageBook;
@@ -50,6 +53,7 @@ class XmlTemplateCompiler {
         try {
             final SAXReader reader = new SAXReader();
             reader.setMergeAdjacentText(true);
+            reader.setXMLFilter(LINE_NUMBER_ATTR_FILTER);
 
             widgetChain = walk(reader.read(new StringReader(template)));
         } catch (DocumentException e) {
@@ -91,7 +95,7 @@ class XmlTemplateCompiler {
 
 
                 //setup a lexical scope if we're going into a repeat widget (by reading the previous node)
-                boolean shouldPopScope = lexicalClimb(element, i);
+                final boolean shouldPopScope = lexicalClimb(element, i);
 
                 //continue recursing down, perform a post-order, depth-first traversal of the DOM
                 WidgetChain childsChildren;
@@ -194,6 +198,8 @@ class XmlTemplateCompiler {
         //special case: is this a "require" widget? (used for exporting/interning header tags into embedding pages)
         if (REQUIRE_WIDGET.equalsIgnoreCase(annotation.trim()))
             try {
+                Dom.normalizeAttributes(element);
+
                 return new RequireWidget(Dom.stripAnnotation(element.asXML()), lexicalScopes.peek());
             } catch (ExpressionCompileException e) {
                 errors.add(e.getError());
