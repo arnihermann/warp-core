@@ -1,7 +1,7 @@
 package com.wideplay.warp.widgets;
 
 import com.wideplay.warp.widgets.rendering.EmbedAs;
-import com.wideplay.warp.widgets.rendering.TextTools;
+import com.wideplay.warp.widgets.rendering.Parsing;
 import net.jcip.annotations.Immutable;
 
 import java.util.Collection;
@@ -27,12 +27,12 @@ class RepeatWidget implements Renderable {
     public RepeatWidget(WidgetChain widgetChain, String expression, Evaluator evaluator) {
         this.widgetChain = widgetChain;
 
-        final Map<String,String> map = TextTools.toBindMap(expression);
+        final Map<String,String> map = Parsing.toBindMap(expression);
         this.items = map.get("items");
         String var = map.get("var");
 
         if (null != var)
-            this.var = TextTools.stripQuotes(var);
+            this.var = Parsing.stripQuotes(var);
         else
             this.var = DEFAULT_VAR;
 
@@ -41,7 +41,7 @@ class RepeatWidget implements Renderable {
         if (null == pageVar)
             pageVar = DEFAULT_PAGEVAR;
         else
-            pageVar = TextTools.stripQuotes(pageVar);
+            pageVar = Parsing.stripQuotes(pageVar);
 
         this.pageVar = pageVar;
         this.evaluator = evaluator;

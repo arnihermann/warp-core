@@ -1,7 +1,7 @@
 package com.wideplay.warp.widgets;
 
+import com.wideplay.warp.widgets.rendering.Parsing;
 import com.wideplay.warp.widgets.rendering.SelfRendering;
-import com.wideplay.warp.widgets.rendering.TextTools;
 import net.jcip.annotations.Immutable;
 
 import java.util.Set;
@@ -19,7 +19,7 @@ class ArgumentWidget implements Renderable {
 
     public ArgumentWidget(WidgetChain widgetChain, String expression, Evaluator evaluator) {
         this.widgetChain = widgetChain;
-        this.expression = TextTools.stripQuotes(expression);
+        this.expression = Parsing.stripQuotes(expression);
         this.evaluator = evaluator;
     }
 

@@ -111,7 +111,7 @@ public class MvelEvaluatorCompiler implements EvaluatorCompiler {
     }
 
     public List<Token> tokenizeAndCompile(String template) throws ExpressionCompileException {
-        return TextTools.tokenize(template, this);
+        return Parsing.tokenize(template, this);
     }
 
     //generates a parsing context with type information from the backing type's javabean properties

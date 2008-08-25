@@ -3,7 +3,7 @@ package com.wideplay.warp.util;
 import com.google.inject.Guice;
 import com.wideplay.warp.widgets.rendering.EvaluatorCompiler;
 import com.wideplay.warp.widgets.rendering.ExpressionCompileException;
-import com.wideplay.warp.widgets.rendering.TextTools;
+import com.wideplay.warp.widgets.rendering.Parsing;
 import com.wideplay.warp.widgets.rendering.Token;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -32,7 +32,7 @@ public class TextToolsTest {
         for (String chunk : rawStream)
             builder.append(chunk);
 
-        List<Token> tokens = TextTools.tokenize(builder.toString(), Guice.createInjector()
+        List<Token> tokens = Parsing.tokenize(builder.toString(), Guice.createInjector()
                 .getInstance(EvaluatorCompiler.class));
 
         assert tokens.size() == rawStream.length;

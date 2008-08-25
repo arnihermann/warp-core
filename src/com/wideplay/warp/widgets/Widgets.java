@@ -4,9 +4,11 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 import com.google.inject.Stage;
 import com.google.inject.TypeLiteral;
+import com.google.inject.util.Objects;
 import com.wideplay.warp.servlet.Servlets;
 import com.wideplay.warp.widgets.core.CaseWidget;
 import com.wideplay.warp.widgets.routing.PageBook;
+import com.wideplay.warp.widgets.routing.RoutingDispatcher;
 
 import java.util.*;
 
@@ -17,10 +19,11 @@ public final class Widgets {
     private Widgets() {
     }
 
-
     public static PackageAddingBuilder configure() {
+
         return new PackageAddingBuilder() {
             private final List<Package> packages = new ArrayList<Package>();
+            private Options options;
 
             public PackageAddingBuilder with(Package pack) {
                 packages.add(pack);
@@ -28,12 +31,27 @@ public final class Widgets {
                 return this;
             }
 
+            public PackageAddingBuilder set(Options options) {
+                Objects.nonNull(options, "set() called with null. You must use the Widgets.options() to configure " +
+                        "warp-widgets options.");
+
+                return this;
+            }
+
             public Module buildModule() {
+                //set default options?
+                if (null == options)
+                    this.options = options().build();
+
+
                 //noinspection InnerClassTooDeeplyNested
                 return new AbstractModule() {
 
                     @Override
                     protected void configure() {
+                        //configuration options
+                        bind(Options.class).toInstance(options);
+
                         //insert core widgets set
                         packages.add(0, CaseWidget.class.getPackage());
 
@@ -48,8 +66,10 @@ public final class Widgets {
 
 
                         //development mode services
-                        if (Stage.DEVELOPMENT.equals(binder().currentStage()))
+                        if (Stage.DEVELOPMENT.equals(binder().currentStage())) {
                             bind(PageBook.class).to(DebugModePageBook.class);
+                            bind(RoutingDispatcher.class).to(DebugRoutingDispatcher.class);
+                        }
 
                         Servlets.bindScopes(binder());
                     }
@@ -59,10 +79,42 @@ public final class Widgets {
     }
 
 
+    /**
+     *
+     * @return Returns an options builder to set options with
+     */
+    public static OptionsBuilder options() {
+        return new Options();
+    }
+
+
+    /**
+     * Part of the EDSL for configuring warp-widgets.
+     */
     public static interface PackageAddingBuilder {
 
         PackageAddingBuilder with(Package pack);
 
+        PackageAddingBuilder set(Options options);
+
         Module buildModule();
+    }
+
+
+    /**
+     * Part of the EDSL for configuring warp-widgets optional settings.
+     */
+    public static interface OptionsBuilder {
+        OptionsBuilder contextualizeUris();
+
+        OptionsBuilder trimTemplateText();
+
+        OptionsBuilder elevateWarnings();
+
+        OptionsBuilder ignoreComments();
+
+        OptionsBuilder noDebugPage();
+
+        Options build();
     }
 }

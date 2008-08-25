@@ -53,7 +53,7 @@ public class DynTypedMvelEvaluatorCompiler implements EvaluatorCompiler {
     }
 
     public List<Token> tokenizeAndCompile(String template) throws ExpressionCompileException {
-        return TextTools.tokenize(template, this);
+        return Parsing.tokenize(template, this);
     }
 
     public Class<?> resolveEgressType(String expression) throws ExpressionCompileException {

@@ -1,8 +1,6 @@
 package com.wideplay.warp.widgets.rendering;
 
 
-import com.wideplay.warp.util.Strings;
-
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -16,9 +14,9 @@ import java.util.regex.Pattern;
  * @author Dhanji R. Prasanna (dhanji at gmail com)
  * @since 1.0
  */
-public class TextTools {
+public class Parsing {
 
-    private TextTools() {
+    private Parsing() {
     }
 
 

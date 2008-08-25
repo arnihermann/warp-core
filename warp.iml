@@ -7,6 +7,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/build" />
+      <excludeFolder url="file://$MODULE_DIR$/exploded" />
       <excludeFolder url="file://$MODULE_DIR$/test-output" />
     </content>
     <orderEntry type="inheritedJdk" />
@@ -153,7 +154,9 @@
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/jetty/jetty-util-6.1.9.jar!/" />
         </CLASSES>
-        <JAVADOC />
+        <JAVADOC>
+          <root url="http://www.dom4j.org/apidocs/" />
+        </JAVADOC>
         <SOURCES />
       </library>
     </orderEntry>

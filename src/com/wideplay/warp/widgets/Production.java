@@ -10,4 +10,4 @@ import java.lang.annotation.RetentionPolicy;
 */
 @Retention(RetentionPolicy.RUNTIME)
 @BindingAnnotation
-public @interface Debug { }
+public @interface Production { }

@@ -3,8 +3,8 @@ package com.wideplay.warp.widgets.binding;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import com.wideplay.warp.util.Strings;
 import com.wideplay.warp.widgets.Evaluator;
+import com.wideplay.warp.widgets.rendering.Strings;
 import net.jcip.annotations.Immutable;
 import org.mvel.PropertyAccessException;
 

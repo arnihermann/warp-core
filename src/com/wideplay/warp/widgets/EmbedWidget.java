@@ -1,6 +1,6 @@
 package com.wideplay.warp.widgets;
 
-import com.wideplay.warp.widgets.rendering.TextTools;
+import com.wideplay.warp.widgets.rendering.Parsing;
 import com.wideplay.warp.widgets.routing.PageBook;
 import net.jcip.annotations.Immutable;
 
@@ -27,7 +27,7 @@ class EmbedWidget implements Renderable {
         this.targetPage = targetPage.toLowerCase();
 
         //parse expression list
-        this.bindExpressions = TextTools.toBindMap(expression);
+        this.bindExpressions = Parsing.toBindMap(expression);
     }
 
 

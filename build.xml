@@ -156,7 +156,7 @@
         <zip basedir="${staging}" destfile="${dir.distribute}/warp-widgets-full-${version}.zip"/>
     </target>
 
-    <target name="acceptance" depends="make">
+    <target name="acceptance" depends="make" description="Runs acceptance tests using Jetty to verify widget rendering">
         <javac sourcepath="" srcdir="${acceptance-test}" destdir="${acceptance-test-classes}" debug="on">
             <include name="**/*.java"/>
             <classpath>

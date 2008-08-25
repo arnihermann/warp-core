@@ -1,4 +1,4 @@
-package com.wideplay.warp.util;
+package com.wideplay.warp.widgets.rendering;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)

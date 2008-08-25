@@ -8,7 +8,6 @@ import com.wideplay.warp.widgets.rendering.*;
 import com.wideplay.warp.widgets.routing.PageBook;
 import net.jcip.annotations.ThreadSafe;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -51,31 +50,27 @@ class WidgetRegistry {
         return wrapper.isSelfRendering();
     }
 
-    public Repeat parseRepeat(String expression) {
+    public RepeatToken parseRepeat(String expression) {
         //parse and convert widget into metadata annotation
-        final Map<String, String> bindMap = TextTools.toBindMap(expression);
+        final Map<String, String> bindMap = Parsing.toBindMap(expression);
 
         //noinspection OverlyComplexAnonymousInnerClass
-        return new Repeat() {
+        return new RepeatToken() {
 
             public String items() {
-                return bindMap.get(Repeat.ITEMS);
+                return bindMap.get(RepeatToken.ITEMS);
             }
 
             public String var() {
-                final String var = bindMap.get(Repeat.VAR);
+                final String var = bindMap.get(RepeatToken.VAR);
 
-                return null != var ? TextTools.stripQuotes(var) : null;
+                return null != var ? Parsing.stripQuotes(var) : null;
             }
 
             public String pageVar() {
-                final String pageVar = bindMap.get(Repeat.PAGE_VAR);
+                final String pageVar = bindMap.get(RepeatToken.PAGE_VAR);
 
-                return null == pageVar ? Repeat.DEFAULT_PAGEVAR : pageVar;
-            }
-
-            public Class<? extends Annotation> annotationType() {
-                return Repeat.class;
+                return null == pageVar ? RepeatToken.DEFAULT_PAGEVAR : pageVar;
             }
         };
     }

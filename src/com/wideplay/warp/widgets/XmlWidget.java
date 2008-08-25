@@ -18,7 +18,7 @@ import java.util.*;
 @ThreadSafe @SelfRendering
 class XmlWidget implements Renderable {
     private final WidgetChain widgetChain;
-    private final boolean noChildren;
+    private final boolean selfClosed;
     private final String name;
     private final Map<String, List<Token>> attributes;
     private volatile Provider<HttpServletRequest> request;
@@ -41,10 +41,12 @@ class XmlWidget implements Renderable {
         this.widgetChain = widgetChain;
         this.name = name;
         this.attributes = Collections.unmodifiableMap(compile(attributes, compiler));
-        this.noChildren = widgetChain instanceof TerminalWidgetChain;
+
+        //hacky. Script tags should not be self-closed due to IE insanity.
+        this.selfClosed = widgetChain instanceof TerminalWidgetChain && !"script".equalsIgnoreCase(name);
     }
 
-    //converts a map of name:value attrs into a map of name:token attrs
+    //compiles a map of name:value attrs into a map of name:token renderables
     private Map<String, List<Token>> compile(Map<String, String> attributes, EvaluatorCompiler compiler) throws ExpressionCompileException {
         Map<String, List<Token>> map = new LinkedHashMap<String, List<Token>>();
 
@@ -87,7 +89,7 @@ class XmlWidget implements Renderable {
         respond.chew();
 
         //write children
-        if (noChildren) {
+        if (selfClosed) {
             respond.write("/>");    //write self-closed tag
         } else {
             respond.write('>');

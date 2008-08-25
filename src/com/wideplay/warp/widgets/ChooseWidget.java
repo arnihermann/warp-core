@@ -3,8 +3,8 @@ package com.wideplay.warp.widgets;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.wideplay.warp.widgets.binding.FlashCache;
+import com.wideplay.warp.widgets.rendering.Parsing;
 import com.wideplay.warp.widgets.rendering.SelfRendering;
-import com.wideplay.warp.widgets.rendering.TextTools;
 import net.jcip.annotations.Immutable;
 
 import java.util.Collection;
@@ -24,7 +24,7 @@ class ChooseWidget implements Renderable {
 
     public ChooseWidget(WidgetChain widgetChain, String expression, Evaluator evaluator) {
         this.evaluator = evaluator;
-        this.map = TextTools.toBindMap(expression);
+        this.map = Parsing.toBindMap(expression);
         this.widgetChain = widgetChain;
 
         //TODO validate expression

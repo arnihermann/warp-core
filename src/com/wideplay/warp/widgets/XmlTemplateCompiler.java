@@ -3,7 +3,7 @@ package com.wideplay.warp.widgets;
 import com.wideplay.warp.widgets.rendering.EvaluatorCompiler;
 import com.wideplay.warp.widgets.rendering.ExpressionCompileException;
 import com.wideplay.warp.widgets.rendering.MvelEvaluatorCompiler;
-import com.wideplay.warp.widgets.rendering.Repeat;
+import com.wideplay.warp.widgets.rendering.RepeatToken;
 import com.wideplay.warp.widgets.routing.PageBook;
 import net.jcip.annotations.NotThreadSafe;
 import org.dom4j.*;
@@ -234,7 +234,7 @@ class XmlTemplateCompiler {
 
 
     private Map<String, Class<?>> parseRepeatScope(String[] extract) {
-        Repeat repeat = registry.parseRepeat(extract[1]);
+        RepeatToken repeat = registry.parseRepeat(extract[1]);
         Map<String, Class<?>> context = new HashMap<String, Class<?>>();
 
         //verify that repeat was parsed properly

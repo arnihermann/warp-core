@@ -20,7 +20,7 @@ class DebugModePageBook implements PageBook {
     private final WidgetRegistry registry;
 
     @Inject
-    public DebugModePageBook(@Debug PageBook book, Provider<TemplateLoader> templateLoader, WidgetRegistry registry) {
+    public DebugModePageBook(@Production PageBook book, Provider<TemplateLoader> templateLoader, WidgetRegistry registry) {
         this.book = book;
         this.templateLoader = templateLoader;
         this.registry = registry;

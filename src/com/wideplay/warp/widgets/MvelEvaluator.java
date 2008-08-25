@@ -1,6 +1,6 @@
 package com.wideplay.warp.widgets;
 
-import com.wideplay.warp.widgets.rendering.TextTools;
+import com.wideplay.warp.widgets.rendering.Parsing;
 import net.jcip.annotations.ThreadSafe;
 import org.jetbrains.annotations.Nullable;
 import org.mvel.MVEL;
@@ -29,8 +29,8 @@ class MvelEvaluator implements Evaluator {
             String preparedExpression = expr;
 
             //strip expression decorators as necessary
-            if (TextTools.isExpression(expr)) {
-                preparedExpression = TextTools.stripExpression(expr);
+            if (Parsing.isExpression(expr)) {
+                preparedExpression = Parsing.stripExpression(expr);
             }
 
             //compile expression
