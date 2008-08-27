@@ -119,16 +119,29 @@ class PageWidgetBuilder {
             log.finest(String.format("Compiling template for page %s", page));
 
             try {
-                final Renderable widget = new XmlTemplateCompiler(
-                        page,
-                        new MvelEvaluatorCompiler(page),
-                        registry,
-                        pageBook,
-                        metrics
-                )
+                final String template = loader.load(page);
 
-                        .compile(loader.load(page));
+                Renderable widget;
 
+                //is this an XML template or a flat-file template?
+                if (Parsing.treatAsXml(template))
+                    widget = new XmlTemplateCompiler(
+                            page,
+                            new MvelEvaluatorCompiler(page),
+                            registry,
+                            pageBook,
+                            metrics
+                    )
+
+                            .compile(template);
+                else
+                    widget = new FlatTemplateCompiler(
+                            page,
+                            new MvelEvaluatorCompiler(page),
+                            metrics
+                    )
+
+                            .compile(template);
 
                 //apply the compiled widget chain to the page (completing compile step)
                 toCompile.apply(widget);

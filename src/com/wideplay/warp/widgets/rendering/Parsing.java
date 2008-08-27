@@ -156,6 +156,54 @@ public class Parsing {
         return var.substring(1, var.length() - 1);
     }
 
+    /**
+     * Remember this method is not so much about verifying something is XML as it is
+     * verifying that something is a NON-Xml template. In other words, read this as
+     * whether or not we should *treat* something as XML, then complain that it's malformed
+     * later (if necessary).
+     *
+     * @param template A fully loaded template as a string.
+     *
+     * @return Returns true if this template should be treated as an XML template.
+     *  Templates that are not XML *MUST* begin with a {@code @Meta} annotation.
+     */
+    public static boolean treatAsXml(String template) {
+        return 0 > indexOfMeta(template);
+
+    }
+
+    public static int indexOfMeta(String template) {
+        //do a manual character scan (coz indexOf(regex) will be O(n) runtime)
+        for (int i = 0; i < template.length(); i++) {
+            char c = template.charAt(i);
+
+            //skip leading whitespace
+            if (isWhitespace(c))
+                continue;
+
+            //Does this template begin with @Meta or @Meta(  --> then it is *not* XML
+            if ('@' == c) {
+                final char trailing = template.charAt(i + 5);
+
+                if ("Meta".equals(template.substring(i + 1, i + 5))
+
+                        && ('(' == trailing || isWhitespace(trailing)))
+
+                    return i;
+            }
+
+            //do not go past the first non-whitespace character (short-circuit)
+            return -1;
+        }
+
+        //treat everything else as XML
+        return -1;
+    }
+
+    private static boolean isWhitespace(char c) {
+        return ' ' == c || '\n' == c || '\r' == c || '\t' == c;
+    }
+
     private enum TokenizerState { READING_TEXT, READING_EXPRESSION }
 
 

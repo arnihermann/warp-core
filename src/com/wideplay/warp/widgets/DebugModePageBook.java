@@ -4,7 +4,9 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.wideplay.warp.widgets.rendering.MvelEvaluatorCompiler;
+import com.wideplay.warp.widgets.rendering.Parsing;
 import com.wideplay.warp.widgets.routing.PageBook;
+import com.wideplay.warp.widgets.routing.Production;
 import com.wideplay.warp.widgets.routing.SystemMetrics;
 import net.jcip.annotations.ThreadSafe;
 
@@ -60,8 +62,14 @@ class DebugModePageBook implements PageBook {
 
         final Class<?> pageClass = page.pageClass();
 
-        page.apply(new XmlTemplateCompiler(pageClass, new MvelEvaluatorCompiler(pageClass), registry, book, metrics)
-                .compile(templateLoader.get().load(pageClass)));
+        final String template = templateLoader.get().load(pageClass);
+
+        if (Parsing.treatAsXml(template))
+            page.apply(new XmlTemplateCompiler(pageClass, new MvelEvaluatorCompiler(pageClass), registry, book, metrics)
+                    .compile(template));
+        else
+            page.apply(new FlatTemplateCompiler(pageClass, new MvelEvaluatorCompiler(pageClass), metrics)
+                    .compile(template));
     }
 
     public Page embedAs(Class<?> page) {

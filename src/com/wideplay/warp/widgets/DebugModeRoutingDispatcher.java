@@ -3,6 +3,7 @@ package com.wideplay.warp.widgets;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.wideplay.warp.widgets.routing.PageBook;
+import com.wideplay.warp.widgets.routing.Production;
 import com.wideplay.warp.widgets.routing.RoutingDispatcher;
 import com.wideplay.warp.widgets.routing.SystemMetrics;
 import org.mvel.PropertyAccessException;

@@ -1,4 +1,4 @@
-package com.wideplay.warp.widgets;
+package com.wideplay.warp.widgets.routing;
 
 import com.google.inject.BindingAnnotation;
 

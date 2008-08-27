@@ -4,7 +4,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.ImplementedBy;
 import com.google.inject.Module;
 import com.google.inject.Stage;
-import com.wideplay.warp.widgets.Production;
 import com.wideplay.warp.widgets.Renderable;
 
 import java.util.Map;
