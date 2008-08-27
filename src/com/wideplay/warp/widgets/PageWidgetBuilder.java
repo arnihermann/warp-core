@@ -8,6 +8,7 @@ import com.wideplay.warp.widgets.resources.Assets;
 import com.wideplay.warp.widgets.resources.Export;
 import com.wideplay.warp.widgets.resources.ResourcesService;
 import com.wideplay.warp.widgets.routing.PageBook;
+import com.wideplay.warp.widgets.routing.SystemMetrics;
 
 import javax.servlet.ServletContext;
 import java.util.HashSet;
@@ -23,13 +24,14 @@ class PageWidgetBuilder {
     private final ResourcesService resourcesService;
     private final Provider<ServletContext> context;
     private final WidgetRegistry registry;
+    private final SystemMetrics metrics;
 
     @Inject
     PageWidgetBuilder(PageBook pageBook, TemplateLoader loader,
                       @Packages Set<Package> packages,
                       ResourcesService resourcesService,
                       Provider<ServletContext> servletContextProvider,
-                      WidgetRegistry registry) {
+                      WidgetRegistry registry, SystemMetrics metrics) {
 
         this.pageBook = pageBook;
         this.loader = loader;
@@ -38,6 +40,7 @@ class PageWidgetBuilder {
         this.context = servletContextProvider;
         this.registry = registry;
 
+        this.metrics = metrics;
     }
 
     public void scan() {

@@ -5,6 +5,7 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.wideplay.warp.widgets.rendering.MvelEvaluatorCompiler;
 import com.wideplay.warp.widgets.routing.PageBook;
+import com.wideplay.warp.widgets.routing.SystemMetrics;
 import net.jcip.annotations.ThreadSafe;
 
 /**
@@ -18,12 +19,16 @@ class DebugModePageBook implements PageBook {
     private final PageBook book;
     private final Provider<TemplateLoader> templateLoader;
     private final WidgetRegistry registry;
+    private final SystemMetrics metrics;
 
     @Inject
-    public DebugModePageBook(@Production PageBook book, Provider<TemplateLoader> templateLoader, WidgetRegistry registry) {
+    public DebugModePageBook(@Production PageBook book, Provider<TemplateLoader> templateLoader,
+                             WidgetRegistry registry, SystemMetrics metrics) {
+
         this.book = book;
         this.templateLoader = templateLoader;
         this.registry = registry;
+        this.metrics = metrics;
     }
 
     public Page at(String uri, Class<?> myPageClass) {

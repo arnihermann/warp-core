@@ -8,6 +8,7 @@ import static com.wideplay.warp.widgets.XmlTemplateCompilerTest.mockRequestProvi
 import com.wideplay.warp.widgets.example.Wiki;
 import com.wideplay.warp.widgets.resources.ResourcesService;
 import com.wideplay.warp.widgets.routing.PageBook;
+import com.wideplay.warp.widgets.routing.SystemMetrics;
 import static org.easymock.EasyMock.*;
 
 import javax.servlet.ServletContext;
@@ -71,7 +72,7 @@ public class PageWidgetBuilderTest {
         };
         
         new PageWidgetBuilder(book, new TemplateLoader(servletContextProvider),
-                packages, resourcesService, servletContextProvider, registry)
+                packages, resourcesService, servletContextProvider, registry, createNiceMock(SystemMetrics.class))
                 
                 .scan();
 

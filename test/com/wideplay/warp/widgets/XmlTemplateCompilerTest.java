@@ -8,6 +8,7 @@ import com.wideplay.warp.widgets.rendering.EmbedAs;
 import com.wideplay.warp.widgets.rendering.ExpressionCompileException;
 import com.wideplay.warp.widgets.rendering.MvelEvaluatorCompiler;
 import com.wideplay.warp.widgets.routing.PageBook;
+import com.wideplay.warp.widgets.routing.SystemMetrics;
 import static org.easymock.EasyMock.*;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -23,6 +24,7 @@ public class XmlTemplateCompilerTest {
     private static final String ANNOTATION_EXPRESSIONS = "Annotation expressions";
     private Injector injector;
     private PageBook pageBook;
+    private SystemMetrics metrics;
 
     @BeforeMethod
     public void pre() {
@@ -33,6 +35,7 @@ public class XmlTemplateCompilerTest {
         });
 
         pageBook = createNiceMock(PageBook.class);
+        metrics = createNiceMock(SystemMetrics.class);
     }
 
     @Test

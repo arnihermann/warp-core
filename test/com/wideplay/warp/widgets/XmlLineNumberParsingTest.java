@@ -3,6 +3,7 @@ package com.wideplay.warp.widgets;
 import com.google.inject.Injector;
 import com.wideplay.warp.widgets.rendering.MvelEvaluatorCompiler;
 import com.wideplay.warp.widgets.routing.PageBook;
+import com.wideplay.warp.widgets.routing.SystemMetrics;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -32,7 +33,8 @@ public class XmlLineNumberParsingTest {
 
         try {
             new XmlTemplateCompiler(Object.class, new MvelEvaluatorCompiler(Object.class),
-                    new WidgetRegistry(createMock(Evaluator.class), pageBook, createMock(Injector.class)), pageBook, metrics)
+                    new WidgetRegistry(createMock(Evaluator.class), pageBook, createMock(Injector.class)), pageBook,
+                    createMock(SystemMetrics.class))
 
                     .compile(FAULTY_XML);
         } catch (TemplateCompileException e) {

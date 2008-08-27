@@ -36,7 +36,14 @@ class DebugModeRoutingDispatcher implements RoutingDispatcher {
 
     public Respond dispatch(HttpServletRequest request) {
         long start = System.currentTimeMillis();
-        PageBook.Page page = pageBook.get(request.getRequestURI());
+
+        //attempt to discover page class
+        final PageBook.Page page = pageBook.get(request.getRequestURI().substring(request.getContextPath().length()));
+
+        //this may be a static resource (in which case we dont gather metrics for it)
+        Class<?> pageClass = null;
+        if (null != page)
+            pageClass = page.pageClass();
 
         try {
             return dispatcher.dispatch(request);
@@ -92,7 +99,9 @@ class DebugModeRoutingDispatcher implements RoutingDispatcher {
         } finally {
             long time = System.currentTimeMillis() - start;
 
-            metrics.logPageRenderTime(page.pageClass(), time);
+            //only store time metric if this not a static-resource 
+            if (null != pageClass)
+                metrics.logPageRenderTime(pageClass, time);
         }
     }
 }

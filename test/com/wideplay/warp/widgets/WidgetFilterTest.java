@@ -5,6 +5,7 @@ import com.google.inject.Provider;
 import com.wideplay.warp.widgets.resources.ResourcesService;
 import com.wideplay.warp.widgets.routing.PageBook;
 import com.wideplay.warp.widgets.routing.RoutingDispatcher;
+import com.wideplay.warp.widgets.routing.SystemMetrics;
 import static org.easymock.EasyMock.*;
 import org.testng.annotations.Test;
 
@@ -42,7 +43,8 @@ public class WidgetFilterTest {
 
         final boolean ran[] = new boolean[1];
         final PageWidgetBuilder pageWidgetBuilder = new PageWidgetBuilder(pageBook, new TemplateLoader(null),
-                new HashSet<Package>(), createNiceMock(ResourcesService.class), null, registry) {
+                new HashSet<Package>(), createNiceMock(ResourcesService.class), null, registry,
+                createNiceMock(SystemMetrics.class)) {
 
             @Override
             public void scan() {
