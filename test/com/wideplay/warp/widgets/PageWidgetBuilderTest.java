@@ -5,10 +5,10 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Provider;
 import static com.wideplay.warp.widgets.XmlTemplateCompilerTest.mockRequestProviderForContext;
-import com.wideplay.warp.widgets.example.Wiki;
 import com.wideplay.warp.widgets.resources.ResourcesService;
 import com.wideplay.warp.widgets.routing.PageBook;
 import com.wideplay.warp.widgets.routing.SystemMetrics;
+import com.wideplay.warp.widgets.test.Wiki;
 import static org.easymock.EasyMock.*;
 
 import javax.servlet.ServletContext;

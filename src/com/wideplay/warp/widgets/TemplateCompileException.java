@@ -21,6 +21,9 @@ class TemplateCompileException extends RuntimeException {
 
     public TemplateCompileException(Class<?> page, String template,
                                     List<CompileError> errors, List<CompileError> warnings) {
+
+        System.out.println("Generating exception for " + page + " due to " + errors);
+
         this.page = page;
         this.warnings = warnings;
         try {
@@ -114,5 +117,10 @@ class TemplateCompileException extends RuntimeException {
             this.index = index;
             this.lines = lines;
         }
+    }
+
+    @Override
+    public String getMessage() {
+        return "Unable to compile template for " + page.getName();
     }
 }

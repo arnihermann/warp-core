@@ -14,4 +14,8 @@ public interface SystemMetrics {
     void logPageRenderTime(Class<?> page, long time);
 
     void logErrorsAndWarnings(Class<?> page, List<CompileError> errors, List<CompileError> warnings);
+
+    void activate();
+
+    boolean isActive();
 }

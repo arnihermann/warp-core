@@ -1,4 +1,4 @@
-package com.wideplay.warp.widgets.example;
+package com.wideplay.warp.widgets.test;
 
 import com.google.inject.name.Named;
 import com.wideplay.warp.widgets.At;

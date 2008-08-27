@@ -7,6 +7,7 @@ import net.jcip.annotations.ThreadSafe;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -16,6 +17,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @ThreadSafe @Singleton //@Concurrent
 class DefaultSystemMetrics implements SystemMetrics {
     private final ConcurrentMap<Class<?>, Metric> pages = new ConcurrentHashMap<Class<?>, Metric>();
+    private final AtomicBoolean active = new AtomicBoolean(false);
 
     public void logPageRenderTime(Class<?> page, long time) {
         Metric metric = putIfAbsent(page);
@@ -31,6 +33,14 @@ class DefaultSystemMetrics implements SystemMetrics {
         //these must always be set in unison, so we are forced to use a wrapper to avoid synchronization
         metric.lastErrors.set(new ErrorTuple(errors, warnings));
 
+    }
+
+    public void activate() {
+        active.set(true);
+    }
+
+    public boolean isActive() {
+        return active.get();
     }
 
     private Metric putIfAbsent(Class<?> page) {

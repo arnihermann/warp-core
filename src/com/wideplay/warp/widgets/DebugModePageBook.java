@@ -55,7 +55,7 @@ class DebugModePageBook implements PageBook {
     private void reload(Page page) {
 
         //do nothing on the first pass
-        if (null == page)
+        if (!metrics.isActive())
             return;
 
         final Class<?> pageClass = page.pageClass();

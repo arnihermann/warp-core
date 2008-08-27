@@ -133,7 +133,6 @@ class PageBookImpl implements PageBook {
 
         public PageTuple(PathMatcher matcher, Class<?> clazz, Injector injector) {
             this.matcher = matcher;
-//            this.pageWidget.set(pageWidget);
             this.clazz = clazz;
             this.injector = injector;
 
@@ -297,6 +296,21 @@ class PageBookImpl implements PageBook {
 
         public void apply(Renderable widget) {
             this.pageWidget.set(widget);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Page)) return false;
+
+            Page that = (Page) o;
+
+            return this.clazz.equals(that.pageClass());
+        }
+
+        @Override
+        public int hashCode() {
+            return clazz.hashCode();
         }
     }
     
