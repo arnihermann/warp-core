@@ -1,15 +1,12 @@
 package com.wideplay.warp.widgets;
 
-import com.wideplay.warp.widgets.rendering.EvaluatorCompiler;
-import com.wideplay.warp.widgets.rendering.ExpressionCompileException;
-import com.wideplay.warp.widgets.rendering.MvelEvaluatorCompiler;
-import com.wideplay.warp.widgets.rendering.RepeatToken;
+import com.wideplay.warp.widgets.rendering.*;
 import com.wideplay.warp.widgets.routing.PageBook;
+import com.wideplay.warp.widgets.routing.SystemMetrics;
 import net.jcip.annotations.NotThreadSafe;
 import org.dom4j.*;
 import org.dom4j.io.SAXReader;
 import org.jetbrains.annotations.NotNull;
-import org.mvel.ErrorDetail;
 
 import java.io.StringReader;
 import java.util.*;
@@ -22,9 +19,10 @@ class XmlTemplateCompiler {
     private final Class<?> page;
     private final WidgetRegistry registry;
     private final PageBook pageBook;
+    private final SystemMetrics metrics;
 
-    private final List<EvaluatorCompiler.CompileErrorDetail> errors = new ArrayList<EvaluatorCompiler.CompileErrorDetail>();
-    private final List<EvaluatorCompiler.CompileErrorDetail> warnings = new ArrayList<EvaluatorCompiler.CompileErrorDetail>();
+    private final List<CompileError> errors = new ArrayList<CompileError>();
+    private final List<CompileError> warnings = new ArrayList<CompileError>();
 
     //state variables
     private Element form;
@@ -37,10 +35,13 @@ class XmlTemplateCompiler {
     private static final String CHOOSE_WIDGET = "choose";
 
 
-    public XmlTemplateCompiler(Class<?> page, EvaluatorCompiler compiler, WidgetRegistry registry, PageBook pageBook) {
+    public XmlTemplateCompiler(Class<?> page, EvaluatorCompiler compiler, WidgetRegistry registry, PageBook pageBook,
+                               SystemMetrics metrics) {
+
         this.page = page;
         this.registry = registry;
         this.pageBook = pageBook;
+        this.metrics = metrics;
 
         this.lexicalScopes.push(compiler);
     }
@@ -54,11 +55,24 @@ class XmlTemplateCompiler {
 
             widgetChain = walk(reader.read(new StringReader(template)));
         } catch (DocumentException e) {
+            errors.add(
+                    CompileError.in(template)
+                    .near(0)
+                    .causedBy(CompileErrors.MALFORMED_TEMPLATE)
+            );
+
+            //really this should only have the 1 error, but we need to set errors/warnings atomically.
+            metrics.logErrorsAndWarnings(page, errors, warnings);
+
             throw new TemplateParseException(e);
         }
 
-        if (!errors.isEmpty())
-            throw new TemplateCompileException(page, template, errors);
+        if (!errors.isEmpty()) {
+            //if there was an error we must track it
+            metrics.logErrorsAndWarnings(page, errors, warnings);
+
+            throw new TemplateCompileException(page, template, errors, warnings);
+        }
 
         return widgetChain;
     }
@@ -116,7 +130,12 @@ class XmlTemplateCompiler {
                 try {
                     widgetChain.addWidget(new TextWidget(Dom.stripAnnotation(node.asXML()), lexicalScopes.peek()));
                 } catch (ExpressionCompileException e) {
-                    errors.add(e.getError());
+
+                    errors.add(
+                            CompileError.in(Dom.asRawXml(element))
+                            .near(Dom.lineNumberOf(element))
+                            .causedBy(e)
+                    );
                 }
             }
         }
@@ -152,7 +171,7 @@ class XmlTemplateCompiler {
             //setup a new lexical scope if necessary (symbol table changes on each lexical closure encountered)
             final String name = keyAndContent[0];
             if (REPEAT_WIDGET.equalsIgnoreCase(name) || CHOOSE_WIDGET.equalsIgnoreCase(name)) {
-                lexicalScopes.push(new MvelEvaluatorCompiler(parseRepeatScope(keyAndContent)));
+                lexicalScopes.push(new MvelEvaluatorCompiler(parseRepeatScope(keyAndContent, element)));
                 return true;
             }
 
@@ -187,7 +206,11 @@ class XmlTemplateCompiler {
                 return registry.xmlWidget(childsChildren, element.getName(), Dom.parseAttribs(element.attributes()),
                         lexicalScopes.peek());
             } catch (ExpressionCompileException e) {
-                errors.add(e.getError());
+                errors.add(
+                        CompileError.in(Dom.asRawXml(element))
+                        .near(Dom.lineNumberOf(element))
+                        .causedBy(e)
+                );
 
                 return new TerminalWidgetChain();
             }
@@ -199,7 +222,11 @@ class XmlTemplateCompiler {
 
                 return new RequireWidget(Dom.stripAnnotation(element.asXML()), lexicalScopes.peek());
             } catch (ExpressionCompileException e) {
-                errors.add(e.getError());
+                errors.add(
+                        CompileError.in(Dom.asRawXml(element))
+                        .near(Dom.lineNumberOf(element))
+                        .causedBy(e)
+                );
 
                 return new TerminalWidgetChain();
             }
@@ -217,7 +244,11 @@ class XmlTemplateCompiler {
                 childsChildren = new SingleWidgetChain(registry.xmlWidget(childsChildren, element.getName(),
                         Dom.parseAttribs(element.attributes()), lexicalScopes.peek()));
             } catch (ExpressionCompileException e) {
-                errors.add(e.getError());
+                errors.add(
+                        CompileError.in(Dom.asRawXml(element))
+                        .near(Dom.lineNumberOf(element))
+                        .causedBy(e)
+                );
             }
 
 
@@ -226,7 +257,11 @@ class XmlTemplateCompiler {
         try {
             return registry.newWidget(widgetName, extract[1], childsChildren, lexicalScopes.peek());
         } catch (ExpressionCompileException e) {
-            errors.add(e.getError());
+            errors.add(
+                        CompileError.in(Dom.asRawXml(element))
+                        .near(Dom.lineNumberOf(element))
+                        .causedBy(e)
+                );
 
             //this should never be used.
             return new TerminalWidgetChain();
@@ -236,20 +271,24 @@ class XmlTemplateCompiler {
 
 
 
-    private Map<String, Class<?>> parseRepeatScope(String[] extract) {
+    private Map<String, Class<?>> parseRepeatScope(String[] extract, Element element) {
         RepeatToken repeat = registry.parseRepeat(extract[1]);
         Map<String, Class<?>> context = new HashMap<String, Class<?>>();
 
         //verify that repeat was parsed properly
         if (null == repeat.var()) {
-            errors.add(new EvaluatorCompiler.CompileErrorDetail(extract[1],
-                        new ErrorDetail("missing 'var' attribute on @Repeat widget declaration", true))
+            errors.add(
+                        CompileError.in(Dom.asRawXml(element))
+                        .near(Dom.lineNumberOf(element))
+                        .causedBy(CompileErrors.MISSING_REPEAT_VAR)
                 );
         }
         if (null == repeat.items()) {
-            errors.add(new EvaluatorCompiler.CompileErrorDetail(extract[1],
-                        new ErrorDetail("missing 'items' attribute on @Repeat widget declaration", true))
-                );
+            errors.add(
+                    CompileError.in(Dom.asRawXml(element))
+                    .near(Dom.lineNumberOf(element))
+                    .causedBy(CompileErrors.MISSING_REPEAT_ITEMS)
+            );
         }
 
         try {
@@ -262,9 +301,10 @@ class XmlTemplateCompiler {
                 typeParameter = lexicalScopes.peek().resolveCollectionTypeParameter(repeat.items());
 
             } else {
-                errors.add(new EvaluatorCompiler.CompileErrorDetail(extract[1],
-                        new ErrorDetail("cannot repeat over non-Collections. Please ensure 'items' " +
-                                "is a subtype of java.util.Collection", true))
+                errors.add(
+                    CompileError.in(Dom.asRawXml(element))
+                    .near(Dom.lineNumberOf(element))
+                    .causedBy(CompileErrors.REPEAT_OVER_ATOM)
                 );
             }
 
@@ -273,7 +313,11 @@ class XmlTemplateCompiler {
             context.put(repeat.pageVar(), page);
 
         } catch (ExpressionCompileException e) {
-            errors.add(e.getError());
+                errors.add(
+                    CompileError.in(Dom.asRawXml(element))
+                    .near(Dom.lineNumberOf(element))
+                    .causedBy(e)
+                );
         }
 
         return context;
@@ -300,8 +344,12 @@ class XmlTemplateCompiler {
 
             //skip empty?
             if (null == name) {
-                warnings.add(new EvaluatorCompiler.CompileErrorDetail(Dom.asRawXml(element),
-                        new ErrorDetail("form field is missing required attribute 'name' (bind path)", true)));
+                warnings.add(
+                        CompileError.in(Dom.asRawXml(element))
+                        .near(Dom.lineNumberOf(element))
+                        .causedBy(CompileErrors.FORM_MISSING_NAME)
+                );
+
                 return;
             }
 
@@ -314,14 +362,14 @@ class XmlTemplateCompiler {
             try {
                 new MvelEvaluatorCompiler(page.pageClass())
                         .compile(expression);
+
             } catch (ExpressionCompileException e) {
                 //very hacky, needed to strip out xmlns attribution
-                final String xml = Dom.asRawXml(element);
-                warnings.add(new EvaluatorCompiler.CompileErrorDetail(xml,
-
-                        //add error detail with an offset of where the expression occurs
-                        new ErrorDetail(1, xml.indexOf(expression) - 1, true,
-                                "unknown or unresolvable property in input binding: " + expression)));
+                warnings.add(
+                        CompileError.in(Dom.asRawXml(element))
+                        .near(Dom.lineNumberOf(element))
+                        .causedBy(CompileErrors.UNRESOLVABLE_FORM_BINDING, e)
+                );
             }
 
         }
@@ -341,9 +389,11 @@ class XmlTemplateCompiler {
             final String uri = uriAttrib.getValue();
             if (uri.startsWith("/"))
                 if (null == pageBook.get(uri))
-                    warnings.add(new EvaluatorCompiler.CompileErrorDetail(uriAttrib.asXML(),
-                            new ErrorDetail(1, -1, true,
-                                    "no page registered at the linked URI: " + uri)));
+                    warnings.add(
+                        CompileError.in(Dom.asRawXml(element))
+                        .near(Dom.lineNumberOf(element))
+                        .causedBy(CompileErrors.UNRESOLVABLE_FORM_ACTION, uri)
+                );
         }
     }
 

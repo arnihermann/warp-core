@@ -55,7 +55,7 @@ class DebugModePageBook implements PageBook {
 
         final Class<?> pageClass = page.pageClass();
 
-        page.apply(new XmlTemplateCompiler(pageClass, new MvelEvaluatorCompiler(pageClass), registry, book)
+        page.apply(new XmlTemplateCompiler(pageClass, new MvelEvaluatorCompiler(pageClass), registry, book, metrics)
                 .compile(templateLoader.get().load(pageClass)));
     }
 

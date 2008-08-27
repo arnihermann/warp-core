@@ -133,7 +133,7 @@ public class MvelEvaluatorCompiler implements EvaluatorCompiler {
             if (CLASS.equals(propertyDescriptor.getName()))
                 continue;
 
-            //if this is a collection, determine its parametric type
+            //if this is a collection, determine its type parameter
             if (Collection.class.isAssignableFrom(propertyDescriptor.getPropertyType())) {
                 final ParameterizedType returnType = (ParameterizedType) propertyDescriptor
                         .getReadMethod()

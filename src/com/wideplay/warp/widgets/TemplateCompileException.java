@@ -1,27 +1,28 @@
 package com.wideplay.warp.widgets;
 
-import com.wideplay.warp.widgets.rendering.EvaluatorCompiler;
+import com.wideplay.warp.widgets.rendering.CompileError;
 import org.apache.commons.io.IOUtils;
-import org.mvel.ErrorDetail;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.Arrays;
 import java.util.List;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
 class TemplateCompileException extends RuntimeException {
-    private final List<EvaluatorCompiler.CompileErrorDetail> errors;
+    private final List<CompileError> errors;
     private final List<String> templateLines;
     private final String template;
-    private static final int COLUMN_PAD = 5;
     private final Class<?> page;
+    private final List<CompileError> warnings;
 
-    public TemplateCompileException(Class<?> page, String template, 
-                                    List<EvaluatorCompiler.CompileErrorDetail> errors) {
+    private static final int COLUMN_PAD = 5;
+
+    public TemplateCompileException(Class<?> page, String template,
+                                    List<CompileError> errors, List<CompileError> warnings) {
         this.page = page;
+        this.warnings = warnings;
         try {
             //noinspection unchecked
             this.templateLines = IOUtils.readLines(new StringReader(template));
@@ -33,46 +34,46 @@ class TemplateCompileException extends RuntimeException {
         this.errors = errors;
     }
 
-
-    @Override
-    public String getMessage() {
-        if (null == errors)
-            return super.getMessage();
-
-        StringBuilder builder = new StringBuilder("Compilation errors in template for ");
-        builder.append(page.getName());
-        builder.append("\n");
-
-        int i = 1;
-        for (EvaluatorCompiler.CompileErrorDetail error : errors) {
-            final ErrorDetail detail = error.getError();
-
-            builder.append("\n");
-            builder.append(i);
-            builder.append(") ");
-            builder.append(detail.getMessage());
-
-
-            builder.append("\n\n");
-            final ErrorLocationTuple tuple = find(error.getExpression());
-            builder.append(tuple.lines);
-            builder.append("\n");
-
-            //offset column to where expression exists
-            char[] space = new char[tuple.index + detail.getCol() + COLUMN_PAD];
-            Arrays.fill(space, ' ');
-            builder.append(space);
-            builder.append("^\n");    //show an arrow/caret where the error is
-
-            i++;
-        }
-
-        builder.append("Total errors: ");
-        builder.append(errors.size());
-        builder.append("\n\n");
-
-        return builder.toString();
-    }
+//
+//    @Override
+//    public String getMessage() {
+//        if (null == errors)
+//            return super.getMessage();
+//
+//        StringBuilder builder = new StringBuilder("Compilation errors in template for ");
+//        builder.append(page.getName());
+//        builder.append("\n");
+//
+//        int i = 1;
+//        for (EvaluatorCompiler.CompileErrorDetail error : errors) {
+//            final ErrorDetail detail = error.getError();
+//
+//            builder.append("\n");
+//            builder.append(i);
+//            builder.append(") ");
+//            builder.append(detail.getMessage());
+//
+//
+//            builder.append("\n\n");
+//            final ErrorLocationTuple tuple = find(error.getExpression());
+//            builder.append(tuple.lines);
+//            builder.append("\n");
+//
+//            //offset column to where expression exists
+//            char[] space = new char[tuple.index + detail.getCol() + COLUMN_PAD];
+//            Arrays.fill(space, ' ');
+//            builder.append(space);
+//            builder.append("^\n");    //show an arrow/caret where the error is
+//
+//            i++;
+//        }
+//
+//        builder.append("Total errors: ");
+//        builder.append(errors.size());
+//        builder.append("\n\n");
+//
+//        return builder.toString();
+//    }
 
     //returns the line where this expression occurs and some around it
     private ErrorLocationTuple find(String expression) {
@@ -95,6 +96,14 @@ class TemplateCompileException extends RuntimeException {
         return new ErrorLocationTuple(0, 0, "there was a problem computing error location");
 //        throw new AssertionError("Expression compiler error reported in a template that didn't contain the expression! "
 //                + expression);
+    }
+
+    public List<CompileError> getErrors() {
+        return errors;
+    }
+
+    public List<CompileError> getWarnings() {
+        return warnings;
     }
 
     private static class ErrorLocationTuple {

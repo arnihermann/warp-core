@@ -32,7 +32,7 @@ public class XmlLineNumberParsingTest {
 
         try {
             new XmlTemplateCompiler(Object.class, new MvelEvaluatorCompiler(Object.class),
-                    new WidgetRegistry(createMock(Evaluator.class), pageBook, createMock(Injector.class)), pageBook)
+                    new WidgetRegistry(createMock(Evaluator.class), pageBook, createMock(Injector.class)), pageBook, metrics)
 
                     .compile(FAULTY_XML);
         } catch (TemplateCompileException e) {

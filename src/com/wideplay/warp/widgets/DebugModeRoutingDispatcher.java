@@ -2,7 +2,9 @@ package com.wideplay.warp.widgets;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.wideplay.warp.widgets.routing.PageBook;
 import com.wideplay.warp.widgets.routing.RoutingDispatcher;
+import com.wideplay.warp.widgets.routing.SystemMetrics;
 import org.mvel.PropertyAccessException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,20 +21,31 @@ import java.lang.reflect.InvocationTargetException;
 @Singleton
 class DebugModeRoutingDispatcher implements RoutingDispatcher {
     private final RoutingDispatcher dispatcher;
+    private final SystemMetrics metrics;
+    private final PageBook pageBook;
 
     @Inject
-    public DebugModeRoutingDispatcher(@Production RoutingDispatcher dispatcher) {
+    public DebugModeRoutingDispatcher(@Production RoutingDispatcher dispatcher, SystemMetrics metrics,
+                                      PageBook pageBook) {
+
         this.dispatcher = dispatcher;
+        this.metrics = metrics;
+        this.pageBook = pageBook;
     }
 
 
     public Respond dispatch(HttpServletRequest request) {
+        long start = System.currentTimeMillis();
+        PageBook.Page page = pageBook.get(request.getRequestURI());
+
         try {
             return dispatcher.dispatch(request);
-        } catch (TemplateCompileException tce) {
-            final StringBuilderRespond respond = new StringBuilderRespond();
 
-            final Throwable cause = tce.getCause();
+
+        } catch (TemplateCompileException tce) {
+            //WE DO NOT LOG ERROR METRICS HERE, AS THEY ARE BETTER HANDLED BY THE COMPILER
+
+            final StringBuilderRespond respond = new StringBuilderRespond();
 
             respond.write("<h3>");
             respond.write("Compile errors in page");
@@ -76,6 +89,10 @@ class DebugModeRoutingDispatcher implements RoutingDispatcher {
             }
 
             return respond;
+        } finally {
+            long time = System.currentTimeMillis() - start;
+
+            metrics.logPageRenderTime(page.pageClass(), time);
         }
     }
 }

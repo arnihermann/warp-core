@@ -82,7 +82,7 @@ class PageWidgetBuilder {
                 Class<?> page = toCompile.pageClass();
 
                 final Renderable widget = new XmlTemplateCompiler(page, new MvelEvaluatorCompiler(page),
-                        registry, pageBook)
+                        registry, pageBook, metrics)
                         .compile(loader.load(page));
 
                 //apply the compiled widget chain to the page (completing compile step)
