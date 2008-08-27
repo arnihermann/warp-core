@@ -8,7 +8,7 @@ import org.testng.annotations.Test;
 /**
  * @author Tom Wilson (tom@tomwilson.name)
  */
-@Test
+@Test(suiteName = AcceptanceTest.SUITE)
 public class CaseAcceptanceTest {
     public void shouldDisplayGreenFromCaseStatement() {
         WebDriver driver = AcceptanceTest.createWebDriver();

@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * @author Tom Wilson (tom@tomwilson.name)
  */
-@Test
+@Test(suiteName = AcceptanceTest.SUITE)
 public class RepeatAcceptanceTest {
 
     public void shouldRepeatItemsFromCollection() {
