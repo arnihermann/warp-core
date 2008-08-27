@@ -68,7 +68,7 @@ public final class Widgets {
                         //development mode services
                         if (Stage.DEVELOPMENT.equals(binder().currentStage())) {
                             bind(PageBook.class).to(DebugModePageBook.class);
-                            bind(RoutingDispatcher.class).to(DebugRoutingDispatcher.class);
+                            bind(RoutingDispatcher.class).to(DebugModeRoutingDispatcher.class);
                         }
 
                         Servlets.bindScopes(binder());

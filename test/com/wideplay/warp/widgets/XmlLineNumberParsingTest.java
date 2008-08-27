@@ -9,10 +9,7 @@ import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import static org.easymock.EasyMock.createMock;
 import org.testng.annotations.Test;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
 import java.io.StringReader;
 
 /**
@@ -44,8 +41,7 @@ public class XmlLineNumberParsingTest {
     }
 
     @Test
-    public final void filterParsesLineNumbersIntoAttribute() throws DocumentException,
-            ParserConfigurationException, SAXException, IOException {
+    public final void filterParsesLineNumbersIntoAttribute() throws DocumentException {
 
         final SAXReader reader = new SAXReader();
         reader.setXMLFilter(Dom.newLineNumberFilter());
