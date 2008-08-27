@@ -66,7 +66,16 @@ class Dom {
     }
 
     static String asRawXml(Element element) {
-        return element.asXML().replaceFirst(XMLNS_ATTRIB_REGEX, "");
+        final Element copy = element.createCopy();
+
+        final Attribute lineNumber = copy.attribute(LINE_NUMBER_ATTRIBUTE);
+
+        if (null != lineNumber)
+            copy.remove(lineNumber);
+        
+        copy.remove(copy.getNamespace());
+
+        return copy.asXML();
     }
 
     static boolean skippable(Attribute type) {
@@ -169,6 +178,6 @@ class Dom {
     public static int lineNumberOf(Element element) {
         final Attribute attribute = element.attribute(LINE_NUMBER_ATTRIBUTE);
         
-        return null == attribute ? null : Integer.parseInt(attribute.getValue());
+        return null == attribute ? -1 : Integer.parseInt(attribute.getValue());
     }
 }

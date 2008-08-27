@@ -218,9 +218,9 @@ class XmlTemplateCompiler {
         //special case: is this a "require" widget? (used for exporting/interning header tags into embedding pages)
         if (REQUIRE_WIDGET.equalsIgnoreCase(annotation.trim()))
             try {
-                Dom.normalizeAttributes(element);
+//                Dom.normalizeAttributes(element);
 
-                return new RequireWidget(Dom.stripAnnotation(element.asXML()), lexicalScopes.peek());
+                return new RequireWidget(Dom.stripAnnotation(Dom.asRawXml(element)), lexicalScopes.peek());
             } catch (ExpressionCompileException e) {
                 errors.add(
                         CompileError.in(Dom.asRawXml(element))
