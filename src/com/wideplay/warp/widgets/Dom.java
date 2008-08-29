@@ -24,8 +24,8 @@ import java.util.regex.Pattern;
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
 class Dom {
-    private static final String LINE_NUMBER_ATTRIBUTE = "__WarpWidgetsSaxLineNumber";
-
+    static final String LINE_NUMBER_ATTRIBUTE = "__WarpWidgetsSaxLineNumber";
+    
     static final String FORM_TAG = "form";
     static final Pattern WIDGET_ANNOTATION_REGEX = Pattern.compile("(@\\w\\w*(\\([\\w,=\"'()?:><!\\[\\];{}. ]*\\))?[ \n\r\t]*)\\Z");
     static final String XMLNS_ATTRIB_REGEX = " xmlns=\"[a-zA-Z0-9_+%;#/\\-:\\.]*\"";

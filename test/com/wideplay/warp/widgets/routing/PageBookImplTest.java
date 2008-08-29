@@ -456,16 +456,6 @@ public class PageBookImplTest {
 
     @Test(dataProvider = NOT_URIS_AND_TEMPLATES)
     public final void notMatchPageByUriTemplate(final String template, final String toMatch) {
-        Renderable mock = new Renderable() {
-            public void render(Object bound, Respond respond) {
-
-            }
-
-            public <T extends Renderable> Set<T> collect(Class<T> clazz) {
-                return null;
-            }
-        };
-
         final PageBook pageBook = new PageBookImpl(null);
         pageBook.at(template, MyPage.class);
 
@@ -622,6 +612,10 @@ public class PageBookImplTest {
         }
 
         public Renderable include(String argument) {
+            return null;
+        }
+
+        public String getHead() {
             return null;
         }
     }

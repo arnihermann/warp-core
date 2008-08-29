@@ -1,6 +1,9 @@
 package com.wideplay.warp.widgets;
 
 import com.wideplay.warp.widgets.rendering.*;
+import com.wideplay.warp.widgets.rendering.control.Chains;
+import com.wideplay.warp.widgets.rendering.control.WidgetChain;
+import com.wideplay.warp.widgets.rendering.control.WidgetRegistry;
 import com.wideplay.warp.widgets.routing.PageBook;
 import com.wideplay.warp.widgets.routing.SystemMetrics;
 import net.jcip.annotations.NotThreadSafe;
@@ -67,6 +70,8 @@ class XmlTemplateCompiler {
             throw new TemplateParseException(e);
         }
 
+
+        
         if (!errors.isEmpty()) {
             //if there was an error we must track it
             metrics.logErrorsAndWarnings(page, errors, warnings);
@@ -78,7 +83,7 @@ class XmlTemplateCompiler {
     }
 
     private WidgetChain walk(Document document) {
-        WidgetChain chain = new WidgetChain();
+        WidgetChain chain = Chains.proceeding();
         final WidgetChain docChain = walk(document.getRootElement());
 
         chain.addWidget(widgetize(null, document.getRootElement(), docChain));
@@ -92,7 +97,7 @@ class XmlTemplateCompiler {
     @SuppressWarnings({"JavaDoc"}) @NotNull
     private WidgetChain walk(Element element) {
 
-        WidgetChain widgetChain = new WidgetChain();
+        WidgetChain widgetChain = Chains.proceeding();
         
         for (int i = 0, size = element.nodeCount(); i < size; i++) {
             Node node = element.node(i);
@@ -128,7 +133,7 @@ class XmlTemplateCompiler {
             } else if (Dom.isTextCommentOrCdata(node)) {
                 //process as raw text widget
                 try {
-                    widgetChain.addWidget(new TextWidget(Dom.stripAnnotation(node.asXML()), lexicalScopes.peek()));
+                    widgetChain.addWidget(registry.textWidget(Dom.stripAnnotation(node.asXML()), lexicalScopes.peek()));
                 } catch (ExpressionCompileException e) {
 
                     errors.add(
@@ -212,15 +217,14 @@ class XmlTemplateCompiler {
                         .causedBy(e)
                 );
 
-                return new TerminalWidgetChain();
+                return Chains.terminal();
             }
 
         //special case: is this a "require" widget? (used for exporting/interning header tags into embedding pages)
         if (REQUIRE_WIDGET.equalsIgnoreCase(annotation.trim()))
             try {
-//                Dom.normalizeAttributes(element);
 
-                return new RequireWidget(Dom.stripAnnotation(Dom.asRawXml(element)), lexicalScopes.peek());
+                return registry.requireWidget(Dom.stripAnnotation(Dom.asRawXml(element)), lexicalScopes.peek());
             } catch (ExpressionCompileException e) {
                 errors.add(
                         CompileError.in(Dom.asRawXml(element))
@@ -228,7 +232,7 @@ class XmlTemplateCompiler {
                         .causedBy(e)
                 );
 
-                return new TerminalWidgetChain();
+                return Chains.terminal();
             }
 
         //process as "normal" widget
@@ -241,7 +245,7 @@ class XmlTemplateCompiler {
         final String widgetName = extract[0].trim().toLowerCase();
         if (!registry.isSelfRendering(widgetName))
             try {
-                childsChildren = new SingleWidgetChain(registry.xmlWidget(childsChildren, element.getName(),
+                childsChildren = Chains.singleton(registry.xmlWidget(childsChildren, element.getName(),
                         Dom.parseAttribs(element.attributes()), lexicalScopes.peek()));
             } catch (ExpressionCompileException e) {
                 errors.add(
@@ -264,7 +268,7 @@ class XmlTemplateCompiler {
                 );
 
             //this should never be used.
-            return new TerminalWidgetChain();
+            return Chains.terminal();
         }
     }
 

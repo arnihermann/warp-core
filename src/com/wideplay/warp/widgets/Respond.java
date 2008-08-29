@@ -29,6 +29,8 @@ public interface Respond {
 
     Renderable include(String argument);
 
+    String getHead();
+
     public static interface HtmlTagBuilder {
         void textField(String value, String s);
 

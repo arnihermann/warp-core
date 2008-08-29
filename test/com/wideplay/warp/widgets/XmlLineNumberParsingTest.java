@@ -1,14 +1,9 @@
 package com.wideplay.warp.widgets;
 
-import com.google.inject.Injector;
-import com.wideplay.warp.widgets.rendering.MvelEvaluatorCompiler;
-import com.wideplay.warp.widgets.routing.PageBook;
-import com.wideplay.warp.widgets.routing.SystemMetrics;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
-import static org.easymock.EasyMock.createMock;
 import org.testng.annotations.Test;
 
 import java.io.StringReader;
@@ -27,21 +22,6 @@ public class XmlLineNumberParsingTest {
             "     <dod/>" +
             "</xml>\n";
 
-//    @Test TODO FIX THIS TEST!!
-    public final void lineNumbersCorrectlyFoundInException() {
-        final PageBook pageBook = createMock(PageBook.class);
-
-        try {
-            new XmlTemplateCompiler(Object.class, new MvelEvaluatorCompiler(Object.class),
-                    new WidgetRegistry(createMock(Evaluator.class), pageBook, createMock(Injector.class)), pageBook,
-                    createMock(SystemMetrics.class))
-
-                    .compile(FAULTY_XML);
-        } catch (TemplateCompileException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
     @Test
     public final void filterParsesLineNumbersIntoAttribute() throws DocumentException {
 
@@ -57,6 +37,9 @@ public class XmlLineNumberParsingTest {
     }
 
     private static int lineNumberOf(Document document, final String xpath) {
-        return Dom.lineNumberOf(((Element) document.selectSingleNode(xpath)));
+        return Integer.parseInt((((Element) document.selectSingleNode(xpath)))
+                .attribute(Dom.LINE_NUMBER_ATTRIBUTE)
+                .getValue()
+        );
     }
 }

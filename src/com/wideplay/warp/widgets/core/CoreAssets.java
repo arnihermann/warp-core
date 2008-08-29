@@ -1,7 +1,7 @@
 package com.wideplay.warp.widgets.core;
 
-import com.wideplay.warp.widgets.resources.Assets;
-import com.wideplay.warp.widgets.resources.Export;
+import com.wideplay.warp.widgets.rendering.resources.Assets;
+import com.wideplay.warp.widgets.rendering.resources.Export;
 
 /**
  * Dummy class used to export assets.

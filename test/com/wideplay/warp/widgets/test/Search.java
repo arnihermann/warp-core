@@ -3,7 +3,7 @@ package com.wideplay.warp.widgets.test;
 import com.wideplay.warp.widgets.At;
 import com.wideplay.warp.widgets.Get;
 import com.wideplay.warp.widgets.On;
-import com.wideplay.warp.widgets.resources.Export;
+import com.wideplay.warp.widgets.rendering.resources.Export;
 
 import java.util.Collection;
 

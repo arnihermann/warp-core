@@ -1,6 +1,7 @@
 package com.wideplay.warp.widgets;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.wideplay.warp.widgets.routing.PageBook;
 import com.wideplay.warp.widgets.routing.Production;
@@ -24,14 +25,18 @@ class DebugModeRoutingDispatcher implements RoutingDispatcher {
     private final RoutingDispatcher dispatcher;
     private final SystemMetrics metrics;
     private final PageBook pageBook;
+    private final Provider<Respond> respondProvider;
 
     @Inject
-    public DebugModeRoutingDispatcher(@Production RoutingDispatcher dispatcher, SystemMetrics metrics,
-                                      PageBook pageBook) {
+    public DebugModeRoutingDispatcher(@Production RoutingDispatcher dispatcher,
+                                      SystemMetrics metrics,
+                                      PageBook pageBook,
+                                      Provider<Respond> respondProvider) {
 
         this.dispatcher = dispatcher;
         this.metrics = metrics;
         this.pageBook = pageBook;
+        this.respondProvider = respondProvider;
     }
 
 
@@ -53,7 +58,7 @@ class DebugModeRoutingDispatcher implements RoutingDispatcher {
         } catch (TemplateCompileException tce) {
             //WE DO NOT LOG ERROR METRICS HERE, AS THEY ARE BETTER HANDLED BY THE COMPILER
 
-            final StringBuilderRespond respond = new StringBuilderRespond();
+            final Respond respond = respondProvider.get();
 
             respond.write("<h3>");
             respond.write("Compile errors in page");
@@ -69,7 +74,7 @@ class DebugModeRoutingDispatcher implements RoutingDispatcher {
 
 
         } catch (PropertyAccessException pae) {
-            final StringBuilderRespond respond = new StringBuilderRespond();
+            final Respond respond = respondProvider.get();
 
             final Throwable cause = pae.getCause();
 

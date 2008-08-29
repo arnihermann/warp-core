@@ -5,7 +5,7 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.wideplay.warp.widgets.Respond;
 import com.wideplay.warp.widgets.binding.RequestBinder;
-import com.wideplay.warp.widgets.resources.ResourcesService;
+import com.wideplay.warp.widgets.rendering.resources.ResourcesService;
 import net.jcip.annotations.Immutable;
 
 import javax.servlet.http.HttpServletRequest;

@@ -41,7 +41,7 @@ class StringBuilderRespond implements Respond {
     private final Set<String> requires = new HashSet<String>();
     private String redirect;
 
-    protected String getHead() {
+    public String getHead() {
         return head.toString();
     }
 

@@ -1,11 +1,7 @@
 package com.wideplay.warp.widgets;
 
-import com.google.inject.Injector;
 import com.google.inject.Provider;
-import com.wideplay.warp.widgets.resources.ResourcesService;
-import com.wideplay.warp.widgets.routing.PageBook;
 import com.wideplay.warp.widgets.routing.RoutingDispatcher;
-import com.wideplay.warp.widgets.routing.SystemMetrics;
 import static org.easymock.EasyMock.*;
 import org.testng.annotations.Test;
 
@@ -18,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
-import java.util.HashSet;
 
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
@@ -30,46 +25,25 @@ public class WidgetFilterTest {
 
     @Test
     public final void init() throws ServletException {
-        final PageBook pageBook = createNiceMock(PageBook.class);
-        final Evaluator evaluator = createNiceMock(Evaluator.class);
-
-        final int[] adds = new int[1];
-        final WidgetRegistry registry = new WidgetRegistry(evaluator, pageBook, createNiceMock(Injector.class)) {
-            @Override
-            public void add(String key, Class<? extends Renderable> widget) {
-                adds[0]++;
-            }
-        };
-
-        final boolean ran[] = new boolean[1];
-        final PageWidgetBuilder pageWidgetBuilder = new PageWidgetBuilder(pageBook, new TemplateLoader(null),
-                new HashSet<Package>(), createNiceMock(ResourcesService.class), null, registry,
-                createNiceMock(SystemMetrics.class)) {
-
-            @Override
-            public void scan() {
-                ran[0] = true;
-            }
-        };
-
         final FilterConfig filterConfig = createMock(FilterConfig.class);
+        final WidgetScanner widgetScanner = createMock(WidgetScanner.class);
+
+        widgetScanner.scan();
 
         expect(filterConfig.getServletContext())
                 .andReturn(createMock(ServletContext.class));
 
-        replay(filterConfig);
+        replay(filterConfig, widgetScanner);
 
         new WidgetFilter(createNiceMock(RoutingDispatcher.class), new Provider<ContextInitializer>() {
             public ContextInitializer get() {
-                return new ContextInitializer(pageWidgetBuilder, registry);
+                return new ContextInitializer(widgetScanner);
             }
         })
                 .init(filterConfig);
 
-//        assert ran[0] : "page widget builder scan method not called";
-        assert adds[0] > 1 : "core widgets were not registered";
 
-        verify(filterConfig);
+        verify(filterConfig, widgetScanner);
     }
 
     @Test

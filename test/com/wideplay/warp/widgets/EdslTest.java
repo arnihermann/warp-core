@@ -1,7 +1,10 @@
 package com.wideplay.warp.widgets;
 
 import com.google.inject.*;
+import com.wideplay.warp.widgets.rendering.CallWith;
+import com.wideplay.warp.widgets.routing.Production;
 import static org.easymock.EasyMock.createNiceMock;
+import org.testng.annotations.Test;
 
 import javax.servlet.ServletContext;
 import java.util.Set;
@@ -11,10 +14,10 @@ import java.util.Set;
  */
 public class EdslTest {
 
-//    @Test
+    @Test
     public final void edsl() {
-        Package aPackage = com.wideplay.warp.widgets.example.WidgetStartup.class.getPackage();
-        Package anotherPackage = com.wideplay.warp.widgets.example.WidgetStartup.class.getPackage();
+        Package aPackage = CallWith.class.getPackage();
+        Package anotherPackage = Production.class.getPackage();
 
         assert null != aPackage;
         assert null != anotherPackage;

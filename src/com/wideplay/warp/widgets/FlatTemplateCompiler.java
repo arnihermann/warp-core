@@ -4,6 +4,7 @@ import com.wideplay.warp.widgets.rendering.CompileError;
 import com.wideplay.warp.widgets.rendering.ExpressionCompileException;
 import com.wideplay.warp.widgets.rendering.MvelEvaluatorCompiler;
 import com.wideplay.warp.widgets.rendering.Parsing;
+import com.wideplay.warp.widgets.rendering.control.WidgetRegistry;
 import com.wideplay.warp.widgets.routing.SystemMetrics;
 
 import java.util.Arrays;
@@ -20,11 +21,13 @@ class FlatTemplateCompiler {
     private final Class<?> page;
     private final MvelEvaluatorCompiler compiler;
     private final SystemMetrics metrics;
+    private final WidgetRegistry registry;
 
-    public FlatTemplateCompiler(Class<?> page, MvelEvaluatorCompiler compiler, SystemMetrics metrics) {
+    public FlatTemplateCompiler(Class<?> page, MvelEvaluatorCompiler compiler, SystemMetrics metrics, WidgetRegistry registry) {
         this.page = page;
         this.compiler = compiler;
         this.metrics = metrics;
+        this.registry = registry;
     }
 
     public Renderable compile(String template) {
@@ -32,7 +35,7 @@ class FlatTemplateCompiler {
         template = template.substring(Parsing.indexOfMeta(template) + "@Meta".length());
 
         try {
-            return new TextWidget(template, compiler);
+            return registry.textWidget(template, compiler);
 
         } catch (ExpressionCompileException e) {
             final List<CompileError> errors = Arrays.asList(

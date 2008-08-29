@@ -4,7 +4,7 @@ import com.google.inject.Provider;
 import com.wideplay.warp.widgets.Renderable;
 import com.wideplay.warp.widgets.Respond;
 import com.wideplay.warp.widgets.binding.RequestBinder;
-import com.wideplay.warp.widgets.resources.ResourcesService;
+import com.wideplay.warp.widgets.rendering.resources.ResourcesService;
 import static org.easymock.EasyMock.*;
 import org.testng.annotations.Test;
 
