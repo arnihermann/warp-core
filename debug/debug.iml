@@ -29,7 +29,15 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="gwt-user (2)" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../lib/gwt/gwt-user.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
     <orderEntryProperties />
   </component>
 </module>
