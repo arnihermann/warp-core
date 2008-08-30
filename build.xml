@@ -89,13 +89,16 @@
 
         <jarjar jarfile="${build}/jartmp.jar">
 
+            <!--warp-widgets classes-->
             <fileset dir="${core-classes}">
-                 <!--warp-widgets classes-->
-                <exclude name="com/wideplay/warp/widgets/example/**"/>
+                <!--<exclude name="com/wideplay/warp/widgets/example/**"/>     -->
                 <exclude name="META-INF/**"/>
             </fileset>
 
-             <!--dependencies-->
+            <!--dependencies-->
+            <zipfileset src="${lib}/asm.jar">
+                <exclude name="META-INF/*"/>
+            </zipfileset>
             <zipfileset src="${lib}/commons-io.jar">
                 <exclude name="META-INF/*"/>
             </zipfileset>
@@ -105,11 +108,14 @@
             <zipfileset src="${lib}/jaxen-1.1-beta-7.jar">
                 <exclude name="META-INF/*"/>
             </zipfileset>
+            <zipfileset src="${lib}/mvel-2.0-SNAPSHOT.jar">
+                <exclude name="META-INF/*"/>
+            </zipfileset>
 
              <!--repackage into warp-widgets namespace-->
-            <keep pattern="com.wideplay.**"/>
-            <!--<rule pattern="org.objectweb.asm.**" result="com.wideplay.warp.widgets.asm.@1"/>-->
-            <!--<rule pattern="org.mvel.**" result="com.wideplay.warp.widgets.mvel.@1"/>-->
+            <keep pattern="com.wideplay.warp.**"/>
+            <rule pattern="org.objectweb.asm.**" result="com.wideplay.warp.widgets.asm.@1"/>
+            <rule pattern="org.mvel.**" result="com.wideplay.warp.widgets.mvel.@1"/>
             <rule pattern="org.dom4j.**" result="com.wideplay.warp.widgets.dom4j.@1"/>
             <rule pattern="org.apache.commons.io.**" result="com.wideplay.warp.widgets.io.@1"/>
             <rule pattern="org.jaxen.**" result="com.wideplay.warp.widgets.jaxen.@1"/>
@@ -123,27 +129,7 @@
             <fileset dir="${build}/jartmp"/>
         </jar>
 
-        <!--<jar jarfile="${dir.distribute}/warp-widgets-${version}.jar">-->
-            <!--<fileset dir="${core-classes}">-->
-                 <!--warp-widgets classes -->
-                <!--<exclude name="com/wideplay/warp/widgets/example/**"/>-->
-                <!--<exclude name="META-INF/**"/>-->
-            <!--</fileset>-->
-            <!---->
-
-            <!-- dependencies -->
-            <!--<zipfileset src="${lib}/commons-io.jar">-->
-                <!--<exclude name="META-INF/*"/>-->
-            <!--</zipfileset>-->
-            <!--<zipfileset src="${lib}/dom4j-1.6.1.jar">-->
-                <!--<exclude name="META-INF/*"/>-->
-            <!--</zipfileset>-->
-            <!--<zipfileset src="${lib}/jaxen-1.1-beta-7.jar">-->
-                <!--<exclude name="META-INF/*"/>-->
-            <!--</zipfileset>-->
-        <!--</jar>-->
-
-
+      
         <!-- run them with testng -->
         <testng haltonfailure="true" verbose="2" suitename="warp-widgets unit tests on jar">
             <classpath>
@@ -165,8 +151,6 @@
             <fileset dir="${dir.distribute}" includes="*.jar" excludes="warp-widgets-src-*.jar"/>
             <fileset dir="${lib}">
                 <include name="warp-servlet-*.jar"/>
-                <include name="mvel-2.0-SNAPSHOT.jar"/>
-                <include name="asm.jar"/>
                 <include name="guice-*.jar"/>
             </fileset>
         </copy>
@@ -208,8 +192,6 @@
                 <fileset dir="${lib}">
                     <include name="guice-1.0.jar"/>
                     <include name="warp-servlet*.jar"/>
-                    <include name="mvel-*.jar"/>
-                    <include name="asm.jar"/>
                 </fileset>
                 <fileset dir="${lib}/webdriver">
                     <include name="*.jar"/>

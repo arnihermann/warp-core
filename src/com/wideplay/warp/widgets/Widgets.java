@@ -9,6 +9,7 @@ import com.wideplay.warp.servlet.Servlets;
 import com.wideplay.warp.widgets.core.CaseWidget;
 import com.wideplay.warp.widgets.routing.PageBook;
 import com.wideplay.warp.widgets.routing.RoutingDispatcher;
+import org.mvel.MVEL;
 
 import java.util.*;
 
@@ -49,6 +50,11 @@ public final class Widgets {
 
                     @Override
                     protected void configure() {
+
+                        //set up MVEL namespace (when jarjar-ed, it will use the repackaged namespace)
+                        System.setProperty("mvel.namespace",
+                                MVEL.class.getPackage().getName().replace('.', '/') + "/");
+
                         //configuration options
                         bind(Options.class).toInstance(options);
 
@@ -72,6 +78,7 @@ public final class Widgets {
                         }
 
                         Servlets.bindScopes(binder());
+
                     }
                 };
             }
