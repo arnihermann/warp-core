@@ -3,7 +3,7 @@ package com.wideplay.warp.widgets.rendering.control;
 import com.wideplay.warp.widgets.Evaluator;
 import com.wideplay.warp.widgets.Renderable;
 import com.wideplay.warp.widgets.Respond;
-import com.wideplay.warp.widgets.rendering.Parsing;
+import com.wideplay.warp.widgets.compiler.Parsing;
 import com.wideplay.warp.widgets.rendering.SelfRendering;
 import net.jcip.annotations.Immutable;
 

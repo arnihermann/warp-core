@@ -1,7 +1,7 @@
 package com.wideplay.warp.widgets.routing;
 
 import com.google.inject.Singleton;
-import com.wideplay.warp.widgets.rendering.CompileError;
+import com.wideplay.warp.widgets.compiler.CompileError;
 import net.jcip.annotations.ThreadSafe;
 
 import java.util.List;

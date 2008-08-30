@@ -2,10 +2,10 @@ package com.wideplay.warp.widgets.rendering.control;
 
 import com.wideplay.warp.widgets.Renderable;
 import com.wideplay.warp.widgets.Respond;
-import com.wideplay.warp.widgets.rendering.EvaluatorCompiler;
-import com.wideplay.warp.widgets.rendering.ExpressionCompileException;
+import com.wideplay.warp.widgets.compiler.EvaluatorCompiler;
+import com.wideplay.warp.widgets.compiler.ExpressionCompileException;
+import com.wideplay.warp.widgets.compiler.Token;
 import com.wideplay.warp.widgets.rendering.SelfRendering;
-import com.wideplay.warp.widgets.rendering.Token;
 import net.jcip.annotations.Immutable;
 
 import java.util.Collections;

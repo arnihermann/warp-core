@@ -1,7 +1,7 @@
 package com.wideplay.warp.widgets.routing;
 
 import com.google.inject.ImplementedBy;
-import com.wideplay.warp.widgets.rendering.CompileError;
+import com.wideplay.warp.widgets.compiler.CompileError;
 
 import java.util.List;
 

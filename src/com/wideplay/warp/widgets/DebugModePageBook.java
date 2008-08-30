@@ -3,9 +3,8 @@ package com.wideplay.warp.widgets;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import com.wideplay.warp.widgets.rendering.MvelEvaluatorCompiler;
-import com.wideplay.warp.widgets.rendering.Parsing;
-import com.wideplay.warp.widgets.rendering.control.WidgetRegistry;
+import com.wideplay.warp.widgets.compiler.Compilers;
+import com.wideplay.warp.widgets.compiler.Parsing;
 import com.wideplay.warp.widgets.routing.PageBook;
 import com.wideplay.warp.widgets.routing.Production;
 import com.wideplay.warp.widgets.routing.SystemMetrics;
@@ -21,17 +20,17 @@ import net.jcip.annotations.ThreadSafe;
 class DebugModePageBook implements PageBook {
     private final PageBook book;
     private final Provider<TemplateLoader> templateLoader;
-    private final WidgetRegistry registry;
     private final SystemMetrics metrics;
+    private final Compilers compilers;
 
     @Inject
     public DebugModePageBook(@Production PageBook book, Provider<TemplateLoader> templateLoader,
-                             WidgetRegistry registry, SystemMetrics metrics) {
+                             SystemMetrics metrics, Compilers compilers) {
 
         this.book = book;
         this.templateLoader = templateLoader;
-        this.registry = registry;
         this.metrics = metrics;
+        this.compilers = compilers;
     }
 
     public Page at(String uri, Class<?> myPageClass) {
@@ -55,6 +54,10 @@ class DebugModePageBook implements PageBook {
         return page;
     }
 
+    public Page embedAs(Class<?> page) {
+        return book.embedAs(page);
+    }
+
     private void reload(Page page) {
 
         //do nothing on the first pass (and skip static resources)
@@ -66,14 +69,8 @@ class DebugModePageBook implements PageBook {
         final String template = templateLoader.get().load(pageClass);
 
         if (Parsing.treatAsXml(template))
-            page.apply(new XmlTemplateCompiler(pageClass, new MvelEvaluatorCompiler(pageClass), registry, book, metrics)
-                    .compile(template));
+            page.apply(compilers.compileXml(pageClass, template));
         else
-            page.apply(new FlatTemplateCompiler(pageClass, new MvelEvaluatorCompiler(pageClass), metrics, registry)
-                    .compile(template));
-    }
-
-    public Page embedAs(Class<?> page) {
-        return book.embedAs(page);
+            page.apply(compilers.compileFlat(pageClass, template));
     }
 }

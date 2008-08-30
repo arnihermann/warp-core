@@ -4,7 +4,11 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.wideplay.warp.widgets.Renderable;
 import com.wideplay.warp.widgets.Respond;
-import com.wideplay.warp.widgets.rendering.*;
+import com.wideplay.warp.widgets.compiler.EvaluatorCompiler;
+import com.wideplay.warp.widgets.compiler.ExpressionCompileException;
+import com.wideplay.warp.widgets.compiler.Token;
+import com.wideplay.warp.widgets.rendering.Attributes;
+import com.wideplay.warp.widgets.rendering.SelfRendering;
 import net.jcip.annotations.ThreadSafe;
 
 import javax.servlet.http.HttpServletRequest;

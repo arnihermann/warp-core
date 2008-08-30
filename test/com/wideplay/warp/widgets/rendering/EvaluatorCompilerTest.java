@@ -1,6 +1,8 @@
 package com.wideplay.warp.widgets.rendering;
 
 import com.wideplay.warp.widgets.Evaluator;
+import com.wideplay.warp.widgets.compiler.ExpressionCompileException;
+import com.wideplay.warp.widgets.compiler.MvelEvaluatorCompiler;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;

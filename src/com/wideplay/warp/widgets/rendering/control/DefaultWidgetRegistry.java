@@ -5,10 +5,10 @@ import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.wideplay.warp.widgets.Evaluator;
 import com.wideplay.warp.widgets.Renderable;
-import com.wideplay.warp.widgets.rendering.EvaluatorCompiler;
-import com.wideplay.warp.widgets.rendering.ExpressionCompileException;
-import com.wideplay.warp.widgets.rendering.Parsing;
-import com.wideplay.warp.widgets.rendering.RepeatToken;
+import com.wideplay.warp.widgets.compiler.EvaluatorCompiler;
+import com.wideplay.warp.widgets.compiler.ExpressionCompileException;
+import com.wideplay.warp.widgets.compiler.Parsing;
+import com.wideplay.warp.widgets.compiler.RepeatToken;
 import com.wideplay.warp.widgets.routing.PageBook;
 import net.jcip.annotations.ThreadSafe;
 

@@ -1,6 +1,10 @@
 package com.wideplay.warp.widgets.rendering;
 
 import com.wideplay.warp.widgets.Evaluator;
+import com.wideplay.warp.widgets.compiler.EvaluatorCompiler;
+import com.wideplay.warp.widgets.compiler.ExpressionCompileException;
+import com.wideplay.warp.widgets.compiler.Parsing;
+import com.wideplay.warp.widgets.compiler.Token;
 import org.jetbrains.annotations.Nullable;
 import org.mvel.MVEL;
 

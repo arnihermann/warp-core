@@ -1,9 +1,12 @@
 package com.wideplay.warp.widgets;
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import static com.google.inject.matcher.Matchers.annotatedWith;
-import com.wideplay.warp.widgets.rendering.*;
+import com.wideplay.warp.widgets.compiler.*;
+import com.wideplay.warp.widgets.rendering.CallWith;
+import com.wideplay.warp.widgets.rendering.Embed;
+import com.wideplay.warp.widgets.rendering.EmbedAs;
+import com.wideplay.warp.widgets.rendering.With;
 import com.wideplay.warp.widgets.rendering.control.WidgetRegistry;
 import com.wideplay.warp.widgets.rendering.resources.Assets;
 import com.wideplay.warp.widgets.rendering.resources.Export;
@@ -11,7 +14,6 @@ import com.wideplay.warp.widgets.rendering.resources.ResourcesService;
 import com.wideplay.warp.widgets.routing.PageBook;
 import com.wideplay.warp.widgets.routing.SystemMetrics;
 
-import javax.servlet.ServletContext;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -26,28 +28,29 @@ class ClasspathWidgetScanner implements WidgetScanner {
     private final TemplateLoader loader;
     private final Set<Package> packages;
     private final ResourcesService resourcesService;
-    private final Provider<ServletContext> context;
     private final WidgetRegistry registry;
     private final SystemMetrics metrics;
+    private final Compilers compilers;
 
 
     private final Logger log = Logger.getLogger(ClasspathWidgetScanner.class.getName());
 
     @Inject
     ClasspathWidgetScanner(PageBook pageBook, TemplateLoader loader,
-                      @Packages Set<Package> packages,
-                      ResourcesService resourcesService,
-                      Provider<ServletContext> servletContextProvider,
-                      WidgetRegistry registry, SystemMetrics metrics) {
+                           @Packages Set<Package> packages,
+                           ResourcesService resourcesService,
+                           WidgetRegistry registry,
+                           SystemMetrics metrics,
+                           Compilers compilers) {
 
         this.pageBook = pageBook;
         this.loader = loader;
         this.packages = packages;
         this.resourcesService = resourcesService;
-        this.context = servletContextProvider;
         this.registry = registry;
 
         this.metrics = metrics;
+        this.compilers = compilers;
     }
 
     public void scan() {
@@ -127,23 +130,9 @@ class ClasspathWidgetScanner implements WidgetScanner {
 
                 //is this an XML template or a flat-file template?
                 if (Parsing.treatAsXml(template))
-                    widget = new XmlTemplateCompiler(
-                            page,
-                            new MvelEvaluatorCompiler(page),
-                            registry,
-                            pageBook,
-                            metrics
-                    )
-
-                            .compile(template);
+                    widget = compilers.compileXml(page, template);
                 else
-                    widget = new FlatTemplateCompiler(
-                            page,
-                            new MvelEvaluatorCompiler(page),
-                            metrics,
-                            registry)
-
-                            .compile(template);
+                    widget = compilers.compileFlat(page, template);
 
                 //apply the compiled widget chain to the page (completing compile step)
                 toCompile.apply(widget);

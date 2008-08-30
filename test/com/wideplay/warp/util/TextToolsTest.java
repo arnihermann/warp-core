@@ -1,10 +1,10 @@
 package com.wideplay.warp.util;
 
 import com.google.inject.Guice;
-import com.wideplay.warp.widgets.rendering.EvaluatorCompiler;
-import com.wideplay.warp.widgets.rendering.ExpressionCompileException;
-import com.wideplay.warp.widgets.rendering.Parsing;
-import com.wideplay.warp.widgets.rendering.Token;
+import com.wideplay.warp.widgets.compiler.EvaluatorCompiler;
+import com.wideplay.warp.widgets.compiler.ExpressionCompileException;
+import com.wideplay.warp.widgets.compiler.Parsing;
+import com.wideplay.warp.widgets.compiler.Token;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 

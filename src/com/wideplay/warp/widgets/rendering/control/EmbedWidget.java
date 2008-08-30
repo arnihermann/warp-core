@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import com.wideplay.warp.widgets.Evaluator;
 import com.wideplay.warp.widgets.Renderable;
 import com.wideplay.warp.widgets.Respond;
-import com.wideplay.warp.widgets.rendering.Parsing;
+import com.wideplay.warp.widgets.compiler.Parsing;
 import com.wideplay.warp.widgets.routing.PageBook;
 import net.jcip.annotations.Immutable;
 

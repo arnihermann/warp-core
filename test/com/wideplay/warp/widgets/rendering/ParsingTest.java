@@ -1,5 +1,6 @@
 package com.wideplay.warp.widgets.rendering;
 
+import com.wideplay.warp.widgets.compiler.Parsing;
 import org.apache.commons.io.FileUtils;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;

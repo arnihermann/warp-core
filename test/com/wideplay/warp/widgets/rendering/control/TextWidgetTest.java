@@ -1,8 +1,8 @@
 package com.wideplay.warp.widgets.rendering.control;
 
 import com.wideplay.warp.widgets.Respond;
-import com.wideplay.warp.widgets.rendering.ExpressionCompileException;
-import com.wideplay.warp.widgets.rendering.MvelEvaluatorCompiler;
+import com.wideplay.warp.widgets.compiler.ExpressionCompileException;
+import com.wideplay.warp.widgets.compiler.MvelEvaluatorCompiler;
 import static org.easymock.EasyMock.*;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;

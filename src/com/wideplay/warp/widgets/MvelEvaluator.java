@@ -1,6 +1,6 @@
 package com.wideplay.warp.widgets;
 
-import com.wideplay.warp.widgets.rendering.Parsing;
+import com.wideplay.warp.widgets.compiler.Parsing;
 import net.jcip.annotations.ThreadSafe;
 import org.jetbrains.annotations.Nullable;
 import org.mvel.MVEL;

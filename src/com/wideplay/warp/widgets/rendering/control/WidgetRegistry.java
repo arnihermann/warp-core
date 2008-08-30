@@ -2,9 +2,9 @@ package com.wideplay.warp.widgets.rendering.control;
 
 import com.google.inject.ImplementedBy;
 import com.wideplay.warp.widgets.Renderable;
-import com.wideplay.warp.widgets.rendering.EvaluatorCompiler;
-import com.wideplay.warp.widgets.rendering.ExpressionCompileException;
-import com.wideplay.warp.widgets.rendering.RepeatToken;
+import com.wideplay.warp.widgets.compiler.EvaluatorCompiler;
+import com.wideplay.warp.widgets.compiler.ExpressionCompileException;
+import com.wideplay.warp.widgets.compiler.RepeatToken;
 
 import java.util.Map;
 

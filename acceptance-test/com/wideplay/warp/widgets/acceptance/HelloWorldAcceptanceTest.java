@@ -6,7 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.testng.annotations.Test;
 
 /**
- * @author Tom Wilson (tom@tomwilson.name)
+ * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
 @Test(suiteName = AcceptanceTest.SUITE)
 public class HelloWorldAcceptanceTest {
