@@ -1,7 +1,7 @@
 package com.wideplay.warp.widgets.compiler;
 
 import com.wideplay.warp.widgets.Evaluator;
-import net.jcip.annotations.Immutable;
+import net.jcip.annotations.NotThreadSafe;
 import org.jetbrains.annotations.Nullable;
 import org.mvel.CompileException;
 import org.mvel.MVEL;
@@ -18,7 +18,7 @@ import java.util.*;
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail com)
  */
-@Immutable
+@NotThreadSafe
 public class MvelEvaluatorCompiler implements EvaluatorCompiler {
     private final Class<?> backingType;
     private final Map<String, Class<?>> backingTypes;

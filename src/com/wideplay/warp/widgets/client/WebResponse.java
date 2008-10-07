@@ -5,22 +5,19 @@ import java.util.Map;
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
-public class WebResponse {
-    private Map<String, String> headers;
+public interface WebResponse {
+    Map<String, String> getHeaders();
 
-    public Object to(Class<Json> transport) {
-        return null;
-    }
+    int getStatusCode();
 
-    public String plain() {
-        return null;
-    }
+    <T> ResponseTransportBuilder<T> to(Class<T> data);
 
-    public Map<String, String> getHeaders() {
-        return headers;
-    }
+    String toString();
 
-    public ResponseDataTypeBuilder from(Class<Json> transport) {
-        return null;
+    /**
+     * @author Dhanji R. Prasanna (dhanji@gmail.com)
+     */
+    public static interface ResponseTransportBuilder<T> {
+        T using(Class<? extends Transport> transport);
     }
 }

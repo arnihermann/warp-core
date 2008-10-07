@@ -55,6 +55,8 @@ class XmlTemplateCompiler {
             final SAXReader reader = new SAXReader();
             reader.setMergeAdjacentText(true);
             reader.setXMLFilter(Dom.newLineNumberFilter());
+            reader.setValidation(false);
+            reader.setIncludeExternalDTDDeclarations(true);
 
             widgetChain = walk(reader.read(new StringReader(template)));
         } catch (DocumentException e) {
@@ -341,6 +343,17 @@ class XmlTemplateCompiler {
             return;
 
         final PageBook.Page page = pageBook.get(action.getValue());
+
+        //only look at pages we actually have registered
+        if (null == page) {
+            warnings.add(
+                    CompileError.in(Dom.asRawXml(element))
+                    .near(Dom.lineNumberOf(element))
+                    .causedBy(CompileErrors.UNRESOLVABLE_FORM_ACTION)
+            );
+
+            return;
+        }
 
         //if we're inside a form do a throw-away compile against the target page
         if ("input".equals(element.getName()) || "textarea".equals(element.getName())) {

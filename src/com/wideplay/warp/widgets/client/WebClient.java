@@ -1,17 +1,14 @@
 package com.wideplay.warp.widgets.client;
 
-import java.util.Map;
-
 /**
  * @author Dhanji R. Prasanna (dhanji@gmail.com)
  */
 public interface WebClient<T> {
+    WebResponse get();
 
-    TransportTypeChainBuilder<T> request(String url);
+    WebResponse post(T t);
 
-    TransportTypeChainBuilder<T> request(String url, Map<String, String> headers);
+    WebResponse put(T t);
 
-    WebMethodChainBuilder<T> requestPlain(String url);
-
-    WebMethodChainBuilder<T> requestPlain(String url, Map<String, String> headers);
+    WebResponse delete();
 }
