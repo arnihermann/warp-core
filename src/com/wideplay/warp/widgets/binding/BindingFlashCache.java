@@ -1,6 +1,6 @@
 package com.wideplay.warp.widgets.binding;
 
-import com.wideplay.warp.servlet.SessionScoped;
+import com.google.inject.servlet.SessionScoped;
 import net.jcip.annotations.NotThreadSafe;
 
 import java.util.HashMap;

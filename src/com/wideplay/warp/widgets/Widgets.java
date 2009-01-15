@@ -4,8 +4,8 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 import com.google.inject.Stage;
 import com.google.inject.TypeLiteral;
-import com.google.inject.util.Objects;
-import com.wideplay.warp.servlet.Servlets;
+import com.google.inject.servlet.Servlets;
+import com.google.common.base.Preconditions;
 import com.wideplay.warp.widgets.core.CaseWidget;
 import com.wideplay.warp.widgets.routing.PageBook;
 import com.wideplay.warp.widgets.routing.RoutingDispatcher;
@@ -33,7 +33,7 @@ public final class Widgets {
             }
 
             public PackageAddingBuilder set(Options options) {
-                Objects.nonNull(options, "set() called with null. You must use the Widgets.options() to configure " +
+                Preconditions.checkNotNull(options, "set() called with null. You must use the Widgets.options() to configure " +
                         "warp-widgets options.");
 
                 return this;
@@ -77,7 +77,10 @@ public final class Widgets {
                             bind(RoutingDispatcher.class).to(DebugModeRoutingDispatcher.class);
                         }
 
-                        Servlets.bindScopes(binder());
+			// TODO: this doesn't fit Guice's API anymore
+                        //Servlets.bindScopes(binder());
+			// Replacement idea (although I'm not sure if this is really needed):
+			// install(Servlets.configure().filters().buildModule());
 
                     }
                 };

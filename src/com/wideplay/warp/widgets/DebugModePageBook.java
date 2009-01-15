@@ -3,7 +3,7 @@ package com.wideplay.warp.widgets;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import com.wideplay.warp.servlet.RequestScoped;
+import com.google.inject.servlet.RequestScoped;
 import com.wideplay.warp.widgets.compiler.Compilers;
 import com.wideplay.warp.widgets.compiler.Parsing;
 import com.wideplay.warp.widgets.routing.PageBook;

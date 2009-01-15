@@ -1,6 +1,6 @@
 package com.wideplay.warp.widgets.rendering.control;
 
-import com.google.inject.util.ToStringBuilder;
+import com.google.inject.internal.ToStringBuilder;
 import com.wideplay.warp.widgets.Evaluator;
 import com.wideplay.warp.widgets.Renderable;
 import com.wideplay.warp.widgets.rendering.SelfRendering;
@@ -95,6 +95,7 @@ class WidgetWrapper {
         return selfRendering;
     }
 
+    /** TODO: cut dependency to com.google.inject.internal.ToStringBuilder. */
     @Override
     public String toString() {
         return new ToStringBuilder(WidgetWrapper.class)
